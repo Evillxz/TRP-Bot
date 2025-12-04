@@ -33,7 +33,6 @@ module.exports = {
         const idadeValue = interaction.fields.getStringSelectValues('age_select_menu')?.[0];
         const idade = idadeValue === 'legal_age_select_menu' ? '+18 anos' : '-18 anos';
 
-        // Atualizar dados temporários
         context.tempRegisters.set(userId, {
             nome,
             id,

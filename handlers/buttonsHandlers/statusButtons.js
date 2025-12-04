@@ -17,7 +17,6 @@ async function handleStatusButtons(interaction, { emojis, chalk, logger }) {
     const client = interaction.client;
     
     if (interaction.customId === 'refresh_status') {
-        // Recalcular todas as informações
         const ping = client.ws.ping;
         const apiLatency = Date.now() - interaction.createdTimestamp;
         

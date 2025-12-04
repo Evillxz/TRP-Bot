@@ -285,13 +285,13 @@ module.exports = {
                     .addOptions(
                         new StringSelectMenuOptionBuilder()
                         .setLabel("Tenho mais de 18 anos")
-                        .setEmoji("🔘")
+                        .setEmoji("🔺")
                         .setValue("legal_age_select_menu")
                         .setDescription("Selecione se for o seu caso")
                         .setDefault(registerData.idade === '+18 anos'),
                         new StringSelectMenuOptionBuilder()
                         .setLabel("Tenho menos de 18 anos")
-                        .setEmoji("🔞")
+                        .setEmoji("🔻")
                         .setValue("not_legal_age_select_menu")
                         .setDescription("Selecione se for o seu caso")
                         .setDefault(registerData.idade === '-18 anos')
