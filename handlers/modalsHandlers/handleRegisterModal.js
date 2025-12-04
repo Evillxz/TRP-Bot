@@ -12,7 +12,7 @@ module.exports = {
     async execute(interaction) {
 
         const modal = new ModalBuilder()
-            .setTitle("Modal")
+            .setTitle("Registro")
             .setCustomId("modal_register")
             .addTextDisplayComponents(
                 new TextDisplayBuilder()

@@ -17,10 +17,28 @@ module.exports = {
     async execute(interaction, context) {
         const [action, , userId] = interaction.customId.split('_');
         
+        const requiredRoleId = '1446226263521104105';
+        if (!interaction.member.roles.cache.has(requiredRoleId)) {
+            return await interaction.reply({
+                embeds: [
+                    {
+                        description: '✖ Vocês nao tem permissao para executar esta acao!',
+                        color: 0xFF0000
+                    }
+                ],
+                flags: MessageFlags.Ephemeral
+            });
+        }
+        
         if (!context.tempRegisters || !context.tempRegisters.has(userId)) {
             return await interaction.reply({
-                content: '✖ Dados de registro não encontrados!',
-                ephemeral: true
+                embeds: [
+                    {
+                        description: '✖ Dados de registro nao encontrados!',
+                        color: 0xFF0000
+                    }
+                ],
+                flags: MessageFlags.Ephemeral
             });
         }
 
@@ -29,8 +47,13 @@ module.exports = {
 
         if (!targetUser) {
             return await interaction.reply({
-                content: '✖ Usuário não encontrado!',
-                ephemeral: true
+                embeds: [
+                    {
+                        description: '✖ Usuário não encontrado!',
+                        color: 0xFF0000
+                    }
+                ],
+                flags: MessageFlags.Ephemeral
             });
         }
 
@@ -143,7 +166,8 @@ module.exports = {
 
                 await welcomeChannel.send({ 
                     components: welcomeContainer,
-                    flags: MessageFlags.IsComponentsV2
+                    flags: MessageFlags.IsComponentsV2,
+                    allowedMentions: { users: [targetUser.user.id] }
                 });
             }
 

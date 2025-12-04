@@ -167,3 +167,28 @@
 {"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 11:55:19"}
 {"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 11:55:36"}
 {"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 12:40:57"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 14:32:59"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 14:33:25"}
+{"level":"error","message":"Não foi possível enviar a mensagem de boas-vindas com imagem: Error: No such file or directory","service":"ponto-bot","timestamp":"2025-12-04 14:34:20"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 14:35:09"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 14:37:54"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 14:40:45"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 15:01:24"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 15:03:28"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 15:06:24"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 15:07:24"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 15:08:17"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 15:10:26"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 15:11:08"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 15:16:20"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 15:22:27"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 15:23:44"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 15:25:23"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 15:26:17"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 16:24:02"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 16:25:22"}
+{"level":"error","message":"Não foi possível enviar a mensagem de boas-vindas com imagem: Error: Expected a string primitive","service":"ponto-bot","timestamp":"2025-12-04 16:25:42"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 16:27:30"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 16:33:59"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 16:36:10"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 16:38:14"}

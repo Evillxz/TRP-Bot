@@ -35,6 +35,7 @@ module.exports = {
         }
 
         const container = [
+            new TextDisplayBuilder().setContent("<@&1446226263521104105>"),
             new ContainerBuilder()
             .setAccentColor(0x212121)
             .addSectionComponents(
