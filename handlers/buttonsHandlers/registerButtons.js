@@ -22,7 +22,7 @@ module.exports = {
             return await interaction.reply({
                 embeds: [
                     {
-                        description: '✖ Vocês nao tem permissao para executar esta acao!',
+                        description: '✖ Você não tem permissão para executar esta ação!',
                         color: 0xFF0000
                     }
                 ],
