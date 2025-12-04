@@ -63,10 +63,10 @@ module.exports = {
                                 new ButtonBuilder()
                                     .setStyle(ButtonStyle.Secondary)
                                     .setLabel("Obter Cargo")
-                                    .setCustomId("age_legal_role")
+                                    .setCustomId("veteran_role")
                             )
                             .addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent("<@&1368800847882096640>"),
+                                new TextDisplayBuilder().setContent("<@&1446254282318942300>"),
                             ),
                     )
                     .addSectionComponents(
@@ -75,10 +75,10 @@ module.exports = {
                                 new ButtonBuilder()
                                     .setStyle(ButtonStyle.Secondary)
                                     .setLabel("Obter Cargo")
-                                    .setCustomId("age_illegal_role")
+                                    .setCustomId("newbie_role")
                             )
                             .addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent("<@&1368800911559884821>"),
+                                new TextDisplayBuilder().setContent("<@&1446254386413178971>"),
                             ),
                     )
                     .addSeparatorComponents(

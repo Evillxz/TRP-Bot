@@ -28,7 +28,7 @@ module.exports = {
                     await registerButtons.execute(interaction, context);
                 } else if (interaction.customId === 'refresh_status' || interaction.customId === 'detailed_status') {
                     await handleStatusButtons(interaction, context);
-                } else if (['men_role', 'women_role', 'age_legal_role', 'age_illegal_role', 'random_deletor_role', 'm4_king_role', 'vin_diesel_role', 'playboy_role'].includes(interaction.customId)) {
+                } else if (['men_role', 'women_role', 'veteran_role', 'newbie_role', 'random_deletor_role', 'm4_king_role', 'vin_diesel_role', 'playboy_role'].includes(interaction.customId)) {
                     await roleButtons.execute(interaction, context);
                 } 
             

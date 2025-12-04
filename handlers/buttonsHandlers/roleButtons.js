@@ -5,8 +5,8 @@ module.exports = {
         const roleMap = {
             'men_role': '1368800681741516851',
             'women_role': '1368800797344796832',
-            'age_legal_role': '1368800847882096640',
-            'age_illegal_role': '1368800911559884821',
+            'veteran_role': '1446254282318942300',
+            'newbie_role': '1446254386413178971',
             'random_deletor_role': '1446247386736492654',
             'm4_king_role': '1446247456781373541',
             'vin_diesel_role': '1446247556114812980',
