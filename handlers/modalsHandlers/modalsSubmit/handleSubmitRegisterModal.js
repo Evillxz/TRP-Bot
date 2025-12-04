@@ -26,7 +26,7 @@ module.exports = {
             return await interaction.reply({ 
                 embeds: [
                     {
-                        description: '❌ Canal Administrativo Nao Encontrado',
+                        description: '✖ Canal Administrativo Nao Encontrado',
                         color: 0xFF0000
                     }
                 ],
@@ -101,7 +101,7 @@ module.exports = {
         await interaction.reply({
             embeds: [
                 {
-                    description: '✔ Registro Enviado! Aguarde a análise.',
+                    description: '✔ Registro enviado! Aguarde a análise.',
                     color: 0x00FF00
                 }
             ],

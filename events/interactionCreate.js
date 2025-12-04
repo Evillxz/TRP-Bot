@@ -11,6 +11,7 @@ const handleSubmitRegisterModal = require('../handlers/modalsHandlers/modalsSubm
 const handleEditRegisterModal = require('../handlers/modalsHandlers/modalsSubmit/handleEditRegisterModal');
 const registerButtons = require('../handlers/buttonsHandlers/registerButtons');
 const { handleStatusButtons } = require('../handlers/buttonsHandlers/statusButtons');
+const roleButtons = require('../handlers/buttonsHandlers/roleButtons');
 
 module.exports = {
     name: Events.InteractionCreate,
@@ -27,6 +28,8 @@ module.exports = {
                     await registerButtons.execute(interaction, context);
                 } else if (interaction.customId === 'refresh_status' || interaction.customId === 'detailed_status') {
                     await handleStatusButtons(interaction, context);
+                } else if (['men_role', 'women_role', 'age_legal_role', 'age_illegal_role', 'random_deletor_role', 'm4_king_role', 'vin_diesel_role', 'playboy_role'].includes(interaction.customId)) {
+                    await roleButtons.execute(interaction, context);
                 } 
             
             // Comandos Slash
