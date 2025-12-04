@@ -18,7 +18,7 @@ module.exports = {
     async execute(member, context) {
         const { logger } = context;
 
-        const welcomeChannelId = process.env.WELCOME_CHANNEL || '1293328890705477683';
+        const welcomeChannelId = '1296584792111845449';
         const welcomeChannel = member.guild.channels.cache.get(welcomeChannelId);
 
         if (welcomeChannel) {
@@ -90,7 +90,7 @@ module.exports = {
                 logger.error(`Não foi possível enviar a mensagem de boas-vindas com imagem: ${error}`);
             }
         } else {
-            logger.log('Canal de boas-vindas não encontrado. Verifique o ID.');
+            logger.warn('Canal de boas-vindas não encontrado. Verifique o ID.');
         }
     },
 };
