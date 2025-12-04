@@ -321,3 +321,12 @@
 {"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 16:36:10"}
 {"level":"info","message":"\u001b[32m\u001b[1m[READY]\u001b[22m\u001b[39m Conectado ao Discord | Bot está online como Test System#1124!","service":"ponto-bot","timestamp":"2025-12-04 16:38:14"}
 {"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-04 16:38:14"}
+{"level":"info","message":"\u001b[33m\u001b[1m[MONITORAMENTO]\u001b[22m\u001b[39m RAM: 78.79 MB | Servidores: 2 }","service":"ponto-bot","timestamp":"2025-12-04 16:53:12"}
+{"level":"info","message":"\u001b[33m\u001b[1m[MONITORAMENTO]\u001b[22m\u001b[39m RAM: 79.15 MB | Servidores: 2 }","service":"ponto-bot","timestamp":"2025-12-04 17:08:12"}
+{"level":"info","message":"\u001b[33m\u001b[1m[MONITORAMENTO]\u001b[22m\u001b[39m RAM: 52.73 MB | Servidores: 2 }","service":"ponto-bot","timestamp":"2025-12-04 17:23:12"}
+{"level":"info","message":"\u001b[33m\u001b[1m[MONITORAMENTO]\u001b[22m\u001b[39m RAM: 64.69 MB | Servidores: 2 }","service":"ponto-bot","timestamp":"2025-12-04 17:38:12"}
+{"level":"info","message":"\u001b[33m\u001b[1m[MONITORAMENTO]\u001b[22m\u001b[39m RAM: 64.39 MB | Servidores: 2 }","service":"ponto-bot","timestamp":"2025-12-04 17:53:12"}
+{"level":"info","message":"\u001b[33m\u001b[1m[MONITORAMENTO]\u001b[22m\u001b[39m RAM: 64.60 MB | Servidores: 2 }","service":"ponto-bot","timestamp":"2025-12-04 18:08:12"}
+{"level":"info","message":"\u001b[33m\u001b[1m[MONITORAMENTO]\u001b[22m\u001b[39m RAM: 53.35 MB | Servidores: 2 }","service":"ponto-bot","timestamp":"2025-12-04 18:23:12"}
+{"level":"info","message":"\u001b[33m\u001b[1m[MONITORAMENTO]\u001b[22m\u001b[39m RAM: 53.29 MB | Servidores: 2 }","service":"ponto-bot","timestamp":"2025-12-04 18:38:12"}
+{"level":"info","message":"\u001b[33m\u001b[1m[MONITORAMENTO]\u001b[22m\u001b[39m RAM: 51.54 MB | Servidores: 2 }","service":"ponto-bot","timestamp":"2025-12-04 18:53:12"}

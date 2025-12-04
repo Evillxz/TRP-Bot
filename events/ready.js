@@ -11,10 +11,10 @@ module.exports = {
             await client.loadActiveSessions(context);
         }
 
-        client.user.setStatus('dnd');
+        client.user.setStatus('idle');
 
         const activitiesCustom = [
-            { state: 'Em construção...', type: ActivityType.Custom },
+            { state: 'Ajustes finais...', type: ActivityType.Custom },
             { state: 'Previsão de lançamento: 08/12/2025', type: ActivityType.Custom },
         ];
 
