@@ -25,7 +25,7 @@ module.exports = {
                 new ContainerBuilder()
                     .setAccentColor(8064526)
                     .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent("## Cargos Adicionais para Perfil"),
+                        new TextDisplayBuilder().setContent("## Cargos Adicionais para o seu Perfil"),
                     )
                     .addSeparatorComponents(
                         new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large).setDivider(true),
