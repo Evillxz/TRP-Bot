@@ -56,7 +56,7 @@ module.exports = {
             await targetUser.setNickname(newNickname);
 
             const registeredRoleId = '1296584614391054428';
-            const initialRoleId = '1361019461838176428';
+            const initialRoleId = '1446158406561042602';
             const ageRoleId = this.getAgeRoleId(registerData.idade);
 
             const rolesToAdd = [registeredRoleId, initialRoleId];

@@ -38,7 +38,6 @@ const baseEventHandlerContext = {
     logger: logger
 };
 
-// Carregar comandos Slash
 client.commands = new Map();
 const commandsPath = path.join(__dirname, 'slashCommands');
 if (fs.existsSync(commandsPath)) {
@@ -54,7 +53,6 @@ if (fs.existsSync(commandsPath)) {
     }
 }
 
-// Carregar comandos User
 const userCommandsPath = path.join(__dirname, 'commands/user');
 if (fs.existsSync(userCommandsPath)) {
     const userCommandFiles = fs.readdirSync(userCommandsPath).filter(file => file.endsWith('.js'));
@@ -69,7 +67,6 @@ if (fs.existsSync(userCommandsPath)) {
     }
 }
 
-// Carregar comandos de prefixo
 client.legacyCommands = new Map();
 const legacyCommandsPath = path.join(__dirname, 'prefixCommands');
 if (fs.existsSync(legacyCommandsPath)) {
@@ -90,7 +87,6 @@ if (fs.existsSync(legacyCommandsPath)) {
     }
 }
 
-// MessageCreate para comandos de prefixo
 client.on('messageCreate', async message => {
     const prefixes = ['!', '.', 'p!', ';'];
     
@@ -112,7 +108,6 @@ client.on('messageCreate', async message => {
     } 
 });
 
-// Carregar eventos
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 for (const file of eventFiles) {

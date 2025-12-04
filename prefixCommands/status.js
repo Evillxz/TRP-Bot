@@ -22,23 +22,19 @@ module.exports = {
         try {
             const client = message.client;
             
-            // Calculando ping
             const ping = client.ws.ping;
             const apiLatency = Date.now() - message.createdTimestamp;
             
-            // Calculando uptime
             const uptime = process.uptime();
             const days = Math.floor(uptime / 86400);
             const hours = Math.floor(uptime / 3600) % 24;
             const minutes = Math.floor(uptime / 60) % 60;
             const seconds = Math.floor(uptime) % 60;
             
-            // Calculando uso de RAM
             const memoryUsage = process.memoryUsage();
             const ramUsed = (memoryUsage.rss / 1024 / 1024).toFixed(2);
             const ramHeap = (memoryUsage.heapUsed / 1024 / 1024).toFixed(2);
             
-            // Contadores
             const guilds = client.guilds.cache.size;
             const users = client.users.cache.size;
             const channels = client.channels.cache.size;
