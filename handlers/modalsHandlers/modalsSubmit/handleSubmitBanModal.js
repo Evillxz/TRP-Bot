@@ -1,0 +1,97 @@
+const { MessageFlags, formatEmoji, ContainerBuilder, TextDisplayBuilder, ThumbnailBuilder, SectionBuilder } = require('discord.js');
+const database = require('../../../database/database');
+
+module.exports = {
+    async execute(interaction, context) {
+        const { logger, emojis, chalk } = context;
+
+        try{
+            await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
+            const userId = interaction.fields.getSelectedUsers("user_modal_ban_select", true)?.map((user) => user.id)[0];; 
+            const member = await interaction.guild.members.fetch(userId).catch(() => null);
+
+            const reason = interaction.fields.getTextInputValue("reason_text_input_ban");
+            const adminId = interaction.user.id;
+            const guildId = interaction.guild.id;
+            const logChannelId = '1304465490256596992'
+
+            const gavel = formatEmoji(emojis.static.gavel);
+
+            if (!member) {
+                return interaction.editReply({
+                    embeds: [{
+                        description: '✖ Usuário não encontrado!',
+                        color: 0xFF0000
+                    }],
+                    flags: MessageFlags.Ephemeral
+                })
+            }
+
+            if (!member.bannable) {
+                logger.warn(`Tentativa de banimento mal sucedida - Usuário: ${member} | Admin: ${adminId}`);
+                return interaction.editReply({
+                    embeds: [{
+                        description: '✖ Usuário não pode ser banido!',
+                        color: 0xFF0000
+                    }],
+                    flags: MessageFlags.Ephemeral
+                })
+            }
+
+            await member.ban({ reason: reason });
+            
+            const banId = await database.addBan(userId, member.user.tag, adminId, guildId, reason);
+
+            const channel = await interaction.guild.channels.fetch(logChannelId).catch(() => null);
+
+            if (channel) {
+
+                const container = [
+                    new ContainerBuilder()
+                    .setAccentColor(0xFF0000)
+                    .addSectionComponents(
+                        new SectionBuilder()
+                            .setThumbnailAccessory(
+                                new ThumbnailBuilder()
+                                    .setURL(member.user.displayAvatarURL() || '')
+                            )
+                            .addTextDisplayComponents(
+                                new TextDisplayBuilder().setContent(`## ${gavel} Nova Exoneração\n\u200B\n- **Usuário(a):**\n\` ${member.user.tag} \`\n- **Responsável:**\n<@${adminId}>\n- **Motivo:**\n\` ${reason} \`\n\n-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`),
+                            ),
+                    ),
+                ];
+
+                await channel.send({
+                    components: container,
+                    flags: MessageFlags.IsComponentsV2,
+                    allowedMentions: { parse: [] }
+                });
+            }
+
+            await interaction.editReply({
+                embeds: [{
+                    description: `✔ Usuário **${member.user.tag}** banido com sucesso!`,
+                    color: 0x00FF00
+                }],
+                flags: MessageFlags.Ephemeral
+            });
+
+            logger.info(`Banimento concluído! ID: ${banId} | Usuário: ${member} | Motivo: ${reason} | Admin: ${adminId} | Guild: ${guildId}`);
+        
+
+
+        } catch (error) {
+            logger.error(`${chalk.red.bold('[ERRO]')} Erro no comando ban: ${error.stack}`);
+
+            await interaction.editReply({
+                embeds: [{
+                    description: '✖ Ocorreu um erro ao tentar banir o usuário!',
+                    color: 0xFF0000
+                }],
+                flags: MessageFlags.Ephemeral
+            });
+        }
+        
+    }
+}

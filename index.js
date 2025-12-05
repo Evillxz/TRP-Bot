@@ -6,6 +6,7 @@ const chalk = require('chalk');
 const logger = require('./config/logger');
 const { client } = require('./config/client');
 const emojis = require('./emojis.json');
+const database = require('./database/database');
 
 
 setInterval(() => {
@@ -35,7 +36,8 @@ process.on('uncaughtException', error => {
 const baseEventHandlerContext = {
     emojis: emojis,
     chalk: chalk,
-    logger: logger
+    logger: logger,
+    database: database
 };
 
 client.commands = new Map();
@@ -128,4 +130,9 @@ for (const file of eventFiles) {
     }
 }
 
-client.login(process.env.BOT_TOKEN);
+database.init().then(() => {
+    client.login(process.env.BOT_TOKEN);
+}).catch(err => {
+    logger.error('Erro ao inicializar banco de dados:', err);
+    process.exit(1);
+});

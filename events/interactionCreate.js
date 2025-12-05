@@ -12,13 +12,16 @@ const handleEditRegisterModal = require('../handlers/modalsHandlers/modalsSubmit
 const registerButtons = require('../handlers/buttonsHandlers/registerButtons');
 const { handleStatusButtons } = require('../handlers/buttonsHandlers/statusButtons');
 const roleButtons = require('../handlers/buttonsHandlers/roleButtons');
+const handleAdvModal = require('../handlers/modalsHandlers/handleAdvModal');
+const handleUpAndRebModal = require('../handlers/modalsHandlers/handleUpAndRebModal');
+const handleBanUserModal = require('../handlers/modalsHandlers/handleBanUserModal');
+const handleSubmitBanModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitBanModal');
 
 module.exports = {
     name: Events.InteractionCreate,
     async execute(interaction, context) {
         const { client, logger } = context;
         try {
-
 
             if (interaction.isButton()) {
 
@@ -30,9 +33,26 @@ module.exports = {
                     await handleStatusButtons(interaction, context);
                 } else if (['men_role', 'women_role', 'veteran_role', 'newbie_role', 'random_deletor_role', 'm4_king_role', 'vin_diesel_role', 'playboy_role'].includes(interaction.customId)) {
                     await roleButtons.execute(interaction, context);
-                } 
+
+                } else if (interaction.customId === 'open_adv_modal') {
+                    await handleAdvModal.execute(interaction, context);
+                } else if (interaction.customId === 'open_up_and_reb_modal') {
+                    await handleUpAndRebModal.execute(interaction, context);
+                } else if (interaction.customId === 'open_ban_modal') {
+                    await handleBanUserModal.execute(interaction, context);
+                }
             
-            // Comandos Slash
+            
+            } else if (interaction.isModalSubmit()) {
+                if (interaction.customId.startsWith('modal_register')) {
+                    return handleSubmitRegisterModal.execute(interaction, context);
+                } else if (interaction.customId.startsWith('edit_register_modal_')) {
+                    return handleEditRegisterModal.execute(interaction, context);
+                } else if (interaction.customId.startsWith('modal_ban')) {
+                    return handleSubmitBanModal.execute(interaction, context);
+                } 
+
+
             } /* else if (interaction.isChatInputCommand()) {
                 const command = client.commands.get(interaction.commandName);
 
@@ -61,15 +81,7 @@ module.exports = {
                     await handleRoleConfigSelect.execute(interaction, context);
                 }
             
-                
-            // Modais
-            } */ else if (interaction.isModalSubmit()) {
-                if (interaction.customId.startsWith('modal_register')) {
-                    return handleSubmitRegisterModal.execute(interaction, context);
-                } else if (interaction.customId.startsWith('edit_register_modal_')) {
-                    return handleEditRegisterModal.execute(interaction, context);
-                } 
-            }
+            } */
             
 
         } catch (error) { 
