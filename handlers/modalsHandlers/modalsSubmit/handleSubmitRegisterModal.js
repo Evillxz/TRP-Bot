@@ -95,7 +95,7 @@ module.exports = {
         await adminChannel.send({
             components: container,
             flags: MessageFlags.IsComponentsV2,
-            allowedMentions: { parse: [] }
+            allowedMentions: { roles: ['1446226263521104105'] }
         });
 
         await interaction.reply({
