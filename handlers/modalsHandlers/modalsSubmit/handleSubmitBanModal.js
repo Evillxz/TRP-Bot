@@ -14,7 +14,7 @@ module.exports = {
             const reason = interaction.fields.getTextInputValue("reason_text_input_ban");
             const adminId = interaction.user.id;
             const guildId = interaction.guild.id;
-            const logChannelId = '1304465490256596992'
+            const logChannelId = '1296584859963359233'
 
             const gavel = formatEmoji(emojis.static.gavel);
 

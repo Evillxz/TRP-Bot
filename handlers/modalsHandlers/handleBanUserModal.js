@@ -1,5 +1,5 @@
-const { LabelBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, UserSelectMenuBuilder, TextDisplayBuilder } = require('discord.js');
-
+const { LabelBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, UserSelectMenuBuilder, TextDisplayBuilder, formatEmoji } = require('discord.js');
+const emojis = require('../../emojis.json');
 
 module.exports = {
     async execute(interaction) {
@@ -9,7 +9,7 @@ module.exports = {
             .setCustomId("modal_ban")
             .addTextDisplayComponents(
                 new TextDisplayBuilder()
-                .setContent("-# Esta ação ficará registrada no banco de dados!")
+                .setContent(`-# ${formatEmoji(emojis.static.alert)} Esta ação ficará registrada no banco de dados!`)
             )
             .addLabelComponents(
                 new LabelBuilder()
