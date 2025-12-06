@@ -136,7 +136,7 @@ module.exports = {
                             )
                             .addTextDisplayComponents(
                                 new TextDisplayBuilder().setContent(`## ${formatEmoji(emojis.static.capus)} Novo Membro na Área!`),
-                                new TextDisplayBuilder().setContent(`Bem-vindo(a), ${targetUser}!\n\n-# Responsável: ${registerData.recId}`)
+                                new TextDisplayBuilder().setContent(`Bem-vindo(a), ${targetUser}!\n\n-# Responsável: <@${registerData.recId}>`)
                             )
                     )
                     .addSeparatorComponents(
