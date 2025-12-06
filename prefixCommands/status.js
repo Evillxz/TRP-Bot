@@ -63,12 +63,12 @@ module.exports = {
                     )
                     .addTextDisplayComponents(
                         new TextDisplayBuilder().setContent(
-                            `**Latência (Rede)**\n\`\`\`yaml\n (WebSocket: ${ping}ms)  -  (API: ${apiLatency}ms) \n\`\`\`\n`+
-                            `**Memória (Hardware)**\n\`\`\`js\n (RAM Total: ${ramUsed}MB)  -  (Heap: ${ramHeap}MB) \n\`\`\`\n`+
+                            `**Latency (Rede)**\n\`\`\`yaml\n (WebSocket: ${ping}ms)  -  (API: ${apiLatency}ms) \n\`\`\`\n`+
+                            `**Memory (Memória)**\n\`\`\`js\n (RAM Total: ${ramUsed}MB)  -  (Heap: ${ramHeap}MB) \n\`\`\`\n`+
                             `**Uptime (Tempo Ativo)**\n\`\`\`ts\n ${days}d ${hours}h ${minutes}m ${seconds}s \n\`\`\`\n`+
                             `**Servers (Informações Discord)**\n\`\`\`css\n (Servidores: ${guilds})  -  (Usuários: ${users.toLocaleString()}) \n\`\`\`\n`+
                             `**Commands (Comandos)**\n\`\`\`go\n Slash: ${slashCommands} ][ Prefixo: ${prefixCommands} ][ Total: ${slashCommands + prefixCommands} \n\`\`\`\n`+
-                            `**System (Sistema/Versões)**\n\`\`\`js\n Bot: ${packageJson.version} (Beta)  -  Discord.js: v${require('discord.js').version} \n\`\`\``
+                            `**Versions (Versões)**\n\`\`\`js\n Bot: ${packageJson.version} (Beta)  -  Discord.js: v${require('discord.js').version} \n\`\`\``
                         ),
                     )
                     .addSeparatorComponents(
