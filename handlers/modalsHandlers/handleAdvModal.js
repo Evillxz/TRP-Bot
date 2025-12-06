@@ -28,7 +28,7 @@ module.exports = {
                     new TextInputBuilder()
                         .setCustomId("reason_text_input_adv")
                         .setStyle(TextInputStyle.Paragraph)
-                        .setPlaceholder("Digite o motivo da advertência...")
+                        .setPlaceholder("Recomendamos a quebra de linha a cada 50 caracteres...")
                         .setMinLength(10)
                         .setMaxLength(300)
                 )

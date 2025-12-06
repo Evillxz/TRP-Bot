@@ -25,7 +25,7 @@ module.exports = {
                 new ContainerBuilder()
                     .setAccentColor(8064526)
                     .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent("## Cargos Adicionais para o seu Perfil"),
+                        new TextDisplayBuilder().setContent("## Cargos Adicionais para Perfil"),
                     )
                     .addSeparatorComponents(
                         new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large).setDivider(true),
@@ -54,6 +54,7 @@ module.exports = {
                                 new TextDisplayBuilder().setContent("<@&1368800797344796832>"),
                             ),
                     )
+                    /*
                     .addSeparatorComponents(
                         new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large).setDivider(true),
                     )
@@ -132,6 +133,7 @@ module.exports = {
                                 new TextDisplayBuilder().setContent("<@&1446247626923184270>"),
                             ),
                     ),
+                    */
             ];
 
             await message.channel.send({ 
