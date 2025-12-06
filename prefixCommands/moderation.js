@@ -42,7 +42,7 @@ module.exports = {
                                     .setStyle(ButtonStyle.Secondary)
                                     .setLabel("Aplicar")
                                     .setCustomId("open_adv_modal")
-                                    .setDisabled(true)
+                                    .setDisabled(false)
                             )
                             .addTextDisplayComponents(
                                 new TextDisplayBuilder().setContent("**Aplicar Advertência**\nMensagem enviada no canal e via DM (Se disponível)"),
@@ -74,6 +74,7 @@ module.exports = {
                                     .setStyle(ButtonStyle.Danger)
                                     .setLabel("Aplicar")
                                     .setCustomId("open_ban_modal")
+                                    .setDisabled(false)
                             )
                             .addTextDisplayComponents(
                                 new TextDisplayBuilder().setContent("**Exoneração**\nBanimento permanente do Usuário"),

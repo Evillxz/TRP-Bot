@@ -16,6 +16,7 @@ const handleAdvModal = require('../handlers/modalsHandlers/handleAdvModal');
 const handleUpAndRebModal = require('../handlers/modalsHandlers/handleUpAndRebModal');
 const handleBanUserModal = require('../handlers/modalsHandlers/handleBanUserModal');
 const handleSubmitBanModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitBanModal');
+const handleSubmitAdvModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitAdvModal');
 
 module.exports = {
     name: Events.InteractionCreate,
@@ -40,7 +41,7 @@ module.exports = {
                     await handleUpAndRebModal.execute(interaction, context);
                 } else if (interaction.customId === 'open_ban_modal') {
                     await handleBanUserModal.execute(interaction, context);
-                }
+                } 
             
             
             } else if (interaction.isModalSubmit()) {
@@ -50,6 +51,8 @@ module.exports = {
                     return handleEditRegisterModal.execute(interaction, context);
                 } else if (interaction.customId.startsWith('modal_ban')) {
                     return handleSubmitBanModal.execute(interaction, context);
+                } else if (interaction.customId.startsWith('modal_adv')) {
+                    return handleSubmitAdvModal.execute(interaction, context);
                 } 
 
 

@@ -1,12 +1,13 @@
 require('dotenv').config();
 const fs = require('node:fs');
 const path = require('node:path');
-const { Events } = require('discord.js');
+const { Events, MessageFlags, formatEmoji } = require('discord.js');
 const chalk = require('chalk');
 const logger = require('./config/logger');
 const { client } = require('./config/client');
 const emojis = require('./emojis.json');
 const database = require('./database/database');
+const WarningManager = require('./utils/warningManager');
 
 
 setInterval(() => {
@@ -37,7 +38,11 @@ const baseEventHandlerContext = {
     emojis: emojis,
     chalk: chalk,
     logger: logger,
-    database: database
+    database: database,
+    djs: {
+        MessageFlags,
+        formatEmoji
+    }
 };
 
 client.commands = new Map();
@@ -131,6 +136,7 @@ for (const file of eventFiles) {
 }
 
 database.init().then(() => {
+    WarningManager.startMonitoring();
     client.login(process.env.BOT_TOKEN);
 }).catch(err => {
     logger.error('Erro ao inicializar banco de dados:', err);

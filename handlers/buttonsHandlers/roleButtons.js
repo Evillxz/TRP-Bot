@@ -1,6 +1,6 @@
 module.exports = {
     async execute(interaction, context) {
-        const { logger, chalk } = context;
+        const { logger, chalk, djs: { MessageFlags } } = context;
 
         const roleMap = {
             'men_role': '1368800681741516851',
@@ -21,8 +21,11 @@ module.exports = {
 
         if (!role) {
             return await interaction.reply({
-                content: '❌ Cargo não encontrado!',
-                ephemeral: true
+                embeds: [{
+                    description: '✖ Cargo não encontrado!',
+                    color: 0xFF0000
+                }],
+                flags: MessageFlags.Ephemeral
             });
         }
 
@@ -37,8 +40,11 @@ module.exports = {
         } catch (error) {
             logger.error(`${chalk.red.bold('[ERRO]')} Erro ao gerenciar cargo: ${error.stack}`);
             await interaction.reply({
-                content: '❌ Erro ao processar cargo.',
-                ephemeral: true
+                embeds: [{
+                    description: '✖ Erro interno no sistema!',
+                    color: 0xFF0000
+                }],
+                flags: MessageFlags.Ephemeral
             });
         }
     }

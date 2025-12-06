@@ -28,7 +28,7 @@ module.exports = {
                     new TextInputBuilder()
                         .setCustomId("reason_text_input_ban")
                         .setStyle(TextInputStyle.Paragraph)
-                        .setPlaceholder("Recomendamos quebrar a linha a cada 50 caracteres...")
+                        .setPlaceholder("Recomendamos a quebra de linha a cada 50 caracteres...")
                         .setMinLength(10)
                         .setMaxLength(300)
                 )

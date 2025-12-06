@@ -82,7 +82,7 @@ module.exports = {
 
 
         } catch (error) {
-            logger.error(`${chalk.red.bold('[ERRO]')} Erro no comando ban: ${error.stack}`);
+            logger.error(`${chalk.red.bold('[ERRO]')} Erro no sistema de exoneração: ${error.stack}`);
 
             await interaction.editReply({
                 embeds: [{
