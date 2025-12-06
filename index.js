@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('module-alias/register');
 const fs = require('node:fs');
 const path = require('node:path');
 const { Events, MessageFlags, formatEmoji } = require('discord.js');

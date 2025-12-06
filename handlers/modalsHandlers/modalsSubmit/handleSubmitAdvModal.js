@@ -1,5 +1,5 @@
 const { MessageFlags, formatEmoji, ContainerBuilder, TextDisplayBuilder, ThumbnailBuilder, SectionBuilder } = require('discord.js');
-const database = require('../../../database/database');
+const database = require('database');
 
 const WARNING_ROLES = {
     1: '1446613392826564658',

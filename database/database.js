@@ -57,7 +57,21 @@ class Database {
                     expires_at DATETIME,
                     is_active BOOLEAN DEFAULT 1,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )`,
+                `CREATE TABLE IF NOT EXISTS up_reb_logs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    action_type TEXT NOT NULL,
+                    user_id TEXT NOT NULL,
+                    user_tag TEXT NOT NULL,
+                    admin_id TEXT NOT NULL,
+                    admin_tag TEXT NOT NULL,
+                    guild_id TEXT NOT NULL,
+                    old_role_id TEXT NOT NULL,
+                    new_role_id TEXT NOT NULL,
+                    reason TEXT NOT NULL,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                 )`
+
             ];
 
             let completed = 0;
@@ -152,6 +166,42 @@ class Database {
             this.db.run(query, [warningId], function(err) {
                 if (err) reject(err);
                 else resolve(this.changes);
+            });
+        });
+    }
+
+    async addUpRebLog(actionType, userId, userTag, adminId, adminTag, guildId, oldRoleId, newRoleId, reason) {
+        return new Promise((resolve, reject) => {
+            const query = `
+                INSERT INTO up_reb_logs 
+                (action_type, user_id, user_tag, admin_id, admin_tag, guild_id, old_role_id, new_role_id, reason)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `;
+
+            this.db.run(
+                query,
+                [actionType, userId, userTag, adminId, adminTag, guildId, oldRoleId, newRoleId, reason],
+                function(err) {
+                    if (err) reject(err);
+                    else resolve(this.lastID);
+                }
+            );
+        });
+    }
+
+    async getUpRebLogs(guildId, limit = 20) {
+        return new Promise((resolve, reject) => {
+            const query = `
+                SELECT *
+                FROM up_reb_logs
+                WHERE guild_id = ?
+                ORDER BY created_at DESC
+                LIMIT ?
+            `;
+
+            this.db.all(query, [guildId, limit], (err, rows) => {
+                if (err) reject(err);
+                else resolve(rows);
             });
         });
     }

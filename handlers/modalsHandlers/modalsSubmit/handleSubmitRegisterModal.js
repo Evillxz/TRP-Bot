@@ -13,10 +13,12 @@ const {
 
 module.exports = {
     async execute(interaction, context) {
-        const { emojis } = context;
+        const { emojis, logger } = context;
         const nome = interaction.fields.getTextInputValue('nick_text_input');
         const id = interaction.fields.getTextInputValue('id_text_input');
         const idadeValue = interaction.fields.getStringSelectValues('age_select_menu')?.[0];
+        const recId = interaction.fields.getStringSelectValues('rec_select_menu')?.[0];
+
         const idade = idadeValue === 'legal_age_select_menu' ? '+18 anos' : '-18 anos';
         
         const adminChannelId = '1363187296764956802';
@@ -56,7 +58,8 @@ module.exports = {
                     `**Informações:**`+
                     `\n- Nome: \`${nome}\``+
                     `\n- ID: \`${id}\``+
-                    `\n- Idade: \`${idade}\``
+                    `\n- Idade: \`${idade}\``+
+                    `\n- Recrutador: <@${recId}>`
                 ),
             )
             .addSeparatorComponents(
@@ -89,6 +92,7 @@ module.exports = {
             nome,
             id,
             idade,
+            recId,
             userId: interaction.user.id
         });
 
@@ -108,5 +112,4 @@ module.exports = {
             flags: MessageFlags.Ephemeral
         });
     }
-
 };

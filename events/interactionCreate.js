@@ -17,6 +17,7 @@ const handleUpAndRebModal = require('../handlers/modalsHandlers/handleUpAndRebMo
 const handleBanUserModal = require('../handlers/modalsHandlers/handleBanUserModal');
 const handleSubmitBanModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitBanModal');
 const handleSubmitAdvModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitAdvModal');
+const handleSubmitUpRebModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitUpRebModal');
 
 module.exports = {
     name: Events.InteractionCreate,
@@ -53,7 +54,9 @@ module.exports = {
                     return handleSubmitBanModal.execute(interaction, context);
                 } else if (interaction.customId.startsWith('modal_adv')) {
                     return handleSubmitAdvModal.execute(interaction, context);
-                } 
+                } else if (interaction.customId.startsWith('modal_up_and_reb')) {
+                    return handleSubmitUpRebModal.execute(interaction, context);
+                }
 
 
             } /* else if (interaction.isChatInputCommand()) {

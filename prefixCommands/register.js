@@ -45,5 +45,5 @@ module.exports = {
             context.logger.error(`Erro ao executar comando de prefixo 'tempo' para ${message.author.tag}:`, error);
             await message.reply('Ocorreu um erro ao tentar consultar seu tempo.').catch();
         }
-    },
+    }
 };

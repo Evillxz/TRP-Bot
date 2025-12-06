@@ -109,8 +109,9 @@ module.exports = {
                         `\n- Nome: \`${registerData.nome}\``+
                         `\n- ID: \`${registerData.id}\``+
                         `\n- Idade: \`${registerData.idade}\``+
+                        `\n- Recrutador: <@${registerData.recId}>`+
                         `\n\n- Status: **Aprovado**`+
-                        `\n- Responsável: ${interaction.user}`
+                        `\n- Aprovado pelo(a) ${interaction.user}`
                     ),
                 )
             ]
@@ -135,7 +136,7 @@ module.exports = {
                             )
                             .addTextDisplayComponents(
                                 new TextDisplayBuilder().setContent(`## ${formatEmoji(emojis.static.capus)} Novo Membro na Área!`),
-                                new TextDisplayBuilder().setContent(`Bem-vindo(a), ${targetUser}!\n\n-# Responsável: ${interaction.user}`)
+                                new TextDisplayBuilder().setContent(`Bem-vindo(a), ${targetUser}!\n\n-# Responsável: ${registerData.recId}`)
                             )
                     )
                     .addSeparatorComponents(
@@ -218,6 +219,7 @@ module.exports = {
                     `\n- Nome: \`${registerData.nome}\``+
                     `\n- ID: \`${registerData.id}\``+
                     `\n- Idade: \`${registerData.idade}\``+
+                    `\n- Recrutador: <@${registerData.recId}>`+
                     `\n\n- Status: **Cancelado**`+
                     `\n- Responsável: ${interaction.user.toString()}`
                 ),

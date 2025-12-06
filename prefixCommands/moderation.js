@@ -58,7 +58,7 @@ module.exports = {
                                     .setStyle(ButtonStyle.Success)
                                     .setLabel("Aplicar")
                                     .setCustomId("open_up_and_reb_modal")
-                                    .setDisabled(true)
+                                    .setDisabled(false)
                             )
                             .addTextDisplayComponents(
                                 new TextDisplayBuilder().setContent("**Upamento/Rebaixamento de Cargo**\nTroca de cargos e mensagem via canal"),

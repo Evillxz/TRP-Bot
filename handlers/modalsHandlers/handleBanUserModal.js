@@ -1,5 +1,5 @@
 const { LabelBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, UserSelectMenuBuilder, TextDisplayBuilder, formatEmoji } = require('discord.js');
-const emojis = require('../../emojis.json');
+const emojis = require('emojis');
 
 module.exports = {
     async execute(interaction) {

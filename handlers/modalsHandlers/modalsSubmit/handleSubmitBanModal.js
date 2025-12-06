@@ -1,5 +1,5 @@
 const { MessageFlags, formatEmoji, ContainerBuilder, TextDisplayBuilder, ThumbnailBuilder, SectionBuilder } = require('discord.js');
-const database = require('../../../database/database');
+const database = require('database');
 
 module.exports = {
     async execute(interaction, context) {
