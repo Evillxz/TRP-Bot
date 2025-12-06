@@ -60,7 +60,7 @@ async function handleStatusButtons(interaction, { emojis, chalk, logger }) {
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
                         `**Latency (Rede)**\n\`\`\`yaml\n (WebSocket: ${ping}ms)  -  (API: ${apiLatency}ms) \n\`\`\`\n`+
-                        `**Memory (Memória)**\n\`\`\`js\n (RAM Total: ${ramUsed}MB)  -  (Heap: ${ramHeap}MB) \n\`\`\`n`+
+                        `**Memory (Memória)**\n\`\`\`js\n (RAM Total: ${ramUsed}MB)  -  (Heap: ${ramHeap}MB) \n\`\`\`\n`+
                         `**Uptime (Tempo Ativo)**\n\`\`\`ts\n ${days}d ${hours}h ${minutes}m ${seconds}s \n\`\`\`\n`+
                         `**Servers (Informações Discord)**\n\`\`\`css\n (Servidores: ${guilds})  -  (Usuários: ${users.toLocaleString()}) \n\`\`\`\n`+
                         `**Commands (Comandos)**\n\`\`\`go\nSlash: ${slashCommands} ][ Prefixo: ${prefixCommands} ][ Total: ${slashCommands + prefixCommands} \n\`\`\`\n`+
