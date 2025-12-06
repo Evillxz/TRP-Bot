@@ -64,7 +64,7 @@ module.exports = {
                     )
                     .addTextDisplayComponents(
                         new TextDisplayBuilder().setContent(`## Novo Registro Recebido`),
-                        new TextDisplayBuilder().setContent(`-# Usuário: ${targetUser.user}\n-# Tag: **${targetUser.user.tag}**\n-# Data: \`${new Date().toLocaleString()}\``),
+                        new TextDisplayBuilder().setContent(`-# Usuário: ${targetUser.user}\n-# Tag: **${targetUser.user.tag}**\n-# Data: \`${new Date().toLocaleString('pt-BR')}\``),
                     )
             )
             .addSeparatorComponents(

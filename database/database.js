@@ -157,7 +157,6 @@ class Database {
     }
 
     startExpirationCheck() {
-        // Removido - o WarningManager vai gerenciar isso
     }
 }
 

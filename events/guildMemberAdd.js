@@ -60,7 +60,7 @@ module.exports = {
                 const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: 'welcome-image.png' });
 
                 const components = [
-                    new TextDisplayBuilder().setContent(`<@${member.user.id}>`),
+                    new TextDisplayBuilder().setContent(`|| <@${member.user.id}> ||`),
                     new ContainerBuilder()
                         .addMediaGalleryComponents(
                             new MediaGalleryBuilder()

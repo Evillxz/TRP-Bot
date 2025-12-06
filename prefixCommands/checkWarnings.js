@@ -7,11 +7,15 @@ module.exports = {
         const { logger } = context;
         
         if (!message.member.permissions.has('ADMINISTRATOR')) {
-            return message.reply('❌ Você precisa ser administrador para usar este comando.');
+            return message.reply({
+                embeds: [{
+                    description: '✖ Você não tem permissão para usar este comando.',
+                    color: 0xFF0000
+                }]
+            });
         }
 
         try {
-            // Buscar todas as advertências ativas
             const query = `SELECT * FROM warnings WHERE guild_id = ? ORDER BY created_at DESC LIMIT 10`;
             
             const warnings = await new Promise((resolve, reject) => {
@@ -22,7 +26,12 @@ module.exports = {
             });
 
             if (warnings.length === 0) {
-                return message.reply('📋 Nenhuma advertência encontrada no banco.');
+                return message.reply({
+                    embeds: [{
+                        description: '✖ Nenhuma advertência encontrada.',
+                        color: 0xFF0000
+                    }]
+                });
             }
 
             let response = '📋 **Últimas advertências:**\n\n';
