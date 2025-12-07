@@ -91,16 +91,22 @@ module.exports = {
                             .addComponents(
                                 new ButtonBuilder()
                                     .setStyle(ButtonStyle.Secondary)
-                                    .setLabel("Buscar Registros de Usuário")
+                                    .setLabel("Buscar Registros")
                                     .setEmoji({ id: emojis.static.search.id })
                                     .setDisabled(true)
                                     .setCustomId("open_user_records_modal"),
                                 new ButtonBuilder()
                                     .setStyle(ButtonStyle.Secondary)
-                                    .setLabel("Lista dos Exonerados")
+                                    .setLabel("Exonerados")
                                     .setEmoji({ id: emojis.static.ban.id })
                                     .setDisabled(true)
                                     .setCustomId("banned_list"),
+                                new ButtonBuilder()
+                                    .setStyle(ButtonStyle.Secondary)
+                                    .setLabel("Adv's Ativas")
+                                    .setEmoji({ id: emojis.static.toggleOn.id })
+                                    .setDisabled(false)
+                                    .setCustomId("advs_active_list")
                             ),
                     ),
             ];

@@ -18,6 +18,7 @@ const handleBanUserModal = require('../handlers/modalsHandlers/handleBanUserModa
 const handleSubmitBanModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitBanModal');
 const handleSubmitAdvModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitAdvModal');
 const handleSubmitUpRebModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitUpRebModal');
+const advsActiveListButton = require('../handlers/buttonsHandlers/advsActiveListButton');
 
 module.exports = {
     name: Events.InteractionCreate,
@@ -42,6 +43,8 @@ module.exports = {
                     await handleUpAndRebModal.execute(interaction, context);
                 } else if (interaction.customId === 'open_ban_modal') {
                     await handleBanUserModal.execute(interaction, context);
+                } else if (interaction.customId === 'advs_active_list') {
+                    await advsActiveListButton.execute(interaction, context);
                 } 
             
             

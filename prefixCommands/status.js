@@ -81,13 +81,13 @@ module.exports = {
                                     .setStyle(ButtonStyle.Secondary)
                                     .setLabel("Atualizar")
                                     .setEmoji({ id: emojis.static.reloading.id })
-                                    //.setDisabled(true)
+                                    .setDisabled(false)
                                     .setCustomId("refresh_status"),
                                 new ButtonBuilder()
                                     .setStyle(ButtonStyle.Secondary)
                                     .setLabel("Detalhes Avançados")
                                     .setEmoji({ id: emojis.static.advanced.id })
-                                    //.setDisabled(true)
+                                    .setDisabled(false)
                                     .setCustomId("detailed_status"),
                                 new ButtonBuilder()
                                     .setStyle(ButtonStyle.Link)

@@ -337,3 +337,58 @@
 {"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 20:25:20"}
 {"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 20:26:20"}
 {"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 20:30:21"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:00:14"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:08:18"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:26:01"}
+{"level":"error","message":"Erro ao verificar advertências: message is not defined","service":"ponto-bot","stack":"ReferenceError: message is not defined\n    at warnings (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\handlers\\buttonsHandlers\\advsActiveListButton.js:20:41)\n    at new Promise (<anonymous>)\n    at Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\handlers\\buttonsHandlers\\advsActiveListButton.js:19:36)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\events\\interactionCreate.js:47:21)","timestamp":"2025-12-06 23:26:27"}
+{"level":"error","message":"[InteractionCreate ERROR] [Guild: 1292705494737092610] [User: 852175475961888778] --- ERRO NÃO CAPTURADO NO TRY/CATCH PRINCIPAL --- message is not defined","service":"ponto-bot","stack":"ReferenceError: message is not defined\n    at Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\handlers\\buttonsHandlers\\advsActiveListButton.js:67:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\events\\interactionCreate.js:47:21)","timestamp":"2025-12-06 23:26:27"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:27:42"}
+{"level":"error","message":"Erro ao verificar advertências: message is not defined","service":"ponto-bot","stack":"ReferenceError: message is not defined\n    at warnings (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\handlers\\buttonsHandlers\\advsActiveListButton.js:20:41)\n    at new Promise (<anonymous>)\n    at Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\handlers\\buttonsHandlers\\advsActiveListButton.js:19:36)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\events\\interactionCreate.js:47:21)","timestamp":"2025-12-06 23:27:45"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:28:19"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:31:28"}
+{"level":"error","message":"Erro ao verificar advertências: Cannot access 'now' before initialization","service":"ponto-bot","stack":"ReferenceError: Cannot access 'now' before initialization\n    at Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\handlers\\buttonsHandlers\\advsActiveListButton.js:36:58)\n    at async Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\events\\interactionCreate.js:47:21)","timestamp":"2025-12-06 23:31:30"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:31:52"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:32:37"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:36:22"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:37:36"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:38:19"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:41:32"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:41:51"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:42:13"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:42:20"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:44:26"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:44:43"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:44:54"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:48:06"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:48:34"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:49:52"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:50:02"}
+{"level":"error","message":"Erro ao verificar advertências: warning is not defined","service":"ponto-bot","stack":"ReferenceError: warning is not defined\n    at Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\handlers\\buttonsHandlers\\advsActiveListButton.js:41:50)\n    at async Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\events\\interactionCreate.js:47:21)","timestamp":"2025-12-06 23:50:06"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:50:37"}
+{"level":"error","message":"Erro ao verificar advertências: response is not defined","service":"ponto-bot","stack":"ReferenceError: response is not defined\n    at Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\handlers\\buttonsHandlers\\advsActiveListButton.js:66:57)\n    at async Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\events\\interactionCreate.js:47:21)","timestamp":"2025-12-06 23:50:43"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:51:35"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:52:19"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:52:26"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:54:05"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:54:28"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:54:43"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-06 23:56:17"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:01:19"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:02:17"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:04:51"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:07:01"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:09:35"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:10:48"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:12:07"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:14:02"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:16:35"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:19:59"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:23:25"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:44:19"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:45:38"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:47:37"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:49:16"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:49:23"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:50:19"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:51:03"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 00:51:52"}

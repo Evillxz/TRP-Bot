@@ -1,4 +1,14 @@
-const { LabelBuilder, ModalBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextInputBuilder, TextInputStyle, UserSelectMenuBuilder, TextDisplayBuilder } = require('discord.js');
+const { 
+    LabelBuilder, 
+    ModalBuilder, 
+    StringSelectMenuBuilder, 
+    StringSelectMenuOptionBuilder, 
+    TextInputBuilder, 
+    TextInputStyle, 
+    UserSelectMenuBuilder, 
+    TextDisplayBuilder,
+    formatEmoji
+} = require('discord.js');
 const emojis = require('emojis');
 
 module.exports = {
@@ -9,7 +19,7 @@ module.exports = {
             .setCustomId("modal_adv")
             .addTextDisplayComponents(
                 new TextDisplayBuilder()
-                .setContent("-# Esta ação ficará registrada no banco de dados!")
+                .setContent(`-# ${formatEmoji(emojis.static.alert)} Esta ação ficará registrada no banco de dados!`)
             )
             .addLabelComponents(
                 new LabelBuilder()
