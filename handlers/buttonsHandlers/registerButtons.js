@@ -131,38 +131,37 @@ module.exports = {
                     .setAccentColor(0x00FF00)
                     .addSectionComponents(
                         new SectionBuilder()
-                            .setThumbnailAccessory(
-                                new ThumbnailBuilder().setURL(targetUser.user.displayAvatarURL() || '').setDescription('User Avatar')
-                            )
-                            .addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent(`## ${formatEmoji(emojis.static.capus)} Novo Membro na Área!`),
-                                new TextDisplayBuilder().setContent(`Bem-vindo(a), ${targetUser}!\n\n-# Responsável: <@${registerData.recId}>`)
-                            )
+                        .setThumbnailAccessory(
+                            new ThumbnailBuilder().setURL(targetUser.user.displayAvatarURL() || '').setDescription('User Avatar')
+                        )
+                        .addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent(`## ${formatEmoji(emojis.static.capus)} Novo Membro na Área!`),
+                            new TextDisplayBuilder().setContent(`Bem-vindo(a), ${targetUser}!\n\n-# Responsável: <@${registerData.recId}>`)
+                        )
                     )
                     .addSeparatorComponents(
                         new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large).setDivider(true)
                     )
                     .addActionRowComponents(
                         new ActionRowBuilder()
-                            .addComponents(
-                                new ButtonBuilder()
-                                    .setStyle(ButtonStyle.Link)
-                                    .setLabel("Regras TRP")
-                                    .setEmoji({ id: emojis.static.rules.id })
-                                    .setURL('https://discord.com/channels/1295702106195492894/1296584804938022952'),
-                                new ButtonBuilder()
-                                    .setStyle(ButtonStyle.Link)
-                                    .setLabel("Hierarquia")
-                                    .setEmoji({ id: emojis.static.rank.id })
-                                    .setURL('https://discord.com/channels/1295702106195492894/1296584824240210055'),
-                                new ButtonBuilder()
-                                    .setStyle(ButtonStyle.Link)
-                                    .setLabel("Base")
-                                    .setEmoji({ id: emojis.static.home.id })
-                                    .setURL('https://discord.com/channels/1295702106195492894/1296584821740539954')
-                            )
+                        .addComponents(
+                            new ButtonBuilder()
+                                .setStyle(ButtonStyle.Link)
+                                .setLabel("Regras TRP")
+                                .setEmoji({ id: emojis.static.rules.id })
+                                .setURL('https://discord.com/channels/1295702106195492894/1296584804938022952'),
+                            new ButtonBuilder()
+                                .setStyle(ButtonStyle.Link)
+                                .setLabel("Hierarquia")
+                                .setEmoji({ id: emojis.static.rank.id })
+                                .setURL('https://discord.com/channels/1295702106195492894/1296584824240210055'),
+                            new ButtonBuilder()
+                                .setStyle(ButtonStyle.Link)
+                                .setLabel("Base")
+                                .setEmoji({ id: emojis.static.home.id })
+                                .setURL('https://discord.com/channels/1295702106195492894/1296584821740539954')
+                        )
                     )
-                    
                 ];
 
                 await welcomeChannel.send({ 
