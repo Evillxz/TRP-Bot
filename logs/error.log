@@ -400,3 +400,14 @@
 {"level":"error","message":"Erro ao verificar advertências: formatBR is not a function","service":"ponto-bot","stack":"TypeError: formatBR is not a function\n    at C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\handlers\\buttonsHandlers\\advsActiveListButton.js:51:48\n    at Array.forEach (<anonymous>)\n    at Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\handlers\\buttonsHandlers\\advsActiveListButton.js:45:22)\n    at async Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\events\\interactionCreate.js:47:21)","timestamp":"2025-12-07 01:12:17"}
 {"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 01:12:37"}
 {"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 01:14:06"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 10:24:45"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 10:43:28"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 10:43:50"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 10:45:28"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 10:46:01"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 10:47:08"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 11:00:38"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 11:07:06"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 11:07:25"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 11:08:18"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 11:08:33"}

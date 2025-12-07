@@ -10,20 +10,27 @@ const {
 } = require('discord.js');
 const database = require('database');
 
-function formatarDataBR(dateString) {
+function formatarDataBR(dateString, ajustarFuso = true, retornarTimestamp = false) {
     const d = new Date(dateString);
-    const isUTC = dateString.endsWith("Z");
 
-    const dia     = (isUTC ? d.getUTCDate()      : d.getDate()).toString().padStart(2, "0");
-    const mes     = ((isUTC ? d.getUTCMonth()    : d.getMonth()) + 1).toString().padStart(2, "0");
-    const ano     = (isUTC ? d.getUTCFullYear()  : d.getFullYear());
+    if (ajustarFuso) {
+        d.setHours(d.getHours() - 3);
+    }
 
-    const horas   = (isUTC ? d.getUTCHours()     : d.getHours()).toString().padStart(2, "0");
-    const minutos = (isUTC ? d.getUTCMinutes()   : d.getMinutes()).toString().padStart(2, "0");
-    // const segundos= (isUTC ? d.getUTCSeconds()   : d.getSeconds()).toString().padStart(2, "0");
+    if (retornarTimestamp) {
+        return Math.floor(d.getTime() / 1000);
+    }
+
+    const dia = d.getDate().toString().padStart(2, "0");
+    const mes = (d.getMonth() + 1).toString().padStart(2, "0");
+    const ano = d.getFullYear();
+
+    const horas = d.getHours().toString().padStart(2, "0");
+    const minutos = d.getMinutes().toString().padStart(2, "0");
 
     return `${dia}/${mes}/${ano}, ${horas}:${minutos}`;
 }
+
 
 module.exports = {
     async execute(interaction, context) {
@@ -57,15 +64,15 @@ module.exports = {
             
             warnings.forEach(warning => {
 
-                const criadoEm = formatarDataBR(warning.created_at);
-                const expiraEm = warning.expires_at ? formatarDataBR(warning.expires_at) : "Permanente";
+                const criadoEm = formatarDataBR(warning.created_at, true, true);
+                const expiraEm = warning.expires_at ? formatarDataBR(warning.expires_at, false, true) : "Permanente";
 
                 response += ` \` ${warning.id} \`\n\n`;
                 response += `- Status: \` 🟢 Ativa \`\n`;
                 response += `- Usuário: <@${warning.user_id}> **(${warning.user_tag})**\n`;
                 response += `- Responsável: <@${warning.admin_id}>\n`;
-                response += `- Criada em: **${criadoEm}**\n`;
-                response += `- Expira em: **${expiraEm}**\n`;
+                response += `- Criada em <t:${criadoEm}:f>\n`;
+                response += `- Expira <t:${expiraEm}:R>\n`;
                 response += `- Motivo: \` ${warning.reason} \``;
             });
 
