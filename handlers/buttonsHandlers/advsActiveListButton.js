@@ -53,7 +53,7 @@ module.exports = {
             }
 
             const now = new Date().toLocaleString('pt-BR');
-            let response = `### ${emojiOn} Advertência `;
+            let response = `### Advertência `;
             
             warnings.forEach(warning => {
 
@@ -77,7 +77,7 @@ module.exports = {
                         new ThumbnailBuilder().setURL(interaction.guild.iconURL() || '')
                     )
                     .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(`## Advertências Ativasㅤㅤ\nExibindo **Advertências Ativas**`)
+                        new TextDisplayBuilder().setContent(`## ${emojiOn} Advertências Ativasㅤㅤ\nExibindo **Advertências Ativas**`)
                     )
                 )
                 .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large))
