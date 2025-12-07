@@ -15,7 +15,7 @@ module.exports = {
 
         const activitiesCustom = [
             { state: 'Ajustes finais...', type: ActivityType.Custom },
-            { state: 'Previsão de lançamento: 08/12/2025', type: ActivityType.Custom },
+            { state: 'Faça já seu registro!', type: ActivityType.Custom },
         ];
 
         let activityIndex = 0;
