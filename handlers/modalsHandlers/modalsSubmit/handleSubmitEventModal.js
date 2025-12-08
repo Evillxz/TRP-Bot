@@ -13,7 +13,7 @@ module.exports = {
             const id = interaction.fields.getTextInputValue('id_text_input');
             const image = interaction.fields.getUploadedFiles('proof_file_upload').first();
 
-            await database.addEventRegistration(
+            const registrationId = await database.addEventRegistration(
                 interaction.user.id,
                 interaction.user.tag,
                 nick,
@@ -23,7 +23,7 @@ module.exports = {
 
             await interaction.editReply({
                 embeds: [{
-                    description: '✔ Você entrou no evento!',
+                    description: `✔ Você entrou no evento!\n-# Seu Identificador Único: **#${registrationId}**`,
                     color: 0x00FF00
                 }]
             })
