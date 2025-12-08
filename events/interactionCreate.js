@@ -19,6 +19,14 @@ const handleSubmitBanModal = require('../handlers/modalsHandlers/modalsSubmit/ha
 const handleSubmitAdvModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitAdvModal');
 const handleSubmitUpRebModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitUpRebModal');
 const advsActiveListButton = require('../handlers/buttonsHandlers/advsActiveListButton');
+const handleSearchUserModal = require('../handlers/modalsHandlers/handleSearchUserModal');
+const handleSubmitSearchModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitSearchModal');
+const banListButton = require('../handlers/buttonsHandlers/banListButton');
+const handleParticipateModal = require('../handlers/modalsHandlers/handleEventModal');
+const handleSubmitEventModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitEventModal');
+const listEventButton = require('../handlers/buttonsHandlers/listEventButton');
+const handleRemoveUserEventModal = require('../handlers/modalsHandlers/handleRemoveUserEventModal');
+const handleSubmitRemUsEventModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitRemUsEventModal');
 
 module.exports = {
     name: Events.InteractionCreate,
@@ -30,13 +38,16 @@ module.exports = {
 
                 if (interaction.customId === 'open_modal_register') {
                     await handleRegisterModal.execute(interaction, context);
-                } else if (interaction.customId.startsWith('approve_register_') ||  interaction.customId.startsWith('reject_register_') || interaction.customId.startsWith('edit_register_')) {
+                } else if (
+                    interaction.customId.startsWith('approve_register_') 
+                    || interaction.customId.startsWith('reject_register_') 
+                    || interaction.customId.startsWith('edit_register_')
+                ) { 
                     await registerButtons.execute(interaction, context);
                 } else if (interaction.customId === 'refresh_status' || interaction.customId === 'detailed_status') {
                     await handleStatusButtons(interaction, context);
-                } else if (['men_role', 'women_role', 'veteran_role', 'newbie_role', 'random_deletor_role', 'm4_king_role', 'vin_diesel_role', 'playboy_role'].includes(interaction.customId)) {
+                } else if (['men_role', 'women_role'].includes(interaction.customId)) {
                     await roleButtons.execute(interaction, context);
-
                 } else if (interaction.customId === 'open_adv_modal') {
                     await handleAdvModal.execute(interaction, context);
                 } else if (interaction.customId === 'open_up_and_reb_modal') {
@@ -45,6 +56,16 @@ module.exports = {
                     await handleBanUserModal.execute(interaction, context);
                 } else if (interaction.customId === 'advs_active_list') {
                     await advsActiveListButton.execute(interaction, context);
+                } else if (interaction.customId === 'open_user_records_modal') {
+                    await handleSearchUserModal.execute(interaction, context);
+                } else if (interaction.customId === 'banned_list') {
+                    await banListButton.execute(interaction, context);
+                } else if (interaction.customId === 'open_modal_event') {
+                    await handleParticipateModal.execute(interaction, context);
+                } else if (interaction.customId === 'participants_list') {
+                    await listEventButton.execute(interaction, context);
+                } else if (interaction.customId === 'open_modal_remove_user_event') {
+                    await handleRemoveUserEventModal.execute(interaction, context);
                 } 
             
             
@@ -59,7 +80,13 @@ module.exports = {
                     return handleSubmitAdvModal.execute(interaction, context);
                 } else if (interaction.customId.startsWith('modal_up_and_reb')) {
                     return handleSubmitUpRebModal.execute(interaction, context);
-                }
+                } else if (interaction.customId.startsWith('modal_search_register')) {
+                    return handleSubmitSearchModal.execute(interaction, context);
+                } else if (interaction.customId.startsWith('modal_event')) {
+                    return handleSubmitEventModal.execute(interaction, context);
+                } else if (interaction.customId.startsWith('modal_remove_user_event')) {
+                    return handleSubmitRemUsEventModal.execute(interaction, context);
+                } 
 
 
             } /* else if (interaction.isChatInputCommand()) {

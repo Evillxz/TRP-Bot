@@ -83,7 +83,7 @@ module.exports = {
                 
                 const container = [
                     new ContainerBuilder()
-                    .setAccentColor(0xFFAA00)
+                    .setAccentColor(0xff7b00)
                     .addSectionComponents(
                         new SectionBuilder()
                             .setThumbnailAccessory(

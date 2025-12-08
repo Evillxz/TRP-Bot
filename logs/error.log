@@ -411,3 +411,72 @@
 {"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 11:07:25"}
 {"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 11:08:18"}
 {"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 11:08:33"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 12:07:08"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 12:08:10"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 13:54:43"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 14:08:27"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 14:47:37"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 14:48:59"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 15:05:06"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 15:09:18"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 15:17:25"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 15:18:39"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 15:19:10"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 15:19:40"}
+{"date":"Sun Dec 07 2025 15:24:23 GMT-0300 (Horário Padrão de Brasília)","error":{"code":"UND_ERR_CONNECT_TIMEOUT","name":"ConnectTimeoutError"},"level":"error","message":"unhandledRejection: Connect Timeout Error (attempted addresses: 162.159.137.232:443, 162.159.135.232:443, 162.159.138.232:443, 162.159.136.232:443, 162.159.128.233:443, timeout: 10000ms)\nConnectTimeoutError: Connect Timeout Error (attempted addresses: 162.159.137.232:443, 162.159.135.232:443, 162.159.138.232:443, 162.159.136.232:443, 162.159.128.233:443, timeout: 10000ms)\n    at onConnectTimeout (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\node_modules\\undici\\lib\\core\\connect.js:237:24)\n    at Immediate._onImmediate (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\node_modules\\undici\\lib\\core\\connect.js:188:35)\n    at process.processImmediate (node:internal/timers:485:21)","os":{"loadavg":[0,0,0],"uptime":677936.671},"process":{"argv":["C:\\nvm4w\\nodejs\\node.exe","C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\index.js"],"cwd":"C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders","execPath":"C:\\nvm4w\\nodejs\\node.exe","gid":null,"memoryUsage":{"arrayBuffers":116349,"external":3728202,"heapTotal":22077440,"heapUsed":19666720,"rss":80392192},"pid":20720,"uid":null,"version":"v22.18.0"},"rejection":true,"service":"ponto-bot","stack":"ConnectTimeoutError: Connect Timeout Error (attempted addresses: 162.159.137.232:443, 162.159.135.232:443, 162.159.138.232:443, 162.159.136.232:443, 162.159.128.233:443, timeout: 10000ms)\n    at onConnectTimeout (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\node_modules\\undici\\lib\\core\\connect.js:237:24)\n    at Immediate._onImmediate (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\node_modules\\undici\\lib\\core\\connect.js:188:35)\n    at process.processImmediate (node:internal/timers:485:21)","timestamp":"2025-12-07 15:24:23","trace":[{"column":24,"file":"C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\node_modules\\undici\\lib\\core\\connect.js","function":"onConnectTimeout","line":237,"method":null,"native":false},{"column":35,"file":"C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\node_modules\\undici\\lib\\core\\connect.js","function":"Immediate._onImmediate","line":188,"method":"_onImmediate","native":false},{"column":21,"file":"node:internal/timers","function":"process.processImmediate","line":485,"method":"processImmediate","native":false}]}
+{"level":"error","message":"--- UNHANDLED REJECTION ---","service":"ponto-bot","timestamp":"2025-12-07 15:24:23"}
+{"level":"error","message":"Mensagem: Connect Timeout Error (attempted addresses: 162.159.137.232:443, 162.159.135.232:443, 162.159.138.232:443, 162.159.136.232:443, 162.159.128.233:443, timeout: 10000ms)","service":"ponto-bot","timestamp":"2025-12-07 15:24:23"}
+{"level":"error","message":"Stack: ConnectTimeoutError: Connect Timeout Error (attempted addresses: 162.159.137.232:443, 162.159.135.232:443, 162.159.138.232:443, 162.159.136.232:443, 162.159.128.233:443, timeout: 10000ms)\n    at onConnectTimeout (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\node_modules\\undici\\lib\\core\\connect.js:237:24)\n    at Immediate._onImmediate (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\node_modules\\undici\\lib\\core\\connect.js:188:35)\n    at process.processImmediate (node:internal/timers:485:21)","service":"ponto-bot","timestamp":"2025-12-07 15:24:23"}
+{"level":"error","message":"-------------------------","service":"ponto-bot","timestamp":"2025-12-07 15:24:23"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 15:24:52"}
+{"errors":[{"given":"#fbff00","message":"Unknown validation error occurred.","name":"Error","validator":"s.nullish()"},{"given":"#fbff00","message":"Unknown validation error occurred.","name":"Error","validator":"s.number()"},{"given":"#fbff00","message":"Unknown validation error occurred.","name":"Error","validator":"s.tuple(T)"}],"level":"error","message":"Erro ao buscar registros: Received one or more errors","service":"ponto-bot","stack":"Error: Received one or more errors\n    at _UnionValidator.handle (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\node_modules\\@sapphire\\shapeshift\\dist\\cjs\\index.cjs:1965:23)\n    at _UnionValidator.parse (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\node_modules\\@sapphire\\shapeshift\\dist\\cjs\\index.cjs:972:90)\n    at ContainerBuilder.setAccentColor (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\node_modules\\@discordjs\\builders\\dist\\index.js:2129:29)\n    at Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\handlers\\modalsHandlers\\modalsSubmit\\handleSubmitSearchModal.js:134:18)","timestamp":"2025-12-07 15:25:04"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 15:26:58"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 15:28:40"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 15:29:45"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 15:40:37"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 15:41:47"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 15:43:25"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 15:49:34"}
+{"level":"warn","message":"Canal de boas-vindas não encontrado. Verifique o ID.","service":"ponto-bot","timestamp":"2025-12-07 15:50:35"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 16:12:20"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 16:14:23"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 19:17:52"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 19:19:32"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 19:20:40"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 19:21:54"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 19:22:57"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 19:24:07"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 19:26:18"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 19:29:18"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 19:31:07"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 19:33:29"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 22:25:03"}
+{"level":"error","message":"\u001b[31m\u001b[1m[ERRO]\u001b[22m\u001b[39m Erro no comando status: ReferenceError: MediaGalleryItemBuilder is not defined\n    at Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\prefixCommands\\eventEnter.js:31:33)\n    at Client.<anonymous> (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\index.js:112:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)","service":"ponto-bot","timestamp":"2025-12-07 22:25:19"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 22:26:42"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 22:27:05"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 22:27:21"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 22:48:50"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:06:30"}
+{"level":"error","message":"\u001b[31m\u001b[1m[ERRO]\u001b[22m\u001b[39m Erro no comando status: ReferenceError: ActionRowBuilder is not defined\n    at Object.execute (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\prefixCommands\\panelEvent.js:34:25)\n    at Client.<anonymous> (C:\\Users\\lauan\\Documents\\Projetos VSCode\\Peaky Blinders\\index.js:112:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)","service":"ponto-bot","timestamp":"2025-12-07 23:06:48"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:07:10"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:14:50"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:15:24"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:17:29"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:18:03"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:18:54"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:22:33"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:23:51"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:24:38"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:25:18"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:27:34"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:34:59"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:47:59"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:50:07"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:50:58"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:51:53"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:52:26"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:56:12"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-07 23:59:50"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-08 00:00:24"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-08 00:01:20"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-08 00:04:27"}

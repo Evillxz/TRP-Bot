@@ -144,7 +144,12 @@ module.exports = {
 
         } catch (error) {
             logger.error(`${chalk.red.bold('[ERRO]')} Erro no comando status: ${error.stack}`);
-            await message.reply('❌ Ocorreu um erro ao obter as informações do bot.');
+            await message.reply({
+                embeds: [{
+                    description: '✖ Ocorreu um erro ao executar o comando.',
+                    color: 0xFF0000
+                }]
+            });
         }
     }
 };

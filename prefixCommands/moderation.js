@@ -93,13 +93,13 @@ module.exports = {
                                     .setStyle(ButtonStyle.Secondary)
                                     .setLabel("Buscar Registros")
                                     .setEmoji({ id: emojis.static.search.id })
-                                    .setDisabled(true)
+                                    .setDisabled(false)
                                     .setCustomId("open_user_records_modal"),
                                 new ButtonBuilder()
                                     .setStyle(ButtonStyle.Secondary)
                                     .setLabel("Exonerados")
                                     .setEmoji({ id: emojis.static.ban.id })
-                                    .setDisabled(true)
+                                    .setDisabled(false)
                                     .setCustomId("banned_list"),
                                 new ButtonBuilder()
                                     .setStyle(ButtonStyle.Secondary)
@@ -120,7 +120,12 @@ module.exports = {
 
         } catch (error) {
             logger.error(`${chalk.red.bold('[ERRO]')} Erro no comando status: ${error.stack}`);
-            await message.reply('❌ Ocorreu um erro ao obter as informações do bot.');
+            await message.reply({
+                embeds: [{
+                    description: '✖ Ocorreu um erro ao executar o comando.',
+                    color: 0xFF0000
+                }]
+            });
         }
     }
 };

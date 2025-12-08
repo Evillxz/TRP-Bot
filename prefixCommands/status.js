@@ -68,7 +68,7 @@ module.exports = {
                             `**Uptime (Tempo Ativo)**\n\`\`\`ts\n ${days}d ${hours}h ${minutes}m ${seconds}s \n\`\`\`\n`+
                             `**Servers (Informações Discord)**\n\`\`\`css\n (Servidores: ${guilds})  -  (Usuários: ${users.toLocaleString()}) \n\`\`\`\n`+
                             `**Commands (Comandos)**\n\`\`\`go\n Slash: ${slashCommands} ][ Prefixo: ${prefixCommands} ][ Total: ${slashCommands + prefixCommands} \n\`\`\`\n`+
-                            `**Versions (Versões)**\n\`\`\`js\n Bot: ${packageJson.version} (Beta)  -  Discord.js: v${require('discord.js').version} \n\`\`\``
+                            `**Versions (Versões)**\n\`\`\`js\n Bot: ${packageJson.version}  -  Discord.js: v${require('discord.js').version} \n\`\`\``
                         ),
                     )
                     .addSeparatorComponents(

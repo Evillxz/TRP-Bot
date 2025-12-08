@@ -70,6 +70,15 @@ class Database {
                     new_role_id TEXT NOT NULL,
                     reason TEXT NOT NULL,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )`,
+                `CREATE TABLE IF NOT EXISTS event_registrations (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    discord_id TEXT NOT NULL,
+                    discord_tag TEXT NOT NULL,
+                    game_nick TEXT NOT NULL,
+                    game_id TEXT NOT NULL,
+                    proof_url TEXT NOT NULL,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                 )`
 
             ];
@@ -121,6 +130,16 @@ class Database {
     async getActiveWarnings(userId, guildId) {
         return new Promise((resolve, reject) => {
             const query = `SELECT * FROM warnings WHERE user_id = ? AND guild_id = ? AND is_active = 1 ORDER BY created_at DESC`;
+            this.db.all(query, [userId, guildId], (err, rows) => {
+                if (err) reject(err);
+                else resolve(rows);
+            });
+        });
+    }
+
+    async getAllWarnings(userId, guildId) {
+        return new Promise((resolve, reject) => {
+            const query = `SELECT * FROM warnings WHERE user_id = ? AND guild_id = ? ORDER BY created_at DESC`;
             this.db.all(query, [userId, guildId], (err, rows) => {
                 if (err) reject(err);
                 else resolve(rows);
@@ -202,6 +221,46 @@ class Database {
             this.db.all(query, [guildId, limit], (err, rows) => {
                 if (err) reject(err);
                 else resolve(rows);
+            });
+        });
+    }
+
+    async isUserRegisteredInEvent(discordId) {
+        return new Promise((resolve, reject) => {
+            const query = `SELECT id FROM event_registrations WHERE discord_id = ? LIMIT 1`;
+            this.db.get(query, [discordId], (err, row) => {
+                if (err) reject(err);
+                else resolve(!!row);
+            });
+        });
+    }
+
+    async getEventRegistrations() {
+        return new Promise((resolve, reject) => {
+            const query = `SELECT id, game_nick, game_id, proof_url FROM event_registrations ORDER BY created_at ASC`;
+            this.db.all(query, [], (err, rows) => {
+                if (err) reject(err);
+                else resolve(rows);
+            });
+        });
+    }
+
+    async addEventRegistration(discordId, discordTag, gameNick, gameId, proofUrl) {
+        return new Promise((resolve, reject) => {
+            const query = `INSERT INTO event_registrations (discord_id, discord_tag, game_nick, game_id, proof_url) VALUES (?, ?, ?, ?, ?)`;
+            this.db.run(query, [discordId, discordTag, gameNick, gameId, proofUrl], function(err) {
+                if (err) reject(err);
+                else resolve(this.lastID);
+            });
+        });
+    }
+
+    async removeEventRegistration(id) {
+        return new Promise((resolve, reject) => {
+            const query = `DELETE FROM event_registrations WHERE id = ?`;
+            this.db.run(query, [id], function(err) {
+                if (err) reject(err);
+                else resolve(this.changes > 0);
             });
         });
     }
