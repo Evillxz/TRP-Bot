@@ -1,7 +1,19 @@
-const { ModalBuilder, LabelBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
+const { ModalBuilder, LabelBuilder, TextInputBuilder, TextInputStyle, MessageFlags } = require('discord.js');
 
 module.exports = {
     async execute(interaction) {
+        const member = interaction.member;
+        const hasPermissionRole = member.roles.cache.has('1447573012160450611');
+        
+        if (!hasPermissionRole) {
+            return await interaction.reply({
+                embeds: [{
+                    description: '✖ Você não tem permissão para executar esta ação!',
+                    color: 0xFF0000
+                }],
+                flags: MessageFlags.Ephemeral
+            });
+        }
 
         const modal = new ModalBuilder()
         .setTitle("Buscar Usuário")

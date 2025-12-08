@@ -1418,3 +1418,19 @@
 {"level":"info","message":"\u001b[32m\u001b[1m[WARNING MANAGER]\u001b[22m\u001b[39m Sistema de monitoramento de advertências iniciado!","service":"ponto-bot","timestamp":"2025-12-08 00:04:25"}
 {"level":"info","message":"\u001b[32m\u001b[1m[READY]\u001b[22m\u001b[39m Conectado ao Discord | Bot está online como Test System#1124!","service":"ponto-bot","timestamp":"2025-12-08 00:04:27"}
 {"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-08 00:04:27"}
+{"level":"info","message":"\u001b[33m\u001b[1m[MONITORAMENTO]\u001b[22m\u001b[39m RAM: 82.74 MB | Servidores: 2 }","service":"ponto-bot","timestamp":"2025-12-08 00:19:25"}
+{"level":"info","message":"\u001b[33m\u001b[1m[MONITORAMENTO]\u001b[22m\u001b[39m RAM: 83.11 MB | Servidores: 2 }","service":"ponto-bot","timestamp":"2025-12-08 00:34:25"}
+{"level":"info","message":"\u001b[32m\u001b[1m[DATABASE]\u001b[22m\u001b[39m Conectado ao banco de dados!","service":"ponto-bot","timestamp":"2025-12-08 10:11:54"}
+{"level":"info","message":"\u001b[32m\u001b[1m[WARNING MANAGER]\u001b[22m\u001b[39m Sistema de monitoramento de advertências iniciado!","service":"ponto-bot","timestamp":"2025-12-08 10:11:54"}
+{"level":"info","message":"\u001b[32m\u001b[1m[READY]\u001b[22m\u001b[39m Conectado ao Discord | Bot está online como Test System#1124!","service":"ponto-bot","timestamp":"2025-12-08 10:11:56"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-08 10:11:56"}
+{"level":"info","message":"\u001b[32m\u001b[1m[DATABASE]\u001b[22m\u001b[39m Conectado ao banco de dados!","service":"ponto-bot","timestamp":"2025-12-08 10:13:32"}
+{"level":"info","message":"\u001b[32m\u001b[1m[WARNING MANAGER]\u001b[22m\u001b[39m Sistema de monitoramento de advertências iniciado!","service":"ponto-bot","timestamp":"2025-12-08 10:13:32"}
+{"level":"info","message":"\u001b[32m\u001b[1m[READY]\u001b[22m\u001b[39m Conectado ao Discord | Bot está online como Test System#1124!","service":"ponto-bot","timestamp":"2025-12-08 10:13:34"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-08 10:13:34"}
+{"level":"info","message":"\u001b[32m\u001b[1m[STATUS]\u001b[22m\u001b[39m Comando executado por marcos_apenas. em TDB • Testes de bots","service":"ponto-bot","timestamp":"2025-12-08 10:13:38"}
+{"level":"info","message":"\u001b[32m\u001b[1m[STATUS]\u001b[22m\u001b[39m Comando executado por marcos_apenas. em TDB • Testes de bots","service":"ponto-bot","timestamp":"2025-12-08 10:14:11"}
+{"level":"info","message":"\u001b[32m\u001b[1m[DATABASE]\u001b[22m\u001b[39m Conectado ao banco de dados!","service":"ponto-bot","timestamp":"2025-12-08 10:14:56"}
+{"level":"info","message":"\u001b[32m\u001b[1m[WARNING MANAGER]\u001b[22m\u001b[39m Sistema de monitoramento de advertências iniciado!","service":"ponto-bot","timestamp":"2025-12-08 10:14:56"}
+{"level":"info","message":"\u001b[32m\u001b[1m[READY]\u001b[22m\u001b[39m Conectado ao Discord | Bot está online como Test System#1124!","service":"ponto-bot","timestamp":"2025-12-08 10:14:58"}
+{"level":"warn","message":"Nenhum comando encontrado para registrar.","service":"ponto-bot","timestamp":"2025-12-08 10:14:58"}

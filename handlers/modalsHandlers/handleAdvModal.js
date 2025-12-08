@@ -7,12 +7,25 @@ const {
     TextInputStyle, 
     UserSelectMenuBuilder, 
     TextDisplayBuilder,
-    formatEmoji
+    formatEmoji,
+    MessageFlags
 } = require('discord.js');
 const emojis = require('emojis');
 
 module.exports = {
     async execute(interaction) {
+        const member = interaction.member;
+        const hasPermissionRole = member.roles.cache.has('1447573423600435240');
+        
+        if (!hasPermissionRole) {
+            return await interaction.reply({
+                embeds: [{
+                    description: '✖ Você não tem permissão para executar esta ação!',
+                    color: 0xFF0000
+                }],
+                flags: MessageFlags.Ephemeral
+            });
+        }
 
         const modal = new ModalBuilder()
             .setTitle("Aplicar Advertência")

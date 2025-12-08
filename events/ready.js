@@ -17,7 +17,7 @@ module.exports = {
         const activitiesCustom = [
             { state: 'Evento On! Participe Já!', type: ActivityType.Custom },
             { state: 'Faça já seu registro!', type: ActivityType.Custom },
-            { state: `Versão ${packageJson.version}`, type: ActivityType.Custom },
+            { state: `${packageJson.version} (Stable Version)`, type: ActivityType.Custom },
             { state: 'Shard 0 (Nano Banana)', type: ActivityType.Custom },
         ];
 

@@ -103,6 +103,8 @@ module.exports = {
                 allowedMentions: { parse: [] } 
             });
 
+            await message.delete()
+
             logger.info(`${chalk.green.bold('[STATUS]')} Comando executado por ${message.author.tag} em ${message.guild?.name || 'DM'}`);
 
         } catch (error) {

@@ -1,8 +1,20 @@
-const { LabelBuilder, ModalBuilder, RoleSelectMenuBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextInputBuilder, TextInputStyle, UserSelectMenuBuilder } = require('discord.js');
+const { LabelBuilder, ModalBuilder, RoleSelectMenuBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextInputBuilder, TextInputStyle, UserSelectMenuBuilder, MessageFlags } = require('discord.js');
 const emojis = require('emojis');
 
 module.exports = {
     async execute(interaction) {
+        const member = interaction.member;
+        const hasPermissionRole = member.roles.cache.has('1447573939365871656');
+        
+        if (!hasPermissionRole) {
+            return await interaction.reply({
+                embeds: [{
+                    description: '✖ Você não tem permissão para executar esta ação!',
+                    color: 0xFF0000
+                }],
+                flags: MessageFlags.Ephemeral
+            });
+        }
 
         const modal = new ModalBuilder()
             .setTitle("Upar/Rebaixar Usuário(a)")

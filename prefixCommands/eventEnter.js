@@ -57,6 +57,8 @@ module.exports = {
                 flags: MessageFlags.IsComponentsV2
             });
 
+            await message.delete()
+
         } catch (error) {
             logger.error(`${chalk.red.bold('[ERRO]')} Erro no comando status: ${error.stack}`);
             await message.reply({

@@ -35,7 +35,6 @@ module.exports = {
             await message.channel.sendTyping();
 
             await handle.execute(mockInteraction, context);
-
             
             if (message.deletable) {
                 message.delete().catch(err => context.logger.warn(`Não foi possível deletar mensagem: ${err.message}`));

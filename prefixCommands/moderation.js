@@ -118,6 +118,8 @@ module.exports = {
                 allowedMentions: { parse: [] } 
             });
 
+            await message.delete()
+
         } catch (error) {
             logger.error(`${chalk.red.bold('[ERRO]')} Erro no comando status: ${error.stack}`);
             await message.reply({

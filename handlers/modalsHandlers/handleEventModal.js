@@ -3,16 +3,21 @@ const database = require('database');
 
 module.exports = {
     async execute(interaction) {
-        const isRegistered = await database.isUserRegisteredInEvent(interaction.user.id);
+        const member = interaction.member;
+        const hasOrganizerRole = member.roles.cache.has('1447573012160450611');
         
-        if (isRegistered) {
-            return await interaction.reply({
-                embeds: [{
-                    description: '✖ Você já está registrado no evento!',
-                    color: 0xFF0000
-                }],
-                flags: MessageFlags.Ephemeral
-            });
+        if (!hasOrganizerRole) {
+            const isRegistered = await database.isUserRegisteredInEvent(interaction.user.id);
+            
+            if (isRegistered) {
+                return await interaction.reply({
+                    embeds: [{
+                        description: '✖ Você já está registrado no evento!',
+                        color: 0xFF0000
+                    }],
+                    flags: MessageFlags.Ephemeral
+                });
+            }
         }
 
         const modal = new ModalBuilder()
