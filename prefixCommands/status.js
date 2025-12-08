@@ -11,7 +11,7 @@ const {
     MessageFlags
 } = require('discord.js');
 const packageJson = require('../package.json');
-const emojis = require('../emojis.json');
+const emojis = require('emojis');
 
 module.exports = {
     name: 'status',

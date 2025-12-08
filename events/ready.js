@@ -1,4 +1,5 @@
 const { Events, ActivityType } = require('discord.js');
+const packageJson = require('../package.json');
 
 module.exports = {
     name: Events.ClientReady,
@@ -11,11 +12,13 @@ module.exports = {
             await client.loadActiveSessions(context);
         }
 
-        client.user.setStatus('idle');
+        client.user.setStatus('online');
 
         const activitiesCustom = [
-            { state: 'Ajustes finais...', type: ActivityType.Custom },
+            { state: 'Evento On! Participe Já!', type: ActivityType.Custom },
             { state: 'Faça já seu registro!', type: ActivityType.Custom },
+            { state: `Versão ${packageJson.version}`, type: ActivityType.Custom },
+            { state: 'Shard 0 (Nano Banana)', type: ActivityType.Custom },
         ];
 
         let activityIndex = 0;
