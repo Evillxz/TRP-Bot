@@ -36,7 +36,7 @@ module.exports = {
                 )
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(registrations.map((reg, index) => 
-                        `### ${index + 1} - ${reg.game_nick}\n- ID (RG): **${reg.game_id}**\n- Identificador Único: **${reg.id}**\n- Prova: [Ver Prova](${reg.proof_url})`).join('\n')
+                        `### ${index + 1} - ${reg.game_nick} (${reg.game_id})\n- Identificador Único: **${reg.id}**\n- Prova: [Ver Prova](${reg.proof_url})`).join('\n')
                     )
                 )
             ]
