@@ -78,6 +78,7 @@ module.exports = {
                     }],
                     flags: MessageFlags.Ephemeral
                 });
+                await message.delete();
             } else {
                 const track = res.tracks[0];
                 player.queue.add(track);

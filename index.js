@@ -36,10 +36,13 @@ client.manager.shoukaku
 
 client.manager
     .on('playerStart', async (player, track) => {
-        const channel = client.channels.cache.get(player.textChannelId);
-        if (channel) {
-            const requester = track.requester || null;
-            await musicPanelManager.createOrUpdatePanel(player, channel, requester);
+        const panelData = musicPanelManager.getPanel(player.guildId);
+        if (panelData) {
+            const channel = await client.channels.fetch(panelData.channelId).catch(() => null);
+            if (channel) {
+                const requester = track.requester || null;
+                await musicPanelManager.createOrUpdatePanel(player, channel, requester);
+            }
         }
     })
     .on('playerEnd', async (player, track) => {
@@ -50,19 +53,16 @@ client.manager
         } else if (repeatMode === 2 && track) {
             player.queue.add(track);
         }
-        
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        if (player.queue.size === 0) {
-            const panelData = musicPanelManager.getPanel(player.guildId);
-            if (panelData) {
-                const savedChannel = await client.channels.fetch(panelData.channelId).catch(() => null);
-                if (savedChannel) {
-                    await musicPanelManager.deletePanel(player.guildId, savedChannel, 'ended');
-                }
+    })
+    .on('playerEmpty', async (player) => {
+        const panelData = musicPanelManager.getPanel(player.guildId);
+        if (panelData) {
+            const savedChannel = await client.channels.fetch(panelData.channelId).catch(() => null);
+            if (savedChannel) {
+                await musicPanelManager.deletePanel(player.guildId, savedChannel, 'ended');
             }
-            player.destroy();
         }
+        player.destroy();
     });
 
 
