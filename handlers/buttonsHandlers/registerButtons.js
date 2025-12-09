@@ -16,7 +16,10 @@ const emojis = require('emojis');
 
 module.exports = {
     async execute(interaction, context) {
-        const [action, userId] = interaction.customId.split('_');
+        // a
+        const parts = interaction.customId.split('_');
+        const action = parts[0];
+        const userId = parts[2];
         
         const requiredRoleId = '1446226263521104105';
         if (!interaction.member.roles.cache.has(requiredRoleId)) {
