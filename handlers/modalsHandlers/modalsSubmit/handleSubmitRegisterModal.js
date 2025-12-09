@@ -13,7 +13,7 @@ const {
 
 module.exports = {
     async execute(interaction, context) {
-        const { emojis, logger } = context;
+        const { emojis } = context;
         const nome = interaction.fields.getTextInputValue('nick_text_input');
         const id = interaction.fields.getTextInputValue('id_text_input');
         const idadeValue = interaction.fields.getStringSelectValues('age_select_menu')?.[0];

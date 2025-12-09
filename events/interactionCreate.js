@@ -27,6 +27,7 @@ const handleSubmitEventModal = require('../handlers/modalsHandlers/modalsSubmit/
 const listEventButton = require('../handlers/buttonsHandlers/listEventButton');
 const handleRemoveUserEventModal = require('../handlers/modalsHandlers/handleRemoveUserEventModal');
 const handleSubmitRemUsEventModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitRemUsEventModal');
+const musicButtons = require('../handlers/buttonsHandlers/musicButtons');
 
 module.exports = {
     name: Events.InteractionCreate,
@@ -66,6 +67,8 @@ module.exports = {
                     await listEventButton.execute(interaction, context);
                 } else if (interaction.customId === 'open_modal_remove_user_event') {
                     await handleRemoveUserEventModal.execute(interaction, context);
+                } else if (interaction.customId.startsWith('music_')) {
+                    await musicButtons.execute(interaction, context);
                 } 
             
             
