@@ -21,8 +21,8 @@ module.exports = {
         const availabilityRoles = interaction.fields.getStringSelectValues('availability_select_menu');
         const recId = interaction.fields.getStringSelectValues('rec_select_menu')?.[0];
         
-        // const adminChannelId = '1363187296764956802';
-        const adminChannelId = '1304465490256596992';
+        const adminChannelId = '1363187296764956802';
+        // const adminChannelId = '1304465490256596992';
         const adminChannel = interaction.guild.channels.cache.get(adminChannelId);
 
         const roles = availabilityRoles.map(id => `<@&${id}>`).join('\u200b');
