@@ -13,7 +13,7 @@ const database = require('database');
 module.exports = {
     async execute(interaction) {
 
-        const register = await database.getRegister(userId, guildId);
+        const register = await database.getRegister(interaction.user.id, interaction.guild.id);
         if (register) {
             return await interaction.reply({
                 embeds: [
