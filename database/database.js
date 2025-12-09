@@ -79,6 +79,20 @@ class Database {
                     game_id TEXT NOT NULL,
                     proof_url TEXT NOT NULL,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )`,
+                `CREATE TABLE IF NOT EXISTS register (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_name TEXT NOT NULL,
+                    user_discord_name,
+                    user_id TEXT NOT NULL,
+                    user_game_id TEXT NOT NULL,
+                    user_telephone TEXT NOT NULL,
+                    user_shift TEXT NOT NULL,
+                    rec_id TEXT NOT NULL,
+                    approver_id TEXT NOT NULL,
+                    approver_tag TEXT NOT NULL,
+                    guild_id TEXT NOT NULL,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                 )`
 
             ];
@@ -90,6 +104,16 @@ class Database {
                     completed++;
                     if (completed === queries.length) resolve();
                 });
+            });
+        });
+    }
+
+    async addRegister(userName, userTag, userId, userRg, userPhone, userShift, recId, approverId, approverTag, guildId) {
+        return new Promise((resolve, reject) => {
+            const query = `INSERT INTO register (user_name, user_discord_name, user_id, user_game_id, user_telephone, user_shift, rec_id, approver_id, approver_tag, guild_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+            this.db.run(query, [userName, userTag, userId, userRg, userPhone, userShift, recId, approverId, approverTag, guildId], function(err) {
+                if (err) reject(err);
+                else resolve(this.lastID);
             });
         });
     }

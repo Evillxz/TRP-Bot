@@ -11,9 +11,10 @@ const {
     ButtonStyle,
     formatEmoji
 } = require('discord.js');
+const database = require('database');
+const emojis = require('emojis');
 
 module.exports = {
-
     async execute(interaction, context) {
         const [action, , userId] = interaction.customId.split('_');
         
@@ -119,13 +120,26 @@ module.exports = {
                         `\n- Aprovado pelo(a) ${interaction.user}`
                     ),
                 )
-            ]
+            ];
 
             await interaction.update({
                 components: container,
                 flags: MessageFlags.IsComponentsV2,
                 allowedMentions: { parse: [] }
             });
+
+            await database.addRegister(
+                registerData.name, 
+                targetUser.tag, 
+                targetUser.id, 
+                registerData.id, 
+                registerData.telephone, 
+                registerData.availabilityRoles, 
+                registerData.recId, 
+                interaction.user.id, 
+                interaction.user.tag, 
+                interaction.guild.id
+            );
 
             const welcomeChannelId = '1368788175148810302';
             const welcomeChannel = interaction.guild.channels.cache.get(welcomeChannelId);
@@ -224,7 +238,7 @@ module.exports = {
                     `\n- Nome: \`${registerData.name}\``+
                     `\n- ID: \`${registerData.id}\``+
                     `\n- Telefone: \`${registerData.telephone}\``+
-                    `\n- Turnos: ${rolesAvailability}`
+                    `\n- Turno(s): ${rolesAvailability}`
                     `\n- Recrutador: <@${registerData.recId}>`+
                     `\n\n- Status: **Cancelado**`+
                     `\n- Responsável: ${interaction.user.toString()}`
@@ -290,7 +304,7 @@ module.exports = {
                 .setLabel("Nickname (Nome)")
                 .setTextInputComponent(
                     new TextInputBuilder()
-                        .setCustomId("nick_text_input")
+                        .setCustomId(`nick_text_input`)
                         .setStyle(TextInputStyle.Short)
                         .setPlaceholder("Digite aqui o nome do mesmo...")
                         .setValue(registerData.name)
@@ -318,31 +332,36 @@ module.exports = {
                         .setValue(registerData.telephone)
                 )
             )
-            /*
             .addLabelComponents(
                 new LabelBuilder()
-                .setLabel("Idade")
+                .setLabel("Disponibilidade de Horário")
                 .setStringSelectMenuComponent(
                     new StringSelectMenuBuilder()
-                    .setCustomId("age_select_menu")
-                    .setPlaceholder("Selecione uma opção...")
+                    .setCustomId("availability_select_menu")
+                    .setPlaceholder("Você não tem permissão para editar este campo...")
+                    .setDisabled(true)
                     .addOptions(
                         new StringSelectMenuOptionBuilder()
-                        .setLabel("Tenho mais de 18 anos")
-                        .setEmoji("🔺")
-                        .setValue("legal_age_select_menu")
-                        .setDescription("Selecione se for o seu caso")
-                        .setDefault(registerData.idade === '+18 anos'),
-                        new StringSelectMenuOptionBuilder()
-                        .setLabel("Tenho menos de 18 anos")
-                        .setEmoji("🔻")
-                        .setValue("not_legal_age_select_menu")
-                        .setDescription("Selecione se for o seu caso")
-                        .setDefault(registerData.idade === '-18 anos')
+                        .setLabel("Mais ativo pela manhã")
+                        .setValue("1447988476237709392")
                     )
                 )
-            );
-            */
+            )
+            .addLabelComponents(
+                new LabelBuilder()
+                .setLabel("Quem te Recrutou?")
+                .setStringSelectMenuComponent(
+                    new StringSelectMenuBuilder()
+                    .setCustomId("rec_select_menu")
+                    .setPlaceholder("Você não tem permissão para editar este campo...")
+                    .setDisabled(true)
+                    .addOptions(
+                        new StringSelectMenuOptionBuilder()
+                        .setLabel("TRP » John Wick [777]")
+                        .setValue("592399866072793114")
+                    )
+                )
+            )
         
         await interaction.showModal(editModal);
     },

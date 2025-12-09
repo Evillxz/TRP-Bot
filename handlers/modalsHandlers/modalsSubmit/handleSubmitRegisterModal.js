@@ -62,7 +62,7 @@ module.exports = {
                     `\n- Nome: \`${name}\``+
                     `\n- ID: \`${id}\``+
                     `\n- Telefone: \`${telephone}\``+
-                    `\n- Turnos: ${roles}`+
+                    `\n- Turno(s): ${roles}`+
                     `\n- Recrutador: <@${recId}>`
                 ),
             )

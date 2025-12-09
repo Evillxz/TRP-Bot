@@ -28,15 +28,18 @@ module.exports = {
             });
         }
 
-        const nome = interaction.fields.getTextInputValue('nick_text_input');
+        const name = interaction.fields.getTextInputValue('nick_text_input');
         const id = interaction.fields.getTextInputValue('id_text_input');
-        const idadeValue = interaction.fields.getStringSelectValues('age_select_menu')?.[0];
-        const idade = idadeValue === 'legal_age_select_menu' ? '+18 anos' : '-18 anos';
+        const telephone = interaction.fields.getTextInputValue('phone_text_input');
+
+        const existingData = context.tempRegisters.get(userId);
 
         context.tempRegisters.set(userId, {
-            nome,
+            name,
             id,
-            idade,
+            telephone,
+            availabilityRoles: existingData.availabilityRoles,
+            recId: existingData.recId,
             userId
         });
 
@@ -73,9 +76,10 @@ module.exports = {
             .addTextDisplayComponents(
                 new TextDisplayBuilder().setContent(
                     `**Informações:**`+
-                    `\n- Nome: \`${nome}\``+
+                    `\n- Nome: \`${name}\``+
                     `\n- ID: \`${id}\``+
-                    `\n- Idade: \`${idade}\``+
+                    `\n- Telefone: \`${telephone}\``+
+                    `\n- Turno(s): ${existingData.availabilityRoles.map(roleId => `<@&${roleId}>`).join('\u200b')}`+
                     `\n\n- Editado por: ${interaction.user.toString()}`
                 ),
             )
