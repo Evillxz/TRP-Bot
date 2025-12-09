@@ -96,7 +96,7 @@ module.exports = {
             name,
             id,
             telephone,
-            availabilityRoles,
+            availabilityRoles: availabilityRoles,
             recId,
             userId: interaction.user.id
         });

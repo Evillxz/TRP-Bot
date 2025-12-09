@@ -4,12 +4,27 @@ const {
     StringSelectMenuBuilder, 
     StringSelectMenuOptionBuilder,
     TextInputBuilder, 
-    TextInputStyle
+    TextInputStyle,
+    MessageFlags
 } = require('discord.js');
 const emojis = require('emojis');
+const database = require('database');
 
 module.exports = {
     async execute(interaction) {
+
+        const register = await database.getRegister(userId, guildId);
+        if (register) {
+            return await interaction.reply({
+                embeds: [
+                    {
+                        description: '✖ Vocês já está registrado!',
+                        color: 0xFF0000
+                    }
+                ],
+                flags: MessageFlags.Ephemeral
+            });
+        }
 
         const modal = new ModalBuilder()
             .setTitle("Registro")

@@ -118,6 +118,16 @@ class Database {
         });
     }
 
+    async getRegister(userId, guildId) {
+        return new Promise((resolve, reject) => {
+            const query = `SELECT * FROM register WHERE user_id = ? AND guild_id = ? LIMIT 1`;
+            this.db.get(query, [userId, guildId], (err, row) => {
+                if (err) reject(err);
+                else resolve(row || null);
+            });
+        });
+    }
+
     async addBan(userId, userTag, adminId, guildId, reason) {
         return new Promise((resolve, reject) => {
             const query = `INSERT INTO bans (user_id, user_tag, admin_id, guild_id, reason) VALUES (?, ?, ?, ?, ?)`;

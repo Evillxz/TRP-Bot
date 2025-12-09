@@ -80,6 +80,7 @@ module.exports = {
                     `\n- ID: \`${id}\``+
                     `\n- Telefone: \`${telephone}\``+
                     `\n- Turno(s): ${existingData.availabilityRoles.map(roleId => `<@&${roleId}>`).join('\u200b')}`+
+                    `\n- Recrutador: <@${existingData.recId}>`
                     `\n\n- Editado por: ${interaction.user.toString()}`
                 ),
             )

@@ -16,7 +16,7 @@ const emojis = require('emojis');
 
 module.exports = {
     async execute(interaction, context) {
-        const [action, , userId] = interaction.customId.split('_');
+        const [action, userId] = interaction.customId.split('_');
         
         const requiredRoleId = '1446226263521104105';
         if (!interaction.member.roles.cache.has(requiredRoleId)) {
@@ -99,9 +99,7 @@ module.exports = {
                         .addTextDisplayComponents(
                             new TextDisplayBuilder().setContent(`## Novo Registro Recebido`),
                             new TextDisplayBuilder().setContent(
-                                `-# Usuário: ${targetUser.user}`
-                                `\n-# Tag: **${targetUser.tag}**`
-                                `\n-# Data: \`${new Date().toLocaleString('pt-BR')}\``
+                                `-# Usuário: ${targetUser}\n-# Tag: **${targetUser.user.tag}**\n-# Data: \`${new Date().toLocaleString('pt-BR')}\``
                             ),
                         )
                 )
@@ -226,7 +224,7 @@ module.exports = {
                     )
                     .addTextDisplayComponents(
                         new TextDisplayBuilder().setContent(`## Novo Registro Recebido`),
-                        new TextDisplayBuilder().setContent(`-# Usuário: ${targetUser.user}\n-# Tag: **${targetUser.user.tag}**\n-# Data: \`${new Date().toLocaleString('pt-BR')}\``),
+                        new TextDisplayBuilder().setContent(`-# Usuário: ${targetUser}\n-# Tag: **${targetUser.user.tag}**\n-# Data: \`${new Date().toLocaleString('pt-BR')}\``),
                     )
             )
             .addSeparatorComponents(
@@ -238,10 +236,10 @@ module.exports = {
                     `\n- Nome: \`${registerData.name}\``+
                     `\n- ID: \`${registerData.id}\``+
                     `\n- Telefone: \`${registerData.telephone}\``+
-                    `\n- Turno(s): ${rolesAvailability}`
+                    `\n- Turno(s): ${rolesAvailability}`+
                     `\n- Recrutador: <@${registerData.recId}>`+
                     `\n\n- Status: **Cancelado**`+
-                    `\n- Responsável: ${interaction.user.toString()}`
+                    `\n- Responsável: ${interaction.user}`
                 ),
             )
         ]
