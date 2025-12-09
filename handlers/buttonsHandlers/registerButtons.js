@@ -16,7 +16,6 @@ const emojis = require('emojis');
 
 module.exports = {
     async execute(interaction, context) {
-        // a
         const parts = interaction.customId.split('_');
         const action = parts[0];
         const userId = parts[2];
@@ -115,7 +114,7 @@ module.exports = {
                         `\n- Nome: \`${registerData.name}\``+
                         `\n- ID: \`${registerData.id}\``+
                         `\n- Telefone: \`${registerData.telephone}\``+
-                        `\n- Turnos: ${rolesAvailability}`
+                        `\n- Turnos: ${rolesAvailability}`+
                         `\n- Recrutador: <@${registerData.recId}>`+
                         `\n\n- Status: **Aprovado**`+
                         `\n- Aprovado pelo(a) ${interaction.user}`
@@ -202,7 +201,10 @@ module.exports = {
             }
             
             await interaction.reply({
-                content: errorMessage,
+                embeds: [{
+                    description: `${errorMessage}`,
+                    color: 0xFF0000
+                }],
                 flags: MessageFlags.Ephemeral
             }).catch(() => {
                 interaction.editReply({
@@ -333,38 +335,6 @@ module.exports = {
                         .setValue(registerData.telephone)
                 )
             )
-            /*
-            .addLabelComponents(
-                new LabelBuilder()
-                .setLabel("Disponibilidade de Horário")
-                .setStringSelectMenuComponent(
-                    new StringSelectMenuBuilder()
-                    .setCustomId("availability_select_menu")
-                    .setPlaceholder("Você não tem permissão para editar este campo...")
-                    .setDisabled(true)
-                    .addOptions(
-                        new StringSelectMenuOptionBuilder()
-                        .setLabel("Mais ativo pela manhã")
-                        .setValue("1447988476237709392")
-                    )
-                )
-            )
-            .addLabelComponents(
-                new LabelBuilder()
-                .setLabel("Quem te Recrutou?")
-                .setStringSelectMenuComponent(
-                    new StringSelectMenuBuilder()
-                    .setCustomId("rec_select_menu")
-                    .setPlaceholder("Você não tem permissão para editar este campo...")
-                    .setDisabled(true)
-                    .addOptions(
-                        new StringSelectMenuOptionBuilder()
-                        .setLabel("TRP » John Wick [777]")
-                        .setValue("592399866072793114")
-                    )
-                )
-            )
-                */
         
         await interaction.showModal(editModal);
     },
