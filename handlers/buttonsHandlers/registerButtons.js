@@ -100,7 +100,7 @@ module.exports = {
                             new TextDisplayBuilder().setContent(`## Novo Registro Recebido`),
                             new TextDisplayBuilder().setContent(
                                 `-# Usuário: ${targetUser.user}`
-                                `\n-# Tag: **${targetUser.user.tag}**`
+                                `\n-# Tag: **${targetUser.tag}**`
                                 `\n-# Data: \`${new Date().toLocaleString('pt-BR')}\``
                             ),
                         )
@@ -332,6 +332,7 @@ module.exports = {
                         .setValue(registerData.telephone)
                 )
             )
+            /*
             .addLabelComponents(
                 new LabelBuilder()
                 .setLabel("Disponibilidade de Horário")
@@ -362,6 +363,7 @@ module.exports = {
                     )
                 )
             )
+                */
         
         await interaction.showModal(editModal);
     },
