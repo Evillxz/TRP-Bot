@@ -47,7 +47,7 @@ module.exports = {
                     await registerButtons.execute(interaction, context);
                 } else if (interaction.customId === 'refresh_status' || interaction.customId === 'detailed_status') {
                     await handleStatusButtons(interaction, context);
-                } else if (['men_role', 'women_role'].includes(interaction.customId)) {
+                } else if (['men_role', 'women_role', 'legal_age_role', 'not_legal_age_role'].includes(interaction.customId)) {
                     await roleButtons.execute(interaction, context);
                 } else if (interaction.customId === 'open_adv_modal') {
                     await handleAdvModal.execute(interaction, context);

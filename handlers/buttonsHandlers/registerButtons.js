@@ -73,17 +73,17 @@ module.exports = {
     async approveRegister(interaction, context, registerData, targetUser) {
         const userId = interaction.customId.split('_')[3];
         const emojis = context.emojis;
+        const rolesAvailability = registerData.availabilityRoles.map(id => `<@&${id}>`).join('\u200b');
 
         try {
-            const newNickname = `TRP » ${registerData.nome} [${registerData.id}]`;
+            const newNickname = `TRP » ${registerData.name} [${registerData.id}]`;
             await targetUser.setNickname(newNickname);
 
             const registeredRoleId = '1296584614391054428';
             const initialRoleId = '1446158406561042602';
-            const ageRoleId = this.getAgeRoleId(registerData.idade);
+            const availabilityRole = registerData.availabilityRoles;
 
-            const rolesToAdd = [registeredRoleId, initialRoleId];
-            if (ageRoleId) rolesToAdd.push(ageRoleId);
+            const rolesToAdd = [registeredRoleId, initialRoleId, ...availabilityRole];
             
             await targetUser.roles.add(rolesToAdd);
 
@@ -97,7 +97,11 @@ module.exports = {
                         )
                         .addTextDisplayComponents(
                             new TextDisplayBuilder().setContent(`## Novo Registro Recebido`),
-                            new TextDisplayBuilder().setContent(`-# Usuário: ${targetUser.user}\n-# Tag: **${targetUser.user.tag}**\n-# Data: \`${new Date().toLocaleString('pt-BR')}\``),
+                            new TextDisplayBuilder().setContent(
+                                `-# Usuário: ${targetUser.user}`
+                                `\n-# Tag: **${targetUser.user.tag}**`
+                                `\n-# Data: \`${new Date().toLocaleString('pt-BR')}\``
+                            ),
                         )
                 )
                 .addSeparatorComponents(
@@ -106,9 +110,10 @@ module.exports = {
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
                         `**Informações:**`+
-                        `\n- Nome: \`${registerData.nome}\``+
+                        `\n- Nome: \`${registerData.name}\``+
                         `\n- ID: \`${registerData.id}\``+
-                        `\n- Idade: \`${registerData.idade}\``+
+                        `\n- Telefone: \`${registerData.telephone}\``+
+                        `\n- Turnos: ${rolesAvailability}`
                         `\n- Recrutador: <@${registerData.recId}>`+
                         `\n\n- Status: **Aprovado**`+
                         `\n- Aprovado pelo(a) ${interaction.user}`
@@ -195,6 +200,7 @@ module.exports = {
     async rejectRegister(interaction, context, registerData, targetUser) {
         const userId = interaction.customId.split('_')[3];
         const emojis = context.emojis;
+        const rolesAvailability = registerData.availabilityRoles.map(id => `<@&${id}>`).join('\u200b');
 
         const container = [
             new ContainerBuilder()
@@ -215,9 +221,10 @@ module.exports = {
             .addTextDisplayComponents(
                 new TextDisplayBuilder().setContent(
                     `**Informações:**`+
-                    `\n- Nome: \`${registerData.nome}\``+
+                    `\n- Nome: \`${registerData.name}\``+
                     `\n- ID: \`${registerData.id}\``+
-                    `\n- Idade: \`${registerData.idade}\``+
+                    `\n- Telefone: \`${registerData.telephone}\``+
+                    `\n- Turnos: ${rolesAvailability}`
                     `\n- Recrutador: <@${registerData.recId}>`+
                     `\n\n- Status: **Cancelado**`+
                     `\n- Responsável: ${interaction.user.toString()}`
@@ -276,7 +283,7 @@ module.exports = {
             .setCustomId(`edit_register_modal_${registerData.userId}`)
             .addTextDisplayComponents(
                 new TextDisplayBuilder()
-                .setContent("### Edite os campos abaixo conforme necessário!\n- **Nick:** Nome no jogo\n- **Id:** ID no jogo\n- **Idade:** Faixa etária")
+                .setContent("### Edite os campos abaixo conforme necessário!\n- **Nick:** Nome no jogo\n- **ID:** ID no jogo\n- **Telefone:** 000-000")
             )
             .addLabelComponents(
                 new LabelBuilder()
@@ -285,8 +292,8 @@ module.exports = {
                     new TextInputBuilder()
                         .setCustomId("nick_text_input")
                         .setStyle(TextInputStyle.Short)
-                        .setPlaceholder("Digite aqui...")
-                        .setValue(registerData.nome)
+                        .setPlaceholder("Digite aqui o nome do mesmo...")
+                        .setValue(registerData.name)
                 )
             )
             .addLabelComponents(
@@ -296,10 +303,22 @@ module.exports = {
                     new TextInputBuilder()
                         .setCustomId("id_text_input")
                         .setStyle(TextInputStyle.Short)
-                        .setPlaceholder("Exemplo: 112233 - 1122 - 11")
+                        .setPlaceholder("Id do Usuário in-game...")
                         .setValue(registerData.id)
                 )
             )
+            .addLabelComponents(
+                new LabelBuilder()
+                .setLabel("Telefone")
+                .setTextInputComponent(
+                    new TextInputBuilder()
+                        .setCustomId("phone_text_input")
+                        .setStyle(TextInputStyle.Short)
+                        .setPlaceholder("Insira apenas o número de telefone do usuário...")
+                        .setValue(registerData.telephone)
+                )
+            )
+            /*
             .addLabelComponents(
                 new LabelBuilder()
                 .setLabel("Idade")
@@ -323,13 +342,8 @@ module.exports = {
                     )
                 )
             );
+            */
         
         await interaction.showModal(editModal);
     },
-
-    getAgeRoleId(idade) {
-        if (idade === '+18 anos') return '1368800847882096640';
-        if (idade === '-18 anos') return '1368800911559884821';
-        return null;
-    }
 };

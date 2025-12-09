@@ -54,7 +54,6 @@ module.exports = {
                                 new TextDisplayBuilder().setContent("<@&1368800797344796832>"),
                             ),
                     )
-                    /*
                     .addSeparatorComponents(
                         new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large).setDivider(true),
                     )
@@ -64,10 +63,10 @@ module.exports = {
                                 new ButtonBuilder()
                                     .setStyle(ButtonStyle.Secondary)
                                     .setLabel("Obter Cargo")
-                                    .setCustomId("veteran_role")
+                                    .setCustomId("legal_age_role")
                             )
                             .addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent("<@&1446254282318942300>"),
+                                new TextDisplayBuilder().setContent("<@&1368800847882096640>"),
                             ),
                     )
                     .addSectionComponents(
@@ -76,12 +75,13 @@ module.exports = {
                                 new ButtonBuilder()
                                     .setStyle(ButtonStyle.Secondary)
                                     .setLabel("Obter Cargo")
-                                    .setCustomId("newbie_role")
+                                    .setCustomId("not_legal_age_role")
                             )
                             .addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent("<@&1446254386413178971>"),
+                                new TextDisplayBuilder().setContent("<@&1368800911559884821>"),
                             ),
                     )
+                    /*
                     .addSeparatorComponents(
                         new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large).setDivider(true),
                     )

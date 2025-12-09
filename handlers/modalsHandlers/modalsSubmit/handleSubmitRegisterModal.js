@@ -14,15 +14,18 @@ const {
 module.exports = {
     async execute(interaction, context) {
         const { emojis } = context;
-        const nome = interaction.fields.getTextInputValue('nick_text_input');
-        const id = interaction.fields.getTextInputValue('id_text_input');
-        const idadeValue = interaction.fields.getStringSelectValues('age_select_menu')?.[0];
-        const recId = interaction.fields.getStringSelectValues('rec_select_menu')?.[0];
 
-        const idade = idadeValue === 'legal_age_select_menu' ? '+18 anos' : '-18 anos';
+        const name = interaction.fields.getTextInputValue('nick_text_input');
+        const id = interaction.fields.getTextInputValue('id_text_input');
+        const telephone = interaction.fields.getTextInputValue('phone_text_input');
+        const availabilityRoles = interaction.fields.getStringSelectValues('availability_select_menu');
+        const recId = interaction.fields.getStringSelectValues('rec_select_menu')?.[0];
         
-        const adminChannelId = '1363187296764956802';
+        // const adminChannelId = '1363187296764956802';
+        const adminChannelId = '1304465490256596992';
         const adminChannel = interaction.guild.channels.cache.get(adminChannelId);
+
+        const roles = availabilityRoles.map(id => `<@&${id}>`).join('\u200b');
         
         if (!adminChannel) {
             return await interaction.reply({ 
@@ -56,9 +59,10 @@ module.exports = {
             .addTextDisplayComponents(
                 new TextDisplayBuilder().setContent(
                     `**Informações:**`+
-                    `\n- Nome: \`${nome}\``+
+                    `\n- Nome: \`${name}\``+
                     `\n- ID: \`${id}\``+
-                    `\n- Idade: \`${idade}\``+
+                    `\n- Telefone: \`${telephone}\``+
+                    `\n- Turnos: ${roles}`+
                     `\n- Recrutador: <@${recId}>`
                 ),
             )
@@ -89,9 +93,10 @@ module.exports = {
 
         context.tempRegisters = context.tempRegisters || new Map();
         context.tempRegisters.set(interaction.user.id, {
-            nome,
+            name,
             id,
-            idade,
+            telephone,
+            availabilityRoles,
             recId,
             userId: interaction.user.id
         });

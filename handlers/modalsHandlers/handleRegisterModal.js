@@ -2,8 +2,7 @@ const {
     LabelBuilder, 
     ModalBuilder, 
     StringSelectMenuBuilder, 
-    StringSelectMenuOptionBuilder, 
-    TextDisplayBuilder, 
+    StringSelectMenuOptionBuilder,
     TextInputBuilder, 
     TextInputStyle
 } = require('discord.js');
@@ -15,18 +14,14 @@ module.exports = {
         const modal = new ModalBuilder()
             .setTitle("Registro")
             .setCustomId("modal_register")
-            .addTextDisplayComponents(
-                new TextDisplayBuilder()
-                .setContent("### Preencha os campos abaixo com os dados corretos!\n- **Nick:** Seu nick no jogo\n- **Id:** Seu id no jogo\n- **Idade:** Sua idade real\n- **Recrutador:** A pessoa que te recrutou")
-            )
             .addLabelComponents(
                 new LabelBuilder()
                 .setLabel("Nickname (Nome)")
                 .setTextInputComponent(
                     new TextInputBuilder()
-                        .setCustomId("nick_text_input")
-                        .setStyle(TextInputStyle.Short)
-                        .setPlaceholder("Digite aqui...")
+                    .setCustomId("nick_text_input")
+                    .setStyle(TextInputStyle.Short)
+                    .setPlaceholder("Insira apenas seu nome dentro do jogo...")
                 )
             )
             .addLabelComponents(
@@ -34,29 +29,46 @@ module.exports = {
                 .setLabel("Identificador (ID)")
                 .setTextInputComponent(
                     new TextInputBuilder()
-                        .setCustomId("id_text_input")
-                        .setStyle(TextInputStyle.Short)
-                        .setPlaceholder("Exemplo: 112233 - 1122 - 11")
+                    .setCustomId("id_text_input")
+                    .setStyle(TextInputStyle.Short)
+                    .setPlaceholder("Formatos: 1122 - 123")
                 )
             )
             .addLabelComponents(
                 new LabelBuilder()
-                .setLabel("Idade")
+                .setLabel('Número de Telefone')
+                .setTextInputComponent(
+                    new TextInputBuilder()
+                    .setCustomId('phone_text_input')
+                    .setStyle(TextInputStyle.Short)
+                    .setPlaceholder('Seu número de telefone dentro do jogo...')
+                )
+            )
+            .addLabelComponents(
+                new LabelBuilder()
+                .setLabel("Disponibilidade de Horário")
                 .setStringSelectMenuComponent(
                     new StringSelectMenuBuilder()
-                    .setCustomId("age_select_menu")
+                    .setCustomId("availability_select_menu")
                     .setPlaceholder("Selecione uma opção...")
+                    .setMaxValues(3)
+                    .setMinValues(1)
                     .addOptions(
                         new StringSelectMenuOptionBuilder()
-                        .setLabel("Tenho mais de 18 anos")
-                        .setEmoji("🔺")
-                        .setValue("legal_age_select_menu")
-                        .setDescription("Selecione se for o seu caso"),
+                        .setLabel("Mais ativo pela manhã")
+                        .setEmoji({ id: emojis.static.sun.id })
+                        .setValue("1447988476237709392")
+                        .setDescription("Selecione se você for ativo pela manhã."),
                         new StringSelectMenuOptionBuilder()
-                        .setLabel("Tenho menos de 18 anos")
-                        .setEmoji("🔻")
-                        .setValue("not_legal_age_select_menu")
-                        .setDescription("Selecione se for o seu caso")
+                        .setLabel("Mais ativo pela tarde")
+                        .setEmoji({ id: emojis.static.sunMoon.id })
+                        .setValue("1447988532932120588")
+                        .setDescription("Selecione se você for ativo pela tarde."),
+                        new StringSelectMenuOptionBuilder()
+                        .setLabel("Mais ativo pela noite")
+                        .setEmoji({ id: emojis.static.moon.id })
+                        .setValue("1447988583217758318")
+                        .setDescription("Selecione se você for ativo pela noite.")
                     )
                 )
             )
@@ -92,7 +104,7 @@ module.exports = {
                 )
             )
         
-        interaction.showModal(modal);
+        await interaction.showModal(modal);
         
     }
 }; 
