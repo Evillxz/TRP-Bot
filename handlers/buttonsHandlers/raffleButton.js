@@ -13,7 +13,7 @@ const database = require('database');
 
 module.exports = async (interaction) => {
     const userId = interaction.user.id;
-    const userName = interaction.user.username;
+    const userName = interaction.member?.displayName || interaction.user.displayName;
     const userTag = interaction.user.tag;
 
     try {
