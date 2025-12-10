@@ -25,6 +25,7 @@ module.exports = {
             const count = await database.countActiveRaffleParticipants();
 
             const container = [
+                new TextDisplayBuilder().setContent("|| @everyone @here ||"),
                 new ContainerBuilder()
                 .addSectionComponents(
                     new SectionBuilder()
