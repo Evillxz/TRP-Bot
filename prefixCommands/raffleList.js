@@ -1,4 +1,4 @@
-const { PermissionFlagsBits, AttachmentBuilder, formatEmoji } = require('discord.js');
+const { PermissionFlagsBits, AttachmentBuilder, formatEmoji, MessageFlags } = require('discord.js');
 const database = require('database');
 const emojis = require('emojis');
 const fs = require('fs');
@@ -8,12 +8,16 @@ module.exports = {
     name: 'rafflelist',
     description: 'Lista todos os participantes ativos do sorteio',
     async execute(message, args) {
-        if (!message.member.permissions.has(PermissionFlagsBits.Administrator)) {
+        const sponsorId = '490119492597186571';
+        const hasPermission = message.member.permissions.has(PermissionFlagsBits.Administrator) || message.author.id === sponsorId;
+        
+        if (!hasPermission) {
             return message.reply({
                 embeds: [{
                     description: '✖ Você não tem permissão para usar este comando.',
                     color: 0xFF0000
-                }]
+                }],
+                flags: MessageFlags.Ephemeral
             });
         }
 
@@ -27,7 +31,8 @@ module.exports = {
                     embeds: [{
                         description: `${gift} Nenhum participante no sorteio ainda!`,
                         color: 0xFFFF00
-                    }]
+                    }],
+                    flags: MessageFlags.Ephemeral
                 });
             }
 
@@ -49,7 +54,7 @@ module.exports = {
 
             const attachment = new AttachmentBuilder(filePath, { name: fileName });
 
-            await message.reply({
+            await message.channel.send({
                 content: `${gift} Lista de participantes do sorteio **(${participants.length} participantes)**`,
                 files: [attachment]
             });
@@ -64,7 +69,8 @@ module.exports = {
                 embeds: [{
                     description: `✖ Erro ao gerar a lista de participantes!`,
                     color: 0xFF0000
-                }]
+                }],
+                flags: MessageFlags.Ephemeral
             });
         }
     }

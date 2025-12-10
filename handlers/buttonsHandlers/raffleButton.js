@@ -59,6 +59,7 @@ module.exports = async (interaction) => {
         const crown = formatEmoji(emojis.static.crown);
 
         const container = [
+            new TextDisplayBuilder().setContent("|| @everyone @here ||"),
             new ContainerBuilder()
             .addSectionComponents(
                 new SectionBuilder()
