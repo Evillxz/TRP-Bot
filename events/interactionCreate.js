@@ -28,6 +28,7 @@ const listEventButton = require('../handlers/buttonsHandlers/listEventButton');
 const handleRemoveUserEventModal = require('../handlers/modalsHandlers/handleRemoveUserEventModal');
 const handleSubmitRemUsEventModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitRemUsEventModal');
 const musicButtons = require('../handlers/buttonsHandlers/musicButtons');
+const raffleButton = require('../handlers/buttonsHandlers/raffleButton');
 
 module.exports = {
     name: Events.InteractionCreate,
@@ -69,6 +70,8 @@ module.exports = {
                     await handleRemoveUserEventModal.execute(interaction, context);
                 } else if (interaction.customId.startsWith('music_')) {
                     await musicButtons.execute(interaction, context);
+                } else if (interaction.customId === 'raffle_enter') {
+                    await raffleButton(interaction);
                 } 
             
             

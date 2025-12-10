@@ -93,6 +93,14 @@ class Database {
                     approver_tag TEXT NOT NULL,
                     guild_id TEXT NOT NULL,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )`,
+                `CREATE TABLE IF NOT EXISTS raffle (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    discord_name TEXT NOT NULL,
+                    discord_tag TEXT NOT NULL,
+                    discord_id TEXT NOT NULL,
+                    participating BOOLEAN DEFAULT 1,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                 )`
 
             ];
@@ -114,6 +122,56 @@ class Database {
             this.db.run(query, [userName, userTag, userId, userRg, userPhone, userShift, recId, approverId, approverTag, guildId], function(err) {
                 if (err) reject(err);
                 else resolve(this.lastID);
+            });
+        });
+    }
+
+    async addRaffle(userDiscordName, userDiscordTag, userId, participating) {
+        return new Promise((resolve, reject) => {
+            const query = `INSERT INTO raffle (discord_name, discord_tag, discord_id, participating) VALUES (?, ?, ?, ?)`;
+            this.db.run(query, [userDiscordName, userDiscordTag, userId, participating], function(err) {
+                if (err) reject(err);
+                else resolve(this.lastID);
+            });
+        });
+    }
+
+    async getRaffleUser(userId) {
+        return new Promise((resolve, reject) => {
+            const query = `SELECT * FROM raffle WHERE discord_id = ? LIMIT 1`;
+            this.db.get(query, [userId], (err, row) => {
+                if (err) reject(err);
+                else resolve(row || null);
+            });
+        });
+    }
+
+    async toggleRaffleParticipation(userId, participating) {
+        return new Promise((resolve, reject) => {
+            const query = `UPDATE raffle SET participating = ? WHERE discord_id = ?`;
+            this.db.run(query, [participating, userId], function(err) {
+                if (err) reject(err);
+                else resolve(this.changes);
+            });
+        });
+    }
+
+    async getActiveRaffleParticipants() {
+        return new Promise((resolve, reject) => {
+            const query = `SELECT * FROM raffle WHERE participating = 1 ORDER BY created_at ASC`;
+            this.db.all(query, [], (err, rows) => {
+                if (err) reject(err);
+                else resolve(rows);
+            });
+        });
+    }
+
+    async countActiveRaffleParticipants() {
+        return new Promise((resolve, reject) => {
+            const query = `SELECT COUNT(*) as count FROM raffle WHERE participating = 1`;
+            this.db.get(query, [], (err, row) => {
+                if (err) reject(err);
+                else resolve(row.count);
             });
         });
     }

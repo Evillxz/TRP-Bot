@@ -12,18 +12,23 @@ const database = require('database');
 
 module.exports = {
     async execute(interaction) {
+        const member = interaction.member;
+        const hasProgrammerRole = member.roles.cache.has('1365475846843928617');
 
-        const register = await database.getRegister(interaction.user.id, interaction.guild.id);
-        if (register) {
-            return await interaction.reply({
-                embeds: [
-                    {
-                        description: '✖ Vocês já está registrado!',
-                        color: 0xFF0000
-                    }
-                ],
-                flags: MessageFlags.Ephemeral
-            });
+        if (!hasProgrammerRole) {
+            const register = await database.getRegister(interaction.user.id, interaction.guild.id);
+
+            if (register) {
+                return await interaction.reply({
+                    embeds: [
+                        {
+                            description: '✖ Você já está registrado!',
+                            color: 0xFF0000
+                        }
+                    ],
+                    flags: MessageFlags.Ephemeral
+                });
+            }
         }
 
         const modal = new ModalBuilder()

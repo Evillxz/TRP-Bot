@@ -2,8 +2,8 @@ require('dotenv').config();
 require('module-alias/register');
 const fs = require('node:fs');
 const path = require('node:path');
-const { Events, MessageFlags, formatEmoji, GatewayIntentBits } = require('discord.js');
-const { Kazagumo, KazagumoPlayer } = require('kazagumo');
+const { Events, MessageFlags, formatEmoji } = require('discord.js');
+const { Kazagumo } = require('kazagumo');
 const { Connectors } = require('shoukaku');
 const chalk = require('chalk');
 const logger = require('./config/logger');
@@ -13,7 +13,6 @@ const database = require('./database/database');
 const WarningManager = require('./utils/warningManager');
 const musicPanelManager = require('./utils/musicPanelManager');
 
-// Configurar Lavalink Manager
 client.manager = new Kazagumo({
     defaultSearchEngine: 'youtube',
     send: (guildId, payload) => {
@@ -28,11 +27,10 @@ client.manager = new Kazagumo({
     }
 ]);
 
-// Eventos do Lavalink
 client.manager.shoukaku
     .on('ready', (name) => logger.info(`${chalk.green.bold('[LAVALINK]')} Node ${name} conectado`))
     .on('error', (name, error) => logger.error(`${chalk.red.bold('[LAVALINK]')} Erro no node ${name}: ${error.message}`))
-    .on('close', (name, code, reason) => logger.warn(`${chalk.yellow.bold('[LAVALINK]')} Node ${name} desconectado: ${reason}`));
+    .on('close', (name, reason) => logger.warn(`${chalk.yellow.bold('[LAVALINK]')} Node ${name} desconectado: ${reason}`));
 
 client.manager
     .on('playerStart', async (player, track) => {
@@ -150,7 +148,6 @@ if (fs.existsSync(legacyCommandsPath)) {
     }
 }
 
-// Carregar comandos de música
 const musicCommandsPath = path.join(__dirname, 'musicCommands');
 if (fs.existsSync(musicCommandsPath)) {
     const musicCommandFiles = fs.readdirSync(musicCommandsPath).filter(file => file.endsWith('.js'));
