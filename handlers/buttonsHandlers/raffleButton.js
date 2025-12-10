@@ -17,6 +17,18 @@ module.exports = async (interaction) => {
     const userTag = interaction.user.tag;
 
     try {
+        const requiredRoleId = '1296584614391054428';
+        
+        if (!interaction.member.roles.cache.has(requiredRoleId)) {
+            return await interaction.reply({
+                embeds: [{
+                    description: '✖ Você precisa estar registrado para participar do sorteio!',
+                    color: 0xFF0000
+                }],
+                flags: MessageFlags.Ephemeral
+            });
+        }
+
         const existingUser = await database.getRaffleUser(userId);
         const enter = formatEmoji(emojis.static.enter);
         const out = formatEmoji(emojis.static.out);
