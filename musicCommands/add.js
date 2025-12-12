@@ -8,6 +8,30 @@ module.exports = {
     description: 'Adiciona uma música à fila',
     async execute(message, context) {
         const player = message.client.manager.players.get(message.guild.id);
+
+        async function isFeatureMaintenance(feature) {
+            try {
+                const maintenancePath = path.join(__dirname, '..', 'maintenance.json');
+                const data = await fs.promises.readFile(maintenancePath, 'utf8');
+                const obj = JSON.parse(data);
+                return !!obj[feature];
+            } catch (err) {
+                return false;
+            }
+        }
+
+        if (await isFeatureMaintenance('music')) {
+            const reply = await message.reply({
+                embeds: [{
+                    description: `🚧 Sistema de música em manutenção. Tente novamente mais tarde.`,
+                    color: 0xFFA500
+                }],
+                flags: MessageFlags.Ephemeral
+            });
+            await message.delete();
+            setTimeout(() => reply.delete().catch(() => {}), 5000);
+            return;
+        }
         
         if (!player) {
             const reply = await message.reply({

@@ -1,6 +1,8 @@
 const musicPanelManager = require('../utils/musicPanelManager');
 const emojis = require('emojis');
 const { formatEmoji, MessageFlags } = require('discord.js');
+const fs = require('fs');
+const path = require('path');
 
 module.exports = {
     name: 'play',
@@ -8,6 +10,30 @@ module.exports = {
     description: 'Toca uma música no canal de voz',
     async execute(message, context) {
         const { channel } = message.member.voice;
+
+        async function isFeatureMaintenance(feature) {
+            try {
+                const maintenancePath = path.join(__dirname, '..', 'maintenance.json');
+                const data = await fs.promises.readFile(maintenancePath, 'utf8');
+                const obj = JSON.parse(data);
+                return !!obj[feature];
+            } catch (err) {
+                return false;
+            }
+        }
+
+        if (await isFeatureMaintenance('music')) {
+            const reply = await message.reply({
+                embeds: [{
+                    description: `🚧 Sistema de música em manutenção. Tente novamente mais tarde.`,
+                    color: 0xFFA500
+                }],
+                flags: MessageFlags.Ephemeral
+            });
+            await message.delete();
+            setTimeout(() => reply.delete().catch(() => {}), 5000);
+            return;
+        }
         
         if (!channel) {
             const reply = await message.reply({
