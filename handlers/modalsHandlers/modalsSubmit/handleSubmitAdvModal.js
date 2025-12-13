@@ -2,8 +2,8 @@ const { MessageFlags, formatEmoji, ContainerBuilder, TextDisplayBuilder, Thumbna
 const api = require('apiClient');
 
 const WARNING_ROLES = {
-    // 1: '1446613392826564658',
-    1: '1366221765449220136',
+    1: '1446613392826564658',
+    // 1: '1366221765449220136',
     2: '1446613446639751189',
     3: '1446613483402821794'
 };
@@ -21,8 +21,8 @@ module.exports = {
             const durationSelect = interaction.fields.getStringSelectValues("duration_select_adv")[0];
             const adminId = interaction.user.id;
             const guildId = interaction.guild.id;
-            // const logChannelId = '1296584858910326926';
-            const logChannelId = '1293740554076688436';
+            const logChannelId = '1296584858910326926';
+            // const logChannelId = '1293740554076688436';
 
             const alert = formatEmoji(emojis.static.alert);
 
