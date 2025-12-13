@@ -85,6 +85,7 @@ module.exports = {
             const registeredRoleId = '1296584614391054428';
             const initialRoleId = '1446158406561042602';
             const availabilityRole = registerData.availabilityRoles;
+            const newDate = new Date().toLocaleString('pt-BR');
 
             const rolesToAdd = [registeredRoleId, initialRoleId, ...availabilityRole];
             
@@ -129,9 +130,11 @@ module.exports = {
             });
 
             try {
-                await api.post('/site/register', {
+                
+                await api.post('/bot/memberprofile', {
                     user_name: registerData.name,
-                    user_discord_name: targetUser.tag,
+                    user_discord_tag: targetUser.tag,
+                    user_discord_nick: newNickname,
                     user_id: targetUser.id,
                     user_game_id: registerData.id,
                     user_telephone: registerData.telephone,
@@ -139,8 +142,11 @@ module.exports = {
                     rec_id: registerData.recId,
                     approver_id: interaction.user.id,
                     approver_tag: interaction.user.tag,
-                    guild_id: interaction.guild.id
+                    approver_nick: interaction.member.nickname || interaction.user.username,
+                    guild_id: interaction.guild.id,
+                    recruited_at: newDate,
                 });
+
             } catch (err) {
                 context.logger && context.logger.error('Erro ao salvar registro via API:', err);
                 await interaction.followUp({

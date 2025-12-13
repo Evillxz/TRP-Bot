@@ -24,11 +24,6 @@ const advsActiveListButton = require('../handlers/buttonsHandlers/advsActiveList
 const handleSearchUserModal = require('../handlers/modalsHandlers/handleSearchUserModal');
 const handleSubmitSearchModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitSearchModal');
 const banListButton = require('../handlers/buttonsHandlers/banListButton');
-const handleParticipateModal = require('../handlers/modalsHandlers/handleEventModal');
-const handleSubmitEventModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitEventModal');
-const listEventButton = require('../handlers/buttonsHandlers/listEventButton');
-const handleRemoveUserEventModal = require('../handlers/modalsHandlers/handleRemoveUserEventModal');
-const handleSubmitRemUsEventModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitRemUsEventModal');
 const musicButtons = require('../handlers/buttonsHandlers/musicButtons');
 const raffleButton = require('../handlers/buttonsHandlers/raffleButton');
 
@@ -87,12 +82,6 @@ module.exports = {
                     await handleSearchUserModal.execute(interaction, context);
                 } else if (interaction.customId === 'banned_list') {
                     await banListButton.execute(interaction, context);
-                } else if (interaction.customId === 'open_modal_event') {
-                    await handleParticipateModal.execute(interaction, context);
-                } else if (interaction.customId === 'participants_list') {
-                    await listEventButton.execute(interaction, context);
-                } else if (interaction.customId === 'open_modal_remove_user_event') {
-                    await handleRemoveUserEventModal.execute(interaction, context);
                 } else if (interaction.customId.startsWith('music_')) {
                     await musicButtons.execute(interaction, context);
                 } else if (interaction.customId === 'raffle_enter') {
@@ -113,11 +102,7 @@ module.exports = {
                     return handleSubmitUpRebModal.execute(interaction, context);
                 } else if (interaction.customId.startsWith('modal_search_register')) {
                     return handleSubmitSearchModal.execute(interaction, context);
-                } else if (interaction.customId.startsWith('modal_event')) {
-                    return handleSubmitEventModal.execute(interaction, context);
-                } else if (interaction.customId.startsWith('modal_remove_user_event')) {
-                    return handleSubmitRemUsEventModal.execute(interaction, context);
-                } 
+                }
 
 
             } 

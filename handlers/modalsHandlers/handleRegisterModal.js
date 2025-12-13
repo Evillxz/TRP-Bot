@@ -18,7 +18,7 @@ module.exports = {
         if (!hasProgrammerRole) {
             let register;
             try {
-                register = await api.get(`/site/register/${interaction.user.id}/${interaction.guild.id}`);
+                register = await api.get(`/bot/memberprofile/${interaction.user.id}/${interaction.guild.id}`);
             } catch (err) {
                 console.error('Erro ao consultar registro via API:', err);
                 return await interaction.reply({ embeds: [{ description: '✖ Erro ao consultar registro. Tente novamente mais tarde.', color: 0xFF0000 }], flags: MessageFlags.Ephemeral });
@@ -112,10 +112,20 @@ module.exports = {
                         .setLabel("TRP » Brunim Vrau [852]")
                         .setValue("353147322429079553")
                         .setEmoji({ id: emojis.static.green.id })
-                        .setDescription("( Gerente - Recrutador ) Selecione se for esta pessoa."),
+                        .setDescription("( Braço Esquerdo - Recrutador ) Selecione se for esta pessoa."),
                         new StringSelectMenuOptionBuilder()
                         .setLabel("TRP » Gomezzx [560]")
                         .setValue("744415492000972844")
+                        .setEmoji({ id: emojis.static.green.id })
+                        .setDescription("( Gerente - Recrutador ) Selecione se for esta pessoa."),
+                        new StringSelectMenuOptionBuilder()
+                        .setLabel("TRP » Marcos Correia [234]")
+                        .setValue("490119492597186571")
+                        .setEmoji({ id: emojis.static.green.id })
+                        .setDescription("( Gerente - Recrutador ) Selecione se for esta pessoa."),
+                        new StringSelectMenuOptionBuilder()
+                        .setLabel("TRP » REI [686]")
+                        .setValue("780606242183708722")
                         .setEmoji({ id: emojis.static.green.id })
                         .setDescription("( Gerente - Recrutador ) Selecione se for esta pessoa."),
                     )
