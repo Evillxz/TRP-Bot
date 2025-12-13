@@ -1,4 +1,4 @@
-const database = require('../database/database');
+const api = require('apiClient');
 const { client } = require('../config/client');
 const logger = require('../config/logger');
 const chalk = require('chalk');
@@ -12,14 +12,25 @@ const WARNING_ROLES = {
 class WarningManager {
     static async checkExpiredWarnings() {
         try {
-            const expiredWarnings = await database.getExpiredWarnings();
+            let expiredWarnings = [];
+            try {
+                expiredWarnings = await api.get('/bot/warnings/expired');
+            } catch (err) {
+                logger.error(`${chalk.red.bold(`[WARNING MANAGER]`)} Erro ao obter advertências expiradas via API: ${err}`);
+                return;
+            }
             
             if (expiredWarnings.length > 0) {
                 for (const warning of expiredWarnings) {
                     await this.processExpiredWarning(warning);
                 }
 
-                await database.expireWarnings();
+                try {
+                    await api.post('/bot/warnings/expire');
+                } catch (err) {
+                    logger.error(`${chalk.red.bold(`[WARNING MANAGER]`)} Erro ao marcar advertências como expiradas: ${err}`);
+                    return;
+                }
                 logger.info(`${chalk.yellow.bold(`[WARNING MANAGER]`)} ${expiredWarnings.length} advertências expiradas processadas`);
             }
             
@@ -36,7 +47,13 @@ class WarningManager {
             const member = await guild.members.fetch(warning.user_id).catch(() => null);
             if (!member) return;
 
-            const allActiveWarnings = await database.getActiveWarnings(warning.user_id, warning.guild_id);
+            let allActiveWarnings = [];
+            try {
+                allActiveWarnings = await api.get(`/bot/warnings/active/${warning.user_id}/${warning.guild_id}`);
+            } catch (err) {
+                logger.error(`${chalk.red.bold(`[WARNING MANAGER]`)} Erro ao obter advertências ativas: ${err}`);
+                return;
+            }
             const remainingWarnings = allActiveWarnings.filter(w => w.id !== warning.id);
             
             const currentLevel = allActiveWarnings.length;

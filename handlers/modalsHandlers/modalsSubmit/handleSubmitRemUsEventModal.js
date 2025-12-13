@@ -1,5 +1,5 @@
 const { MessageFlags } = require("discord.js");
-const database = require('database');
+const api = require('apiClient');
 
 module.exports = {
     async execute(interaction, context) {
@@ -20,7 +20,13 @@ module.exports = {
                 });
             }
 
-            const removed = await database.removeEventRegistration(id);
+            let removed = false;
+            try {
+                const r = await api.delete(`/bot/events/${id}`);
+                removed = !!r.deleted || r === true;
+            } catch (err) {
+                throw new Error('Erro ao remover inscrição via API');
+            }
 
             if (removed) {
                 await interaction.editReply({

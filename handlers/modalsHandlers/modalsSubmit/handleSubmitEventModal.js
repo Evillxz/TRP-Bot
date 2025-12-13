@@ -1,5 +1,5 @@
 const { MessageFlags } = require('discord.js');
-const database = require('database');
+const api = require('apiClient');
 
 module.exports = {
     async execute(interaction, context) {
@@ -13,13 +13,14 @@ module.exports = {
             const id = interaction.fields.getTextInputValue('id_text_input');
             const image = interaction.fields.getUploadedFiles('proof_file_upload').first();
 
-            const registrationId = await database.addEventRegistration(
-                interaction.user.id,
-                interaction.user.tag,
-                nick,
-                id,
-                image?.url || ''
-            );
+            const r = await api.post('/bot/events/register', {
+                discord_id: interaction.user.id,
+                discord_tag: interaction.user.tag,
+                game_nick: nick,
+                game_id: id,
+                proof_url: image?.url || ''
+            });
+            const registrationId = r.id;
 
             await interaction.editReply({
                 embeds: [{

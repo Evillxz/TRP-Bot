@@ -9,7 +9,7 @@ const {
     formatEmoji
 } = require('discord.js');
 const emojis = require('emojis');
-const database = require('database');
+const api = require('apiClient');
 
 module.exports = async (interaction) => {
     const userId = interaction.user.id;
@@ -29,12 +29,17 @@ module.exports = async (interaction) => {
             });
         }
 
-        const existingUser = await database.getRaffleUser(userId);
+        let existingUser = null;
+        try {
+            existingUser = await api.get(`/bot/raffle/user/${userId}`);
+        } catch (err) {
+            throw new Error('Erro ao conectar na API do sorteio');
+        }
         const enter = formatEmoji(emojis.static.enter);
         const out = formatEmoji(emojis.static.out);
 
         if (!existingUser) {
-            await database.addRaffle(userName, userTag, userId, 1);
+            await api.post('/bot/raffle/join', { discord_name: userName, discord_tag: userTag, discord_id: userId });
             await interaction.reply({
                 embeds: [{
                     description: `${enter} Você entrou no sorteio!`,
@@ -43,8 +48,9 @@ module.exports = async (interaction) => {
                 flags: MessageFlags.Ephemeral 
             });
         } else {
-            const newStatus = existingUser.participating === 1 ? 0 : 1;
-            await database.toggleRaffleParticipation(userId, newStatus);
+            const current = existingUser.participating === true || existingUser.participating === 1 || existingUser.participating === '1';
+            const newStatus = current ? false : true;
+            await api.post('/bot/raffle/toggle', { discord_id: userId, participating: newStatus });
             
             if (newStatus === 1) {
                 await interaction.reply({ 
@@ -65,7 +71,13 @@ module.exports = async (interaction) => {
             }
         }
 
-        const count = await database.countActiveRaffleParticipants();
+        let count = 0;
+        try {
+            const participants = await api.get('/bot/raffle/active');
+            count = Array.isArray(participants) ? participants.length : 0;
+        } catch (err) {
+            throw new Error('Erro ao obter participantes do sorteio');
+        }
         
         const check = formatEmoji(emojis.animated.check, true);
         const crown = formatEmoji(emojis.static.crown);

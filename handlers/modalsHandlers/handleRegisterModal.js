@@ -8,7 +8,7 @@ const {
     MessageFlags
 } = require('discord.js');
 const emojis = require('emojis');
-const database = require('database');
+const api = require('apiClient');
 
 module.exports = {
     async execute(interaction) {
@@ -16,18 +16,16 @@ module.exports = {
         const hasProgrammerRole = member.roles.cache.has('1365475846843928617');
 
         if (!hasProgrammerRole) {
-            const register = await database.getRegister(interaction.user.id, interaction.guild.id);
+            let register;
+            try {
+                register = await api.get(`/site/register/${interaction.user.id}/${interaction.guild.id}`);
+            } catch (err) {
+                console.error('Erro ao consultar registro via API:', err);
+                return await interaction.reply({ embeds: [{ description: '✖ Erro ao consultar registro. Tente novamente mais tarde.', color: 0xFF0000 }], flags: MessageFlags.Ephemeral });
+            }
 
             if (register) {
-                return await interaction.reply({
-                    embeds: [
-                        {
-                            description: '✖ Você já está registrado!',
-                            color: 0xFF0000
-                        }
-                    ],
-                    flags: MessageFlags.Ephemeral
-                });
+                return await interaction.reply({ embeds: [{ description: '✖ Você já está registrado!', color: 0xFF0000 }], flags: MessageFlags.Ephemeral });
             }
         }
 

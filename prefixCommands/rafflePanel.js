@@ -8,7 +8,7 @@ const {
     ThumbnailBuilder,
     formatEmoji
 } = require('discord.js');
-const database = require('database');
+const api = require('apiClient');
 
 module.exports = {
     name: 'psorteio',
@@ -22,7 +22,14 @@ module.exports = {
 
             const check = formatEmoji(emojis.animated.check, true);
             const crown = formatEmoji(emojis.static.crown);
-            const count = await database.countActiveRaffleParticipants();
+            let count = 0;
+            try {
+                const participants = await api.get('/bot/raffle/active');
+                count = Array.isArray(participants) ? participants.length : 0;
+            } catch (err) {
+                logger && logger.error('Erro ao obter participantes da API:', err);
+                return message.reply({ embeds: [{ description: '✖ Erro ao conectar na API do sorteio. Tente novamente mais tarde.', color: 0xFF0000 }] });
+            }
 
             const container = [
                 new TextDisplayBuilder().setContent("|| @everyone @here ||"),

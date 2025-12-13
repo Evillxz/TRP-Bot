@@ -5,6 +5,8 @@ const {
     MessageFlags
 } = require('discord.js');
 const chalk = require('chalk');
+const fs = require('fs');
+const path = require('path');
 
 const handleRegisterModal = require('../handlers/modalsHandlers/handleRegisterModal');
 const handleSubmitRegisterModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitRegisterModal');
@@ -33,8 +35,31 @@ const raffleButton = require('../handlers/buttonsHandlers/raffleButton');
 module.exports = {
     name: Events.InteractionCreate,
     async execute(interaction, context) {
-        const { client, logger } = context;
+        const { logger } = context;
         try {
+
+            async function isFeatureMaintenance(feature) {
+                try {
+                    const maintenancePath = path.join(__dirname, '..', 'maintenance.json');
+                    const data = await fs.promises.readFile(maintenancePath, 'utf8');
+                    const obj = JSON.parse(data);
+                    return !!obj[feature];
+                } catch (err) {
+                    return false;
+                }
+            }
+
+            if (await isFeatureMaintenance('general')) {
+                const reply = await interaction.reply({
+                    embeds: [{
+                        description: `🚧 Sistema em modo **manutenção**. Tente novamente mais tarde.`,
+                        color: 0xFFA500
+                    }],
+                    flags: MessageFlags.Ephemeral
+                });
+                setTimeout(() => reply.delete().catch(() => {}), 5000);
+                return;
+            }
 
             if (interaction.isButton()) {
 
@@ -95,36 +120,7 @@ module.exports = {
                 } 
 
 
-            } /* else if (interaction.isChatInputCommand()) {
-                const command = client.commands.get(interaction.commandName);
-
-                if (!command) {
-                    logger.error(`Nenhum comando correspondente a "${interaction.commandName}" foi encontrado.`);
-                    await interaction.reply({ content: 'Ocorreu um erro: comando não encontrado.', flags: MessageFlags.Ephemeral });
-                    return;
-                }
-                
-                await command.execute(interaction, context);
-            
-            // Comandos de usuário
-            } else if (interaction.isUserContextMenuCommand()) {
-                const command = client.commands.get(interaction.commandName);
-                 if (!command) {
-                    logger.error(`Nenhum comando de usuário correspondente a "${interaction.commandName}" foi encontrado.`);
-                    return;
-                }
-                await command.execute(interaction, context);
-
-            // Menus de Seleção
-            } else if (interaction.isStringSelectMenu() || interaction.isChannelSelectMenu() || interaction.isRoleSelectMenu() || interaction.isUserSelectMenu()) {
-                if (interaction.customId === 'admin_select_menu') {
-                    await handleAdminSelectMenu.execute(interaction, context);
-                } else if (interaction.customId === 'config_select_on_duty_role' || interaction.customId === 'config_select_off_duty_role') {
-                    await handleRoleConfigSelect.execute(interaction, context);
-                }
-            
-            } */
-            
+            } 
 
         } catch (error) { 
             if (error.code === 10062) {
@@ -134,7 +130,7 @@ module.exports = {
             const logPrefix = `[InteractionCreate ERROR] [Guild: ${interaction.guildId}] [User: ${interaction.user.id}]`;
             logger.error(`${logPrefix} --- ERRO NÃO CAPTURADO NO TRY/CATCH PRINCIPAL ---`, error); 
 
-            const errorMessage = `### ⛔ Erro interno no Sistema!\nOcorreu um problema interno ao processar sua ação.\nMinha equipe de desenvolvimento já foi notificada.`;
+            const errorMessage = `## ⛔ Erro interno no Sistema!\nMinha equipe de desenvolvimento já foi notificada.`;
             const errorContainer = [
                 new ContainerBuilder()
                     .setAccentColor(15548997)

@@ -1,5 +1,5 @@
 const { PermissionFlagsBits, AttachmentBuilder, formatEmoji, MessageFlags } = require('discord.js');
-const database = require('database');
+const api = require('apiClient');
 const emojis = require('emojis');
 const fs = require('fs');
 const path = require('path');
@@ -22,7 +22,13 @@ module.exports = {
         }
 
         try {
-            const participants = await database.getActiveRaffleParticipants();
+            let participants;
+            try {
+                participants = await api.get('/bot/raffle/active');
+            } catch (err) {
+                console.error('Erro ao obter participantes da API:', err);
+                return message.reply({ embeds: [{ description: '✖ Erro ao conectar na API do sorteio. Tente novamente mais tarde.', color: 0xFF0000 }], flags: MessageFlags.Ephemeral });
+            }
 
             const gift = formatEmoji(emojis.static.gift);
 

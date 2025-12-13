@@ -15,7 +15,8 @@ const emojis = require('emojis');
 module.exports = {
     async execute(interaction) {
         const member = interaction.member;
-        const hasPermissionRole = member.roles.cache.has('1447573423600435240');
+        // const hasPermissionRole = member.roles.cache.has('1447573423600435240');
+        const hasPermissionRole = member.roles.cache.has('1300104175476281354');
         
         if (!hasPermissionRole) {
             return await interaction.reply({

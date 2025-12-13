@@ -1,5 +1,5 @@
 const { MessageFlags, formatEmoji, ContainerBuilder, TextDisplayBuilder, ThumbnailBuilder, SectionBuilder } = require('discord.js');
-const database = require('database');
+const api = require('apiClient');
 
 module.exports = {
     async execute(interaction, context) {
@@ -10,6 +10,8 @@ module.exports = {
 
             const userId = interaction.fields.getSelectedUsers("user_modal_ban_select", true)?.map((user) => user.id)[0];; 
             const member = await interaction.guild.members.fetch(userId).catch(() => null);
+
+            const nickname = member?.nickname || member?.user.username;
 
             const reason = interaction.fields.getTextInputValue("reason_text_input_ban");
             const adminId = interaction.user.id;
@@ -41,7 +43,8 @@ module.exports = {
 
             await member.ban({ reason: reason });
             
-            const banId = await database.addBan(userId, member.user.tag, adminId, guildId, reason);
+            const r = await api.post('/bot/bans/add', { user_id: userId, user_nickname: nickname, user_tag: member.user.tag, admin_id: adminId, guild_id: guildId, reason });
+            const banId = r.id;
 
             const channel = await interaction.guild.channels.fetch(logChannelId).catch(() => null);
 

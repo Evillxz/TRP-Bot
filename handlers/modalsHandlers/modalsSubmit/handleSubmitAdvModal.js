@@ -1,8 +1,9 @@
 const { MessageFlags, formatEmoji, ContainerBuilder, TextDisplayBuilder, ThumbnailBuilder, SectionBuilder } = require('discord.js');
-const database = require('database');
+const api = require('apiClient');
 
 const WARNING_ROLES = {
-    1: '1446613392826564658',
+    // 1: '1446613392826564658',
+    1: '1366221765449220136',
     2: '1446613446639751189',
     3: '1446613483402821794'
 };
@@ -20,7 +21,8 @@ module.exports = {
             const durationSelect = interaction.fields.getStringSelectValues("duration_select_adv")[0];
             const adminId = interaction.user.id;
             const guildId = interaction.guild.id;
-            const logChannelId = '1296584858910326926';
+            // const logChannelId = '1296584858910326926';
+            const logChannelId = '1293740554076688436';
 
             const alert = formatEmoji(emojis.static.alert);
 
@@ -35,18 +37,27 @@ module.exports = {
 
             const durationHours = durationSelect === 'permanent_adv_select' ? null : parseInt(durationSelect.split('_')[0]);
 
-            const activeWarnings = await database.getActiveWarnings(userId, guildId);
+            let activeWarnings = [];
+            try {
+                activeWarnings = await api.get(`/bot/warnings/active/${userId}/${guildId}`);
+            } catch (err) {
+                throw new Error('Erro ao obter advertências via API');
+            }
             const warningCount = activeWarnings.length;
             const newWarningLevel = warningCount + 1;
 
             if (newWarningLevel >= 3) {
-                const warningId = await database.addWarning(userId, member.user.tag, adminId, guildId, reason, durationHours);
+                let warningId;
+                const r = await api.post('/bot/warnings/add', { user_id: userId, user_tag: member.user.tag, admin_id: adminId, guild_id: guildId, reason, duration_hours: durationHours });
+                warningId = r.id;
 
                 await member.kick(`Acúmulo de advertências (${newWarningLevel})`);
                 
-                await database.clearUserWarnings(userId, guildId);
-                
-                const kickId = await database.addBan(userId, member.user.tag, 'SYSTEM_AUTO_KICK', guildId, `Kick automático por ${newWarningLevel} advertências`);
+                await api.post('/bot/warnings/clear', { user_id: userId, guild_id: guildId });
+
+                let kickId;
+                const r2 = await api.post('/bot/bans/add', { user_id: userId, user_tag: member.user.tag, admin_id: 'SYSTEM_AUTO_KICK', guild_id: guildId, reason: `Kick automático por ${newWarningLevel} advertências` });
+                kickId = r2.id;
                 
                 await interaction.editReply({
                     embeds: [{
@@ -75,7 +86,9 @@ module.exports = {
                 }
             }
 
-            const warningId = await database.addWarning(userId, member.user.tag, adminId, guildId, reason, durationHours);
+            let warningId;
+            const r = await api.post('/bot/warnings/add', { user_id: userId, user_tag: member.user.tag, admin_id: adminId, guild_id: guildId, reason, duration_hours: durationHours });
+            warningId = r.id;
 
             const channel = await interaction.guild.channels.fetch(logChannelId).catch(() => null);
             if (channel) {

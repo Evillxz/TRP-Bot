@@ -8,7 +8,7 @@ const {
     SeparatorBuilder,
     SeparatorSpacingSize
 } = require('discord.js');
-const database = require('database');
+const api = require('apiClient');
 
 function formatarDataBR(dateString, ajustarFuso = true, retornarTimestamp = false) {
     const d = new Date(dateString);
@@ -30,7 +30,13 @@ module.exports = {
 
         try {
             const emojiBan = formatEmoji(emojis.static.ban);
-            const bans = await database.getBans(interaction.guild.id, 100);
+            let bans = [];
+            try {
+                bans = await api.get(`/bot/bans/list/${interaction.guild.id}`, { limit: 100 });
+            } catch (err) {
+                logger && logger.error('Erro ao obter bans via API:', err);
+                return interaction.editReply({ embeds: [{ description: '✖ Erro ao conectar na API de banimentos. Tente novamente mais tarde.', color: 0xFF0000 }] });
+            }
 
             if (bans.length === 0) {
                 return interaction.editReply({
@@ -48,6 +54,7 @@ module.exports = {
                 const criadoEm = formatarDataBR(ban.created_at, true, true);
                 response += `### Banimento ${ban.id}\n\n`;
                 response += `- Usuário: <@${ban.user_id}> **(${ban.user_tag})**\n`;
+                response += `- Apelido: \`${ban.user_nickname || 'Indisponível'}\`\n`;
                 response += `- Responsável: <@${ban.admin_id}>\n`;
                 response += `- Data: <t:${criadoEm}:f>\n`;
                 response += `- Motivo: \` ${ban.reason} \`\n\n`;

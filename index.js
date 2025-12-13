@@ -3,13 +3,13 @@ require('module-alias/register');
 const fs = require('node:fs');
 const path = require('node:path');
 const { Events, MessageFlags, formatEmoji } = require('discord.js');
+const axios = require('axios');
 const { Kazagumo } = require('kazagumo');
 const { Connectors } = require('shoukaku');
 const chalk = require('chalk');
 const logger = require('./config/logger');
 const { client } = require('./config/client');
 const emojis = require('./emojis.json');
-const database = require('./database/database');
 const WarningManager = require('./utils/warningManager');
 const musicPanelManager = require('./utils/musicPanelManager');
 
@@ -92,7 +92,6 @@ const baseEventHandlerContext = {
     emojis: emojis,
     chalk: chalk,
     logger: logger,
-    database: database,
     djs: {
         MessageFlags,
         formatEmoji
@@ -184,7 +183,7 @@ client.on('messageCreate', async message => {
         await command.execute(message, baseEventHandlerContext);
     } catch (err) {
         logger.error(`Erro no comando de prefixo '${commandName}': ${err.stack || err}`);
-        message.reply('❌ Ocorreu um erro ao executar este comando.');
+        message.reply('✖ Ocorreu um erro ao executar este comando.');
     } 
 });
 
@@ -208,11 +207,32 @@ for (const file of eventFiles) {
     }
 }
 
-database.init().then(() => {
-    WarningManager.startMonitoring();
-    client.login(process.env.BOT_TOKEN);
-}).catch(err => {
-    logger.error('Erro ao inicializar banco de dados:', err);
-    process.exit(1);
-});
+function checkApiHealth() {
+    const apiBase = process.env.API_URL || process.env.API_BASE_URL || 'http://localhost:5500';
+    const apiKey = process.env.API_KEY || process.env.BOT_API_KEY;
+    const headers = apiKey ? { 'x-api-key': apiKey } : {};
+    axios.get(`${apiBase.replace(/\/$/, '')}/health`, { headers, timeout: 5000 })
+        .then(res => {
+            if (res && res.status === 200) {
+                logger.info(`${chalk.green.bold('[API]')} Saúde da API: OK => Saudável`);
+            } else {
+                logger.warn(`${chalk.yellow.bold('[API]')} Saúde da API: ${res.status} => Não saudável`);
+            }
+        })
+        .catch(err => {
+            logger.warn && logger.warn(`${chalk.yellow.bold('[API]')} Verificação de saúde falhou (${apiBase}/health): ${err.message}`);
+        });
+}
 
+checkApiHealth();
+WarningManager.startMonitoring();
+
+try {
+    const wsClient = require('./utils/wsClient');
+    wsClient.connect(client);
+    logger.info(`${chalk.green.bold('[WEBSOCKET]')} Cliente WebSocket conectando à API...`);
+} catch (err) {
+    logger.error(`${chalk.red.bold('[WEBSOCKET]')} Erro ao iniciar cliente WebSocket: ${err && err.message ? err.message : err}`);
+}
+
+client.login(process.env.BOT_TOKEN);

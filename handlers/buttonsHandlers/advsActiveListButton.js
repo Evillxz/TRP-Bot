@@ -8,7 +8,7 @@ const {
     SeparatorBuilder,
     SeparatorSpacingSize
 } = require('discord.js');
-const database = require('database');
+const api = require('apiClient');
 
 function formatarDataBR(dateString, ajustarFuso = true, retornarTimestamp = false) {
     const d = new Date(dateString);
@@ -41,14 +41,13 @@ module.exports = {
         try {
 
             const emojiOn = formatEmoji(emojis.static.toggleOn);
-            const query = `SELECT * FROM warnings WHERE guild_id = ? AND is_active = 1 ORDER BY created_at DESC LIMIT 10`;
-            
-            const warnings = await new Promise((resolve, reject) => {
-                database.db.all(query, [interaction.guild.id], (err, rows) => {
-                    if (err) reject(err);
-                    else resolve(rows);
-                });
-            });
+            let warnings = [];
+            try {
+                warnings = await api.get(`/bot/warnings/active_guild/${interaction.guild.id}`);
+            } catch (err) {
+                logger && logger.error('Erro ao obter advertências via API:', err);
+                return interaction.editReply({ embeds: [{ description: '✖ Erro ao conectar na API de advertências. Tente novamente mais tarde.', color: 0xFF0000 }] });
+            }
 
             if (warnings.length === 0) {
                 return interaction.editReply({

@@ -6,3 +6,5 @@ package-lock.json
 bot.db
 logs/
 lavalink-server/
+.discloudignore
+WS_DOCUMENTATION.md

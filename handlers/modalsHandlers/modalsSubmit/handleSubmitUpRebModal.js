@@ -7,7 +7,7 @@ const {
     formatEmoji
 } = require('discord.js');
 const emojis = require('emojis');
-const database = require('database');
+const api = require('apiClient');
 
 function getActionConfig(action, guild) {
     const configMap = {
@@ -69,17 +69,17 @@ module.exports = {
             await user.roles.add(newRoleId);
             await user.roles.remove(oldRoleId);
 
-            await database.addUpRebLog(
-                action,
-                userId,
-                user.user.tag,
-                adminId,
-                interaction.user.tag,
-                interaction.guild.id,
-                oldRoleId,
-                newRoleId,
+            await api.post('/bot/up_reb_logs/add', {
+                action_type: action,
+                user_id: userId,
+                user_tag: user.user.tag,
+                admin_id: adminId,
+                admin_tag: interaction.user.tag,
+                guild_id: interaction.guild.id,
+                old_role_id: oldRoleId,
+                new_role_id: newRoleId,
                 reason
-            );
+            });
 
             const container = [
                 new ContainerBuilder()

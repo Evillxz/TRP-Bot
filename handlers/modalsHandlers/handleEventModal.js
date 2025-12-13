@@ -1,5 +1,5 @@
 const { ModalBuilder, LabelBuilder, TextInputBuilder, TextInputStyle, FileUploadBuilder, MessageFlags } = require('discord.js');
-const database = require('database');
+const api = require('apiClient');
 
 module.exports = {
     async execute(interaction) {
@@ -7,16 +7,17 @@ module.exports = {
         const hasOrganizerRole = member.roles.cache.has('1447573012160450611');
         
         if (!hasOrganizerRole) {
-            const isRegistered = await database.isUserRegisteredInEvent(interaction.user.id);
-            
+            let isRegistered = false;
+            try {
+                const r = await api.get(`/bot/events/user/${interaction.user.id}`);
+                isRegistered = !!r;
+            } catch (err) {
+                console.error('Erro ao verificar inscrição via API:', err);
+                return await interaction.reply({ embeds: [{ description: '✖ Erro ao verificar inscrição. Tente novamente mais tarde.', color: 0xFF0000 }], flags: MessageFlags.Ephemeral });
+            }
+
             if (isRegistered) {
-                return await interaction.reply({
-                    embeds: [{
-                        description: '✖ Você já está registrado no evento!',
-                        color: 0xFF0000
-                    }],
-                    flags: MessageFlags.Ephemeral
-                });
+                return await interaction.reply({ embeds: [{ description: '✖ Você já está registrado no evento!', color: 0xFF0000 }], flags: MessageFlags.Ephemeral });
             }
         }
 

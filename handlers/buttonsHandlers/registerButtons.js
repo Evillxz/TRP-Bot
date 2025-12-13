@@ -11,8 +11,8 @@ const {
     ButtonStyle,
     formatEmoji
 } = require('discord.js');
-const database = require('database');
 const emojis = require('emojis');
+const api = require('apiClient');
 
 module.exports = {
     async execute(interaction, context) {
@@ -128,18 +128,26 @@ module.exports = {
                 allowedMentions: { parse: [] }
             });
 
-            await database.addRegister(
-                registerData.name, 
-                targetUser.tag, 
-                targetUser.id, 
-                registerData.id, 
-                registerData.telephone, 
-                registerData.availabilityRoles, 
-                registerData.recId, 
-                interaction.user.id, 
-                interaction.user.tag, 
-                interaction.guild.id
-            );
+            try {
+                await api.post('/site/register', {
+                    user_name: registerData.name,
+                    user_discord_name: targetUser.tag,
+                    user_id: targetUser.id,
+                    user_game_id: registerData.id,
+                    user_telephone: registerData.telephone,
+                    user_shift: registerData.availabilityRoles,
+                    rec_id: registerData.recId,
+                    approver_id: interaction.user.id,
+                    approver_tag: interaction.user.tag,
+                    guild_id: interaction.guild.id
+                });
+            } catch (err) {
+                context.logger && context.logger.error('Erro ao salvar registro via API:', err);
+                await interaction.followUp({
+                    embeds: [{ description: '✖ Erro ao salvar registro na API. Tente novamente mais tarde.', color: 0xFF0000 }],
+                    flags: MessageFlags.Ephemeral
+                }).catch(() => {});
+            }
 
             const welcomeChannelId = '1368788175148810302';
             const welcomeChannel = interaction.guild.channels.cache.get(welcomeChannelId);

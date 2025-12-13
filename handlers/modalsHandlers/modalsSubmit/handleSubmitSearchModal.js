@@ -8,7 +8,7 @@ const {
     SeparatorBuilder,
     SeparatorSpacingSize
 } = require('discord.js');
-const database = require('database');
+const api = require('apiClient');
 
 function formatarDataBR(dateString, ajustarFuso = true, retornarTimestamp = false) {
     const d = new Date(dateString);
@@ -49,7 +49,13 @@ module.exports = {
             let color = 0x000000;
 
             if (category === 'adv_option_select') {
-                const warnings = await database.getAllWarnings(userId, interaction.guild.id);
+                let warnings = [];
+                try {
+                    warnings = await api.get(`/bot/warnings/all/${userId}/${interaction.guild.id}`);
+                } catch (err) {
+                    console.error('Erro ao obter advertências via API:', err);
+                    return interaction.editReply({ embeds: [{ description: '✖ Erro ao conectar na API de advertências. Tente novamente mais tarde.', color: 0xFF0000 }] });
+                }
                 if (warnings.length === 0) {
                     return interaction.editReply({
                         embeds: [{ description: '✖ Nenhuma advertência encontrada para este usuário.', color: 0xFF0000 }]
@@ -72,7 +78,13 @@ module.exports = {
 
 
             } else if (category === 'up_option_select') {
-                const logs = await database.getUpRebLogs(interaction.guild.id, 100);
+                let logs = [];
+                try {
+                    logs = await api.get(`/bot/up_reb_logs/${interaction.guild.id}`);
+                } catch (err) {
+                    console.error('Erro ao obter logs via API:', err);
+                    return interaction.editReply({ embeds: [{ description: '✖ Erro ao conectar na API de up/reb. Tente novamente mais tarde.', color: 0xFF0000 }] });
+                }
                 const upLogs = logs.filter(l => l.action_type === 'UP' && l.user_id === userId);
                 if (upLogs.length === 0) {
                     return interaction.editReply({
@@ -94,7 +106,13 @@ module.exports = {
 
 
             } else if (category === 'reb_option_select') {
-                const logs = await database.getUpRebLogs(interaction.guild.id, 100);
+                let logs = [];
+                try {
+                    logs = await api.get(`/bot/up_reb_logs/${interaction.guild.id}`);
+                } catch (err) {
+                    console.error('Erro ao obter logs via API:', err);
+                    return interaction.editReply({ embeds: [{ description: '✖ Erro ao conectar na API de up/reb. Tente novamente mais tarde.', color: 0xFF0000 }] });
+                }
                 const rebLogs = logs.filter(l => l.action_type === 'REB' && l.user_id === userId);
                 if (rebLogs.length === 0) {
                     return interaction.editReply({
@@ -122,8 +140,20 @@ module.exports = {
                 title = `${emoji} Perfil de Usuário(a)\n-# - ${member} (${member.user.tag})\n-# - Data de Entrada: <t:${Math.floor(joined.getTime() / 1000)}:f>`;
                 color = 0x63100a
 
-                const warnings = await database.getActiveWarnings(userId, interaction.guild.id);
-                const logs = await database.getUpRebLogs(interaction.guild.id, 100);
+                let warnings = [];
+                let logs = [];
+                try {
+                    warnings = await api.get(`/bot/warnings/active/${userId}/${interaction.guild.id}`);
+                } catch (err) {
+                    console.error('Erro ao obter advertências ativas via API:', err);
+                    return interaction.editReply({ embeds: [{ description: '✖ Erro ao conectar na API de advertências. Tente novamente mais tarde.', color: 0xFF0000 }] });
+                }
+                try {
+                    logs = await api.get(`/bot/up_reb_logs/${interaction.guild.id}`);
+                } catch (err) {
+                    console.error('Erro ao obter logs via API:', err);
+                    return interaction.editReply({ embeds: [{ description: '✖ Erro ao conectar na API de up/reb. Tente novamente mais tarde.', color: 0xFF0000 }] });
+                }
                 const upLogs = logs.filter(l => l.action_type === 'UP' && l.user_id === userId);
                 const rebLogs = logs.filter(l => l.action_type === 'REB' && l.user_id === userId);
 

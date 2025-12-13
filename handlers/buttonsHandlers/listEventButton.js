@@ -1,5 +1,5 @@
 const { TextDisplayBuilder, SeparatorBuilder, SeparatorSpacingSize, ContainerBuilder, MessageFlags, ThumbnailBuilder, SectionBuilder } = require('discord.js');
-const database = require('database');
+const api = require('apiClient');
 
 module.exports = {
     async execute(interaction, context) {
@@ -7,7 +7,13 @@ module.exports = {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
         try {
-            const registrations = await database.getEventRegistrations();
+            let registrations = [];
+            try {
+                registrations = await api.get('/bot/events/list');
+            } catch (err) {
+                console.error('Erro ao obter registros de evento via API:', err);
+                return await interaction.editReply({ embeds: [{ description: '✖ Erro ao conectar na API de eventos. Tente novamente mais tarde.', color: 0xFF0000 }] });
+            }
             const guild = interaction.guild;
 
             if (registrations.length === 0) {

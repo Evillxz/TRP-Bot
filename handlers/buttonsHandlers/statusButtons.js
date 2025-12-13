@@ -11,7 +11,7 @@ const {
     MessageFlags
 } = require('discord.js');
 const packageJson = require('../../package.json');
-const emojis = require('../../emojis.json');
+const emojis = require('emojis');
 
 async function handleStatusButtons(interaction, { emojis, chalk, logger }) {
     const client = interaction.client;
@@ -77,13 +77,13 @@ async function handleStatusButtons(interaction, { emojis, chalk, logger }) {
                                 .setStyle(ButtonStyle.Secondary)
                                 .setLabel("Atualizar")
                                 .setEmoji({ id: emojis.static.reloading.id })
-                                //.setDisabled(true)
+                                .setDisabled(false)
                                 .setCustomId("refresh_status"),
                             new ButtonBuilder()
                                 .setStyle(ButtonStyle.Secondary)
                                 .setLabel("Detalhes Avançados")
                                 .setEmoji({ id: emojis.static.advanced.id })
-                                //.setDisabled(true)
+                                .setDisabled(false)
                                 .setCustomId("detailed_status"),
                             new ButtonBuilder()
                                 .setStyle(ButtonStyle.Link)
