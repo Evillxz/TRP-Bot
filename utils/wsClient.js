@@ -7,9 +7,14 @@ const { executeHandler, getAvailableActions } = require('./wsHandlers');
 let ws = null;
 let reconnecting = false;
 let reconnectAttempts = 0;
+let heartbeatInterval = null;
+let heartbeatTimeout = null;
+let isAlive = false;
 const MAX_RECONNECT_ATTEMPTS = 50;
 const BASE_RECONNECT_DELAY = 3000;
 const MAX_RECONNECT_DELAY = 60000;
+const HEARTBEAT_INTERVAL = 30000; // 30 segundos
+const HEARTBEAT_TIMEOUT = 10000; // 10 segundos de timeout
 const localBotId = process.env.BOT_ID || `bot_${uuidv4()}`;
 
 async function connect(client) {
@@ -33,7 +38,11 @@ async function connect(client) {
 
     ws.on('open', () => {
       logger.info(`${chalk.green.bold('[WS CLIENT]')} Conectado com sucesso`);
-      reconnectAttempts = 0; // Reset on successful connection
+      reconnectAttempts = 0;
+      isAlive = true;
+      
+      // Iniciar heartbeat
+      startHeartbeat();
       
       const doAuth = () => {
         try {
@@ -87,19 +96,58 @@ async function connect(client) {
       }
     });
 
+    ws.on('pong', () => {
+      isAlive = true;
+      if (heartbeatTimeout) clearTimeout(heartbeatTimeout);
+    });
+
     ws.on('close', (code, reason) => {
       logger.warn(`${chalk.yellow.bold('[WS CLIENT]')} Desconectado (${code})`);
+      stopHeartbeat();
       ws = null;
+      isAlive = false;
       scheduleReconnect();
     });
 
     ws.on('error', (err) => {
       if (err.code === 'ECONNREFUSED') {
-        logger.warn(`${chalk.yellow.bold('[WS CLIENT]')} API indisponível`);
+        logger.warn(`${chalk.yellow.bold('[WS CLIENT]')} API indisponível - Conexão recusada`);
+      } else if (err.message && err.message.includes('404')) {
+        logger.warn(`${chalk.yellow.bold('[WS CLIENT]')} Erro 404 - Endpoint /ws não encontrado. Verifique configuração da API.`);
       } else {
         logger.error(`${chalk.red.bold('[WS CLIENT]')} Erro: ${err && err.message ? err.message : err}`);
       }
     });
+  }
+
+  function startHeartbeat() {
+    stopHeartbeat(); // Limpa interval anterior
+    
+    heartbeatInterval = setInterval(() => {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        isAlive = false;
+        ws.ping();
+        
+        // Se não receber pong em 10s, forçar reconexão
+        heartbeatTimeout = setTimeout(() => {
+          if (!isAlive) {
+            logger.warn(`${chalk.yellow.bold('[WS CLIENT]')} Heartbeat não respondeu - Reconectando`);
+            ws.close(1000, 'heartbeat_timeout');
+          }
+        }, HEARTBEAT_TIMEOUT);
+      }
+    }, HEARTBEAT_INTERVAL);
+  }
+
+  function stopHeartbeat() {
+    if (heartbeatInterval) {
+      clearInterval(heartbeatInterval);
+      heartbeatInterval = null;
+    }
+    if (heartbeatTimeout) {
+      clearTimeout(heartbeatTimeout);
+      heartbeatTimeout = null;
+    }
   }
 
   function scheduleReconnect() {
@@ -120,7 +168,6 @@ async function connect(client) {
       doConnect();
     }, delay);
 
-    // Cleanup timeout se conectar antes
     return timeoutId;
   }
 
