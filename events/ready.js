@@ -1,5 +1,6 @@
 const { Events, ActivityType } = require('discord.js');
 const packageJson = require('../package.json');
+const { initializeStatusSync } = require('../utils/statusSync');
 
 module.exports = {
     name: Events.ClientReady,
@@ -10,6 +11,23 @@ module.exports = {
         logger.info(`${chalk.green.bold(`[READY]`)} Conectado ao Discord | Bot está online como ${client.user.tag}!`);
         if (client.loadActiveSessions) {
             await client.loadActiveSessions(context);
+        }
+
+        // ⏸️ Sistema de monitoramento de presença hibernado
+        try {
+            const presenceUpdate = require('./presenceUpdate');
+            if (presenceUpdate.detectCurrentlyPlayingUsers) {
+                await presenceUpdate.detectCurrentlyPlayingUsers();
+            }
+        } catch (error) {
+            logger.warn(`${chalk.yellow.bold(`[READY]`)} Erro ao inicializar módulo de presença: ${error.message}`);
+        }
+
+        // Inicializar sincronização de status dos usuários (inclui roles)
+        try {
+            initializeStatusSync(client, context);
+        } catch (error) {
+            logger.error(`${chalk.red.bold(`[READY]`)} Erro ao inicializar sincronização de status: ${error.message}`);
         }
 
         client.user.setStatus('online');

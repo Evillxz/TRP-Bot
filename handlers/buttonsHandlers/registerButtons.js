@@ -85,7 +85,7 @@ module.exports = {
             const registeredRoleId = '1296584614391054428';
             const initialRoleId = '1446158406561042602';
             const availabilityRole = registerData.availabilityRoles;
-            const newDate = new Date().toLocaleString('pt-BR');
+            const newDate = new Date().toISOString();
 
             const rolesToAdd = [registeredRoleId, initialRoleId, ...availabilityRole];
             
@@ -130,32 +130,37 @@ module.exports = {
             });
 
             try {
-                
-                await api.post('/bot/memberprofile', {
+                const payload = {
                     user_name: registerData.name,
-                    user_discord_tag: targetUser.tag,
+                    user_discord_tag: targetUser.user.tag || targetUser.user.username || `${targetUser.user.id}`,
                     user_discord_nick: newNickname,
                     user_id: targetUser.id,
                     user_game_id: registerData.id,
                     user_telephone: registerData.telephone,
-                    user_shift: registerData.availabilityRoles,
+                    user_shift: registerData.availabilityRoles.join(','),
                     rec_id: registerData.recId,
                     approver_id: interaction.user.id,
                     approver_tag: interaction.user.tag,
                     approver_nick: interaction.member.nickname || interaction.user.username,
                     guild_id: interaction.guild.id,
                     recruited_at: newDate,
-                });
+                };
+
+                context.logger && context.logger.info('Enviando payload para API: ' + JSON.stringify(payload, null, 2));
+                
+                await api.post('/bot/memberprofile', payload);
 
             } catch (err) {
-                context.logger && context.logger.error('Erro ao salvar registro via API:', err);
+                const errorDetails = err.response?.data || err.message || JSON.stringify(err);
+                context.logger && context.logger.error('Erro ao salvar registro via API: ' + JSON.stringify(errorDetails));
                 await interaction.followUp({
                     embeds: [{ description: '✖ Erro ao salvar registro na API. Tente novamente mais tarde.', color: 0xFF0000 }],
                     flags: MessageFlags.Ephemeral
                 }).catch(() => {});
             }
 
-            const welcomeChannelId = '1368788175148810302';
+            // const welcomeChannelId = '1368788175148810302';
+            const welcomeChannelId = '1365507026188370012';
             const welcomeChannel = interaction.guild.channels.cache.get(welcomeChannelId);
             
             if (welcomeChannel) {

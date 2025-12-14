@@ -21,6 +21,24 @@ module.exports = {
         const availabilityRoles = interaction.fields.getStringSelectValues('availability_select_menu');
         const recId = interaction.fields.getStringSelectValues('rec_select_menu')?.[0];
         
+        // Sanitizar espaços em branco
+        const cleanName = name?.trim();
+        const cleanId = id?.trim();
+        const cleanTelephone = telephone?.trim();
+        
+        // Validação de campos obrigatórios
+        if (!cleanName || !cleanId || !cleanTelephone || !availabilityRoles?.length || !recId) {
+            return await interaction.reply({ 
+                embeds: [
+                    {
+                        description: '✖ Por favor, preencha **todos os campos** do formulário, incluindo:\n• Nome\n• ID do Jogo\n• Telefone\n• Turnos\n• Recrutador',
+                        color: 0xFF0000
+                    }
+                ],
+                flags: MessageFlags.Ephemeral
+            });
+        }
+        
         const adminChannelId = '1363187296764956802';
         // const adminChannelId = '1304465490256596992';
         const adminChannel = interaction.guild.channels.cache.get(adminChannelId);
@@ -28,6 +46,7 @@ module.exports = {
         const roles = availabilityRoles.map(id => `<@&${id}>`).join('\u200b');
         
         if (!adminChannel) {
+
             return await interaction.reply({ 
                 embeds: [
                     {
@@ -40,7 +59,6 @@ module.exports = {
         }
 
         const container = [
-            new TextDisplayBuilder().setContent("<@&1446226263521104105>"),
             new ContainerBuilder()
             .setAccentColor(0x212121)
             .addSectionComponents(
@@ -59,9 +77,9 @@ module.exports = {
             .addTextDisplayComponents(
                 new TextDisplayBuilder().setContent(
                     `**Informações:**`+
-                    `\n- Nome: \`${name}\``+
-                    `\n- ID: \`${id}\``+
-                    `\n- Telefone: \`${telephone}\``+
+                    `\n- Nome: \`${cleanName}\``+
+                    `\n- ID: \`${cleanId}\``+
+                    `\n- Telefone: \`${cleanTelephone}\``+
                     `\n- Turno(s): ${roles}`+
                     `\n- Recrutador: <@${recId}>`
                 ),
@@ -93,9 +111,9 @@ module.exports = {
 
         context.tempRegisters = context.tempRegisters || new Map();
         context.tempRegisters.set(interaction.user.id, {
-            name,
-            id,
-            telephone,
+            name: cleanName,
+            id: cleanId,
+            telephone: cleanTelephone,
             availabilityRoles: availabilityRoles,
             recId,
             userId: interaction.user.id

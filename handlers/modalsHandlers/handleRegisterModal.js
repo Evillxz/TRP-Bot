@@ -19,12 +19,15 @@ module.exports = {
             let register;
             try {
                 register = await api.get(`/bot/memberprofile/${interaction.user.id}/${interaction.guild.id}`);
+                console.log({ register });
             } catch (err) {
                 console.error('Erro ao consultar registro via API:', err);
                 return await interaction.reply({ embeds: [{ description: '✖ Erro ao consultar registro. Tente novamente mais tarde.', color: 0xFF0000 }], flags: MessageFlags.Ephemeral });
             }
+            console.log({ register });
 
             if (register) {
+                console.log({ register });
                 return await interaction.reply({ embeds: [{ description: '✖ Você já está registrado!', color: 0xFF0000 }], flags: MessageFlags.Ephemeral });
             }
         }
@@ -59,6 +62,8 @@ module.exports = {
                     new TextInputBuilder()
                     .setCustomId('phone_text_input')
                     .setStyle(TextInputStyle.Short)
+                    .setMinValues(6)
+                    .setMaxValues(6)
                     .setPlaceholder('Seu número de telefone dentro do jogo...')
                 )
             )
