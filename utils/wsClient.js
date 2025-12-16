@@ -61,69 +61,51 @@ async function connect(client) {
     logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Dados do servidor salvos em cache (${guildId})`);
   };
 
-  const collectServerData = async (guild) => {
-    try {
-      const cachedData = getCachedServerData(guild.id);
-      if (cachedData) {
-        return cachedData;
-      }
+  const collectServerData = (guild) => {
+    const rolesData = guild.roles.cache
+      .filter(r => r.id !== guild.id)
+      .map(r => ({
+        id: r.id,
+        name: r.name,
+        color: r.color ? `#${r.color.toString(16).padStart(6, '0')}` : '#b3bac1'
+      }))
+      .sort((a, b) => b.name.localeCompare(a.name));
 
-      logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Coletando dados do servidor (cache expirado ou não existe)...`);
+    const usersData = guild.members.cache
+      .filter(m => !m.user.bot)
+      .map(m => ({
+        id: m.user.id,
+        username: m.user.username,
+        nickname: m.nickname || undefined,
+        avatar: m.user.displayAvatarURL({ size: 64 })
+      }))
+      .sort((a, b) =>
+        (a.nickname || a.username).localeCompare(b.nickname || b.username)
+      );
 
-      const roles = await guild.roles.fetch();
-      const rolesData = roles
-        .filter(r => r.id !== guild.id)
-        .map(r => ({
-          id: r.id,
-          name: r.name,
-          color: r.color ? `#${r.color.toString(16).padStart(6, '0')}` : '#b3bac1'
-        }))
-        .sort((a, b) => b.name.localeCompare(a.name));
+    const channelsData = guild.channels.cache
+      .filter(c => c.isTextBased() && c.viewable)
+      .map(c => ({
+        id: c.id,
+        name: c.name,
+        type: c.type
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
 
-      const members = await guild.members.fetch();
-      const usersData = members
-        .filter(m => !m.user.bot)
-        .map(m => ({
-          id: m.user.id,
-          username: m.user.username,
-          nickname: m.nickname || undefined,
-          avatar: m.user.displayAvatarURL({ size: 64 })
-        }))
-        .sort((a, b) => (a.nickname || a.username).localeCompare(b.nickname || b.username));
+    const emojisData = guild.emojis.cache
+      .map(e => ({
+        id: e.id,
+        name: e.name,
+        animated: e.animated
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
 
-      const channels = await guild.channels.fetch();
-      const channelsData = channels
-        .filter(c => c.isTextBased && c.viewable)
-        .map(c => ({
-          id: c.id,
-          name: c.name,
-          type: c.type
-        }))
-        .sort((a, b) => a.name.localeCompare(b.name));
-
-      const emojis = await guild.emojis.fetch();
-      const emojisData = emojis
-        .map(e => ({
-          id: e.id,
-          name: e.name,
-          animated: e.animated
-        }))
-        .sort((a, b) => a.name.localeCompare(b.name));
-
-      const serverData = {
-        roles: rolesData,
-        users: usersData,
-        channels: channelsData,
-        emojis: emojisData
-      };
-
-      cacheServerData(guild.id, serverData);
-
-      return serverData;
-    } catch (e) {
-      logger.error(`${chalk.red.bold('[WS CLIENT]')} Erro ao coletar dados do servidor: ${e && e.message ? e.message : e}`);
-      return { roles: [], users: [], channels: [], emojis: [] };
-    }
+    return {
+      roles: rolesData,
+      users: usersData,
+      channels: channelsData,
+      emojis: emojisData
+    };
   };
 
   function doConnect() {
@@ -139,8 +121,6 @@ async function connect(client) {
       logger.info(`${chalk.green.bold('[WS CLIENT]')} Conectado com sucesso`);
       reconnectAttempts = 0;
       isAlive = true;
-      
-      // Iniciar heartbeat
       startHeartbeat();
       
       const doAuth = async () => {
@@ -148,8 +128,6 @@ async function connect(client) {
           const guildKeys = Array.from(client.guilds.cache.keys());
           logger.info(`${chalk.green.bold('[WS CLIENT]')} Autenticação enviada - ID: ${localBotId}, Servidores: ${guildKeys.length}`);
           ws.send(JSON.stringify({ type: 'auth', apiKey, botId: localBotId, guilds: guildKeys }));
-
-          // Enviar dados do servidor após autenticação
           try {
             const GUILD_ID = process.env.GUILD_ID || '1295702106195492894';
             const guild = client.guilds.cache.get(GUILD_ID);
@@ -161,8 +139,6 @@ async function connect(client) {
                 data: serverData 
               }));
               logger.info(`${chalk.green.bold('[WS CLIENT]')} Dados do servidor enviados para API`);
-              
-              // Iniciar intervalo periódico para reenviar dados
               startServerDataRefresh();
             }
           } catch (e) {
@@ -241,14 +217,12 @@ async function connect(client) {
   }
 
   function startHeartbeat() {
-    stopHeartbeat(); // Limpa interval anterior
+    stopHeartbeat();
     
     heartbeatInterval = setInterval(() => {
       if (ws && ws.readyState === WebSocket.OPEN) {
         isAlive = false;
         ws.ping();
-        
-        // Se não receber pong em 10s, forçar reconexão
         heartbeatTimeout = setTimeout(() => {
           if (!isAlive) {
             logger.warn(`${chalk.yellow.bold('[WS CLIENT]')} Heartbeat não respondeu - Reconectando`);
@@ -273,6 +247,23 @@ async function connect(client) {
   function startServerDataRefresh() {
     stopServerDataRefresh();
     
+    const sendServerData = async (guild) => {
+      let data = getCachedServerData(guild.id);
+
+      if (!data) {
+        data = collectServerData(guild);
+        cacheServerData(guild.id, data);
+        logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Dados coletados do cache do Discord`);
+      } else {
+        logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Usando cache local`);
+      }
+
+      ws.send(JSON.stringify({
+        type: 'server_data',
+        data
+      }));
+    };
+    
     serverDataRefreshInterval = setInterval(async () => {
       if (ws && ws.readyState === WebSocket.OPEN) {
         try {
@@ -280,11 +271,7 @@ async function connect(client) {
           const guild = client.guilds.cache.get(GUILD_ID);
           
           if (guild) {
-            const serverData = await collectServerData(guild);
-            ws.send(JSON.stringify({ 
-              type: 'server_data', 
-              data: serverData 
-            }));
+            await sendServerData(guild);
             logger.info(`${chalk.green.bold('[WS CLIENT]')} Dados do servidor reenviados (refresh periódico)`);
           }
         } catch (e) {
@@ -325,7 +312,6 @@ async function connect(client) {
   doConnect();
 }
 
-// Função para invalidar cache manualmente (em caso de mudanças)
 function invalidateServerDataCache(guildId) {
   if (guildId) {
     serverDataCache.delete(guildId);
