@@ -94,7 +94,7 @@ async function syncUserStatuses(client, forceFetch = false) {
 function initializeStatusSync(client, context) {
   setInterval(() => {
     syncUserStatuses(client, false);
-  }, 300000);
+  }, 360000); // 6 minutos - Aumentado para não conflitar com serverDataRefresh (4 min)
   
   setTimeout(() => {
     syncUserStatuses(client, true);
