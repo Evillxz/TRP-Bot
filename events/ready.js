@@ -9,6 +9,7 @@ module.exports = {
         const { chalk, logger } = context;
 
         logger.info(`${chalk.green.bold(`[READY]`)} Conectado ao Discord | Bot está online como ${client.user.tag}!`);
+        
         if (client.loadActiveSessions) {
             await client.loadActiveSessions(context);
         }

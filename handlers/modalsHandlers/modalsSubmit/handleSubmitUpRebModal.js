@@ -8,6 +8,7 @@ const {
 } = require('discord.js');
 const emojis = require('emojis');
 const api = require('apiClient');
+const { formatarTextoEmbed } = require('formatarTextoEmbed');
 
 function getActionConfig(action, guild) {
     const configMap = {
@@ -81,6 +82,8 @@ module.exports = {
                 reason
             });
 
+            const reasonFormatted = formatarTextoEmbed(reason, 30);
+
             const container = [
                 new ContainerBuilder()
                 .setAccentColor(configs.color)
@@ -96,7 +99,7 @@ module.exports = {
                                 `- **Responsável:**\n<@${adminId}>\n`+
                                 `- **Cargo Novo:**\n<@&${newRoleId}>\n`+
                                 `- **Cargo Antigo:**\n<@&${oldRoleId}>\n`+
-                                `- **Motivo:**\n\` ${reason} \`\n\n`+
+                                `- **Motivo:**\n\` ${reasonFormatted} \`\n\n`+
                                 `-# Máfia Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`
                             )
                         )

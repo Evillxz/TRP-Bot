@@ -1,6 +1,6 @@
 {
   "name": "trp-bot",
-  "version": "v1.3.2",
+  "version": "v1.3.6",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -32,6 +32,7 @@
   "_moduleAliases": {
     "emojis": "emojis.json",
     "apiClient": "utils/apiClient.js",
-    "logger": "config/logger.js"
+    "logger": "config/logger.js",
+    "formatarTextoEmbed": "utils/textFormat.js"
   }
 }

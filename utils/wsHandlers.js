@@ -212,6 +212,57 @@ registerHandler('get_bot_info', async ({ client, botId }) => {
   };
 });
 
+/**
+ * send_embed - Envia uma embed em um canal específico
+ */
+registerHandler('send_embed', async ({ client, payload }) => {
+  const { channelId, content, embed } = payload;
+
+  if (!channelId) {
+    throw new Error('ID do canal é obrigatório');
+  }
+
+  try {
+    const channel = await client.channels.fetch(channelId).catch(() => null);
+
+    if (!channel) {
+      throw new Error('Canal não encontrado');
+    }
+
+    if (!channel.isTextBased()) {
+      throw new Error('O canal deve ser um canal de texto');
+    }
+
+    // Verificar permissões
+    if (!channel.permissionsFor(client.user).has(['SendMessages', 'EmbedLinks'])) {
+      throw new Error('Sem permissão para enviar mensagens ou embeds neste canal');
+    }
+
+    // Preparar o objeto da mensagem
+    const messagePayload = {};
+
+    if (content) {
+      messagePayload.content = content;
+    }
+
+    if (embed && Object.keys(embed).length > 0) {
+      messagePayload.embeds = [embed];
+    }
+
+    // Enviar a mensagem
+    const message = await channel.send(messagePayload);
+
+    return {
+      success: true,
+      messageId: message.id,
+      channelId: channel.id,
+      timestamp: message.createdTimestamp,
+    };
+  } catch (error) {
+    throw new Error(`Erro ao enviar embed: ${error instanceof Error ? error.message : String(error)}`);
+  }
+});
+
 module.exports = {
   registerHandler,
   executeHandler,

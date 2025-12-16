@@ -94,7 +94,7 @@ async function syncUserStatuses(client, forceFetch = false) {
 function initializeStatusSync(client, context) {
   setInterval(() => {
     syncUserStatuses(client, false);
-  }, 60000);
+  }, 300000);
   
   setTimeout(() => {
     syncUserStatuses(client, true);

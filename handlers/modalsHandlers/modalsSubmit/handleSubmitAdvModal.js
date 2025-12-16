@@ -1,5 +1,6 @@
 const { MessageFlags, formatEmoji, ContainerBuilder, TextDisplayBuilder, ThumbnailBuilder, SectionBuilder } = require('discord.js');
 const api = require('apiClient');
+const { formatarTextoEmbed } = require('formatarTextoEmbed');
 
 const WARNING_ROLES = {
     1: '1446613392826564658',
@@ -55,8 +56,17 @@ module.exports = {
                 
                 await api.post('/bot/warnings/clear', { user_id: userId, guild_id: guildId });
 
+                console.log('Dados sendo enviados:', {
+                    user_id: userId,
+                    user_tag: member.user.tag,
+                    admin_id: adminId,
+                    guild_id: guildId,
+                    reason: reason,
+                    duration_hours: durationHours
+                });
+
                 let kickId;
-                const r2 = await api.post('/bot/bans/add', { user_id: userId, user_tag: member.user.tag, admin_id: 'SYSTEM_AUTO_KICK', guild_id: guildId, reason: `Kick automático por ${newWarningLevel} advertências` });
+                const r2 = await api.post('/bot/bans/add', { user_id: userId, user_nickname: member.nickname || member.user.username, user_tag: member.user.tag, admin_id: 'SYSTEM_AUTO_KICK', guild_id: guildId, reason: `Kick automático por ${newWarningLevel} advertências` });
                 kickId = r2.id;
                 
                 await interaction.editReply({
@@ -93,6 +103,8 @@ module.exports = {
             const channel = await interaction.guild.channels.fetch(logChannelId).catch(() => null);
             if (channel) {
                 const durationText = durationHours ? `${durationHours}h` : 'Permanente';
+
+                const reasonFormatted = formatarTextoEmbed(reason, 30);
                 
                 const container = [
                     new ContainerBuilder()
@@ -104,7 +116,7 @@ module.exports = {
                                     .setURL(member.user.displayAvatarURL() || '')
                             )
                             .addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent(`## ${alert} Nova Advertência\n\u200B\n- **Usuário(a):**\n\` ${member.user.tag} \`\n- **Responsável:**\n<@${adminId}>\n- **Motivo:**\n\` ${reason} \`\n- **Nível:**\n\` ADV${newWarningLevel} \`\n- **Duração:**\n\` ${durationText} \`\n\n-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`),
+                                new TextDisplayBuilder().setContent(`## ${alert} Nova Advertência\n\u200B\n- **Usuário(a):**\n\` ${member.user.tag} \`\n- **Responsável:**\n<@${adminId}>\n- **Motivo:**\n${reasonFormatted}\n- **Nível:**\n\` ADV${newWarningLevel} \`\n- **Duração:**\n\` ${durationText} \`\n\n-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`),
                             ),
                     ),
                 ];

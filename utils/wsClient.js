@@ -2,20 +2,25 @@ const WebSocket = require('ws');
 const { v4: uuidv4 } = require('uuid');
 const chalk = require('chalk');
 const logger = require('../config/logger');
-const { executeHandler, getAvailableActions } = require('./wsHandlers');
+const { executeHandler } = require('./wsHandlers');
 
 let ws = null;
 let reconnecting = false;
 let reconnectAttempts = 0;
 let heartbeatInterval = null;
 let heartbeatTimeout = null;
+let serverDataRefreshInterval = null;
 let isAlive = false;
 const MAX_RECONNECT_ATTEMPTS = 50;
 const BASE_RECONNECT_DELAY = 3000;
 const MAX_RECONNECT_DELAY = 60000;
-const HEARTBEAT_INTERVAL = 30000; // 30 segundos
-const HEARTBEAT_TIMEOUT = 10000; // 10 segundos de timeout
+const HEARTBEAT_INTERVAL = 30000;
+const HEARTBEAT_TIMEOUT = 10000;
+const SERVER_DATA_CACHE_TTL = 4 * 60 * 1000;
+const SERVER_DATA_REFRESH_INTERVAL = 4 * 60 * 1000;
 const localBotId = process.env.BOT_ID || `bot_${uuidv4()}`;
+
+const serverDataCache = new Map();
 
 async function connect(client) {
   const apiBase = process.env.API_URL || process.env.API_BASE_URL || 'http://localhost:5500';
@@ -26,6 +31,100 @@ async function connect(client) {
     logger.error(`${chalk.red.bold('[WS CLIENT]')} API_KEY não configurada! WebSocket desabilitado.`);
     return;
   }
+
+  const isServerDataCacheValid = (guildId) => {
+    const cached = serverDataCache.get(guildId);
+    if (!cached) return false;
+    
+    const age = Date.now() - cached.timestamp;
+    if (age > SERVER_DATA_CACHE_TTL) {
+      serverDataCache.delete(guildId);
+      return false;
+    }
+    
+    return true;
+  };
+
+  const getCachedServerData = (guildId) => {
+    if (isServerDataCacheValid(guildId)) {
+      logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Usando dados do servidor do cache (${guildId})`);
+      return serverDataCache.get(guildId).data;
+    }
+    return null;
+  };
+
+  const cacheServerData = (guildId, data) => {
+    serverDataCache.set(guildId, {
+      data,
+      timestamp: Date.now()
+    });
+    logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Dados do servidor salvos em cache (${guildId})`);
+  };
+
+  const collectServerData = async (guild) => {
+    try {
+      const cachedData = getCachedServerData(guild.id);
+      if (cachedData) {
+        return cachedData;
+      }
+
+      logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Coletando dados do servidor (cache expirado ou não existe)...`);
+
+      const roles = await guild.roles.fetch();
+      const rolesData = roles
+        .filter(r => r.id !== guild.id)
+        .map(r => ({
+          id: r.id,
+          name: r.name,
+          color: r.color ? `#${r.color.toString(16).padStart(6, '0')}` : '#b3bac1'
+        }))
+        .sort((a, b) => b.name.localeCompare(a.name));
+
+      const members = await guild.members.fetch();
+      const usersData = members
+        .filter(m => !m.user.bot)
+        .map(m => ({
+          id: m.user.id,
+          username: m.user.username,
+          nickname: m.nickname || undefined,
+          avatar: m.user.displayAvatarURL({ size: 64 })
+        }))
+        .sort((a, b) => (a.nickname || a.username).localeCompare(b.nickname || b.username));
+
+      const channels = await guild.channels.fetch();
+      const channelsData = channels
+        .filter(c => c.isTextBased && c.viewable)
+        .map(c => ({
+          id: c.id,
+          name: c.name,
+          type: c.type
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      const emojis = await guild.emojis.fetch();
+      const emojisData = emojis
+        .map(e => ({
+          id: e.id,
+          name: e.name,
+          animated: e.animated
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      const serverData = {
+        roles: rolesData,
+        users: usersData,
+        channels: channelsData,
+        emojis: emojisData
+      };
+
+      cacheServerData(guild.id, serverData);
+
+      return serverData;
+    } catch (e) {
+      logger.error(`${chalk.red.bold('[WS CLIENT]')} Erro ao coletar dados do servidor: ${e && e.message ? e.message : e}`);
+      return { roles: [], users: [], channels: [], emojis: [] };
+    }
+  };
 
   function doConnect() {
     try {
@@ -44,11 +143,31 @@ async function connect(client) {
       // Iniciar heartbeat
       startHeartbeat();
       
-      const doAuth = () => {
+      const doAuth = async () => {
         try {
           const guildKeys = Array.from(client.guilds.cache.keys());
           logger.info(`${chalk.green.bold('[WS CLIENT]')} Autenticação enviada - ID: ${localBotId}, Servidores: ${guildKeys.length}`);
           ws.send(JSON.stringify({ type: 'auth', apiKey, botId: localBotId, guilds: guildKeys }));
+
+          // Enviar dados do servidor após autenticação
+          try {
+            const GUILD_ID = process.env.GUILD_ID || '1295702106195492894';
+            const guild = client.guilds.cache.get(GUILD_ID);
+            
+            if (guild) {
+              const serverData = await collectServerData(guild);
+              ws.send(JSON.stringify({ 
+                type: 'server_data', 
+                data: serverData 
+              }));
+              logger.info(`${chalk.green.bold('[WS CLIENT]')} Dados do servidor enviados para API`);
+              
+              // Iniciar intervalo periódico para reenviar dados
+              startServerDataRefresh();
+            }
+          } catch (e) {
+            logger.warn(`${chalk.yellow.bold('[WS CLIENT]')} Erro ao enviar dados do servidor: ${e && e.message ? e.message : e}`);
+          }
         } catch (e) {
           logger.error(`${chalk.red.bold('[WS CLIENT]')} Erro ao enviar autenticação: ${e && e.message ? e.message : e}`);
         }
@@ -104,6 +223,7 @@ async function connect(client) {
     ws.on('close', (code, reason) => {
       logger.warn(`${chalk.yellow.bold('[WS CLIENT]')} Desconectado (${code})`);
       stopHeartbeat();
+      stopServerDataRefresh();
       ws = null;
       isAlive = false;
       scheduleReconnect();
@@ -150,6 +270,37 @@ async function connect(client) {
     }
   }
 
+  function startServerDataRefresh() {
+    stopServerDataRefresh();
+    
+    serverDataRefreshInterval = setInterval(async () => {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        try {
+          const GUILD_ID = process.env.GUILD_ID || '1295702106195492894';
+          const guild = client.guilds.cache.get(GUILD_ID);
+          
+          if (guild) {
+            const serverData = await collectServerData(guild);
+            ws.send(JSON.stringify({ 
+              type: 'server_data', 
+              data: serverData 
+            }));
+            logger.info(`${chalk.green.bold('[WS CLIENT]')} Dados do servidor reenviados (refresh periódico)`);
+          }
+        } catch (e) {
+          logger.error(`${chalk.red.bold('[WS CLIENT]')} Erro ao reenviar dados do servidor: ${e && e.message ? e.message : e}`);
+        }
+      }
+    }, SERVER_DATA_REFRESH_INTERVAL);
+  }
+
+  function stopServerDataRefresh() {
+    if (serverDataRefreshInterval) {
+      clearInterval(serverDataRefreshInterval);
+      serverDataRefreshInterval = null;
+    }
+  }
+
   function scheduleReconnect() {
     if (reconnecting) return;
     if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
@@ -174,4 +325,18 @@ async function connect(client) {
   doConnect();
 }
 
-module.exports = { connect };
+// Função para invalidar cache manualmente (em caso de mudanças)
+function invalidateServerDataCache(guildId) {
+  if (guildId) {
+    serverDataCache.delete(guildId);
+    logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Cache invalidado para servidor ${guildId}`);
+  } else {
+    serverDataCache.clear();
+    logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Cache limpo completamente`);
+  }
+}
+
+module.exports = { 
+  connect,
+  invalidateServerDataCache
+};

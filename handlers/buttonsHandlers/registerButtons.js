@@ -145,8 +145,6 @@ module.exports = {
                     guild_id: interaction.guild.id,
                     recruited_at: newDate,
                 };
-
-                context.logger && context.logger.info('Enviando payload para API: ' + JSON.stringify(payload, null, 2));
                 
                 await api.post('/bot/memberprofile', payload);
 
@@ -159,8 +157,8 @@ module.exports = {
                 }).catch(() => {});
             }
 
-            // const welcomeChannelId = '1368788175148810302';
-            const welcomeChannelId = '1365507026188370012';
+            const welcomeChannelId = '1368788175148810302';
+            // const welcomeChannelId = '1365507026188370012';
             const welcomeChannel = interaction.guild.channels.cache.get(welcomeChannelId);
             
             if (welcomeChannel) {

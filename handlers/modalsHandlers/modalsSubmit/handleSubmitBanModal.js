@@ -1,5 +1,6 @@
 const { MessageFlags, formatEmoji, ContainerBuilder, TextDisplayBuilder, ThumbnailBuilder, SectionBuilder } = require('discord.js');
 const api = require('apiClient');
+const { formatarTextoEmbed } = require('formatarTextoEmbed');
 
 module.exports = {
     async execute(interaction, context) {
@@ -47,6 +48,7 @@ module.exports = {
             const banId = r.id;
 
             const channel = await interaction.guild.channels.fetch(logChannelId).catch(() => null);
+            const reasonFormatted = formatarTextoEmbed(reason, 30);
 
             if (channel) {
 
@@ -60,7 +62,7 @@ module.exports = {
                                     .setURL(member.user.displayAvatarURL() || '')
                             )
                             .addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent(`## ${gavel} Nova Exoneração\n\u200B\n- **Usuário(a):**\n\` ${member.user.tag} \`\n- **Responsável:**\n<@${adminId}>\n- **Motivo:**\n\` ${reason} \`\n\n-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`),
+                                new TextDisplayBuilder().setContent(`## ${gavel} Nova Exoneração\n\u200B\n- **Usuário(a):**\n\` ${member.user.tag} \`\n- **Responsável:**\n<@${adminId}>\n- **Motivo:**\n\` ${reasonFormatted} \`\n\n-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`),
                             ),
                     ),
                 ];

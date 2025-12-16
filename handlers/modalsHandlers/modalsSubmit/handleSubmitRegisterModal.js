@@ -21,12 +21,10 @@ module.exports = {
         const availabilityRoles = interaction.fields.getStringSelectValues('availability_select_menu');
         const recId = interaction.fields.getStringSelectValues('rec_select_menu')?.[0];
         
-        // Sanitizar espaços em branco
         const cleanName = name?.trim();
         const cleanId = id?.trim();
         const cleanTelephone = telephone?.trim();
         
-        // Validação de campos obrigatórios
         if (!cleanName || !cleanId || !cleanTelephone || !availabilityRoles?.length || !recId) {
             return await interaction.reply({ 
                 embeds: [
