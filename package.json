@@ -1,6 +1,6 @@
 {
   "name": "trp-bot",
-  "version": "v1.3.6",
+  "version": "v1.3.8",
   "description": "",
   "main": "index.js",
   "scripts": {

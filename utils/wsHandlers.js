@@ -1,15 +1,5 @@
-/**
- * WebSocket Action Handlers
- * Módulo centralizador para todas as ações do WebSocket
- */
-
 const handlers = {};
 
-/**
- * Registra um novo handler de ação
- * @param {string} action - Nome da ação
- * @param {Function} handler - Função assíncrona que processa a ação
- */
 function registerHandler(action, handler) {
   if (typeof handler !== 'function') {
     throw new Error(`Handler para "${action}" deve ser uma função`);
@@ -17,12 +7,6 @@ function registerHandler(action, handler) {
   handlers[action] = handler;
 }
 
-/**
- * Executa um handler registrado
- * @param {string} action - Nome da ação
- * @param {Object} params - Parâmetros passados ao handler
- * @returns {Promise} Resultado da execução
- */
 async function executeHandler(action, params) {
   const handler = handlers[action];
   if (!handler) {
@@ -31,18 +15,10 @@ async function executeHandler(action, params) {
   return handler(params);
 }
 
-/**
- * Retorna lista de ações disponíveis
- */
 function getAvailableActions() {
   return Object.keys(handlers);
 }
 
-// ============ HANDLERS PADRÃO ============
-
-/**
- * get_guild_channels - Lista canais de um servidor
- */
 registerHandler('get_guild_channels', async ({ client, payload }) => {
   const { guildId } = payload;
   
@@ -58,7 +34,6 @@ registerHandler('get_guild_channels', async ({ client, payload }) => {
   try {
     await guild.channels.fetch();
   } catch (e) {
-    // Continua mesmo se falhar o fetch
   }
 
   return Array.from(guild.channels.cache.values()).map(ch => ({
@@ -69,9 +44,6 @@ registerHandler('get_guild_channels', async ({ client, payload }) => {
   }));
 });
 
-/**
- * get_guild_roles - Lista cargos de um servidor
- */
 registerHandler('get_guild_roles', async ({ client, payload }) => {
   const { guildId } = payload;
   
@@ -87,11 +59,10 @@ registerHandler('get_guild_roles', async ({ client, payload }) => {
   try {
     await guild.roles.fetch();
   } catch (e) {
-    // Continua mesmo se falhar o fetch
   }
 
   return Array.from(guild.roles.cache.values())
-    .filter(r => r.id !== guild.id) // Remove @everyone
+    .filter(r => r.id !== guild.id)
     .map(r => ({
       id: r.id,
       name: r.name,
@@ -101,9 +72,6 @@ registerHandler('get_guild_roles', async ({ client, payload }) => {
     }));
 });
 
-/**
- * get_guild_members - Lista membros de um servidor (com limite)
- */
 registerHandler('get_guild_members', async ({ client, payload }) => {
   const { guildId, limit = 100 } = payload;
   
@@ -111,7 +79,6 @@ registerHandler('get_guild_members', async ({ client, payload }) => {
     throw new Error('guildId inválido');
   }
 
-  // Limita a 1000 para não sobrecarregar
   const safeLimit = Math.min(limit, 1000);
 
   const guild = client.guilds.cache.get(guildId);
@@ -122,7 +89,6 @@ registerHandler('get_guild_members', async ({ client, payload }) => {
   try {
     await guild.members.fetch({ limit: safeLimit });
   } catch (e) {
-    // Continua mesmo se falhar o fetch
   }
 
   return Array.from(guild.members.cache.values())
@@ -137,9 +103,6 @@ registerHandler('get_guild_members', async ({ client, payload }) => {
     }));
 });
 
-/**
- * get_member - Busca informações de um membro específico
- */
 registerHandler('get_member', async ({ client, payload }) => {
   const { guildId, memberId } = payload;
   
@@ -169,9 +132,6 @@ registerHandler('get_member', async ({ client, payload }) => {
   }
 });
 
-/**
- * list_guilds - Lista todos os servidores do bot
- */
 registerHandler('list_guilds', async ({ client }) => {
   return Array.from(client.guilds.cache.values()).map(g => ({
     id: g.id,
@@ -182,9 +142,6 @@ registerHandler('list_guilds', async ({ client }) => {
   }));
 });
 
-/**
- * ping - Testa conectividade
- */
 registerHandler('ping', async ({ client, botId }) => {
   return {
     botId,
@@ -195,9 +152,6 @@ registerHandler('ping', async ({ client, botId }) => {
   };
 });
 
-/**
- * get_bot_info - Retorna informações do bot
- */
 registerHandler('get_bot_info', async ({ client, botId }) => {
   return {
     id: client.user.id,
@@ -212,9 +166,6 @@ registerHandler('get_bot_info', async ({ client, botId }) => {
   };
 });
 
-/**
- * send_embed - Envia uma embed em um canal específico
- */
 registerHandler('send_embed', async ({ client, payload }) => {
   const { channelId, content, embed } = payload;
 
@@ -233,12 +184,10 @@ registerHandler('send_embed', async ({ client, payload }) => {
       throw new Error('O canal deve ser um canal de texto');
     }
 
-    // Verificar permissões
     if (!channel.permissionsFor(client.user).has(['SendMessages', 'EmbedLinks'])) {
       throw new Error('Sem permissão para enviar mensagens ou embeds neste canal');
     }
 
-    // Preparar o objeto da mensagem
     const messagePayload = {};
 
     if (content) {
@@ -249,7 +198,6 @@ registerHandler('send_embed', async ({ client, payload }) => {
       messagePayload.embeds = [embed];
     }
 
-    // Enviar a mensagem
     const message = await channel.send(messagePayload);
 
     return {

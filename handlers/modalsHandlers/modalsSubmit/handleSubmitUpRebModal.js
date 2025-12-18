@@ -4,6 +4,8 @@ const {
     TextDisplayBuilder,
     ThumbnailBuilder,
     SectionBuilder,
+    SeparatorBuilder, 
+    SeparatorSpacingSize,
     formatEmoji
 } = require('discord.js');
 const emojis = require('emojis');
@@ -65,7 +67,7 @@ module.exports = {
                         color: 0xFF0000
                     }]
                 })
-            }
+            };
 
             await user.roles.add(newRoleId);
             await user.roles.remove(oldRoleId);
@@ -82,53 +84,60 @@ module.exports = {
                 reason
             });
 
-            const reasonFormatted = formatarTextoEmbed(reason, 30);
+            const reasonFormatted = formatarTextoEmbed(reason, 50);
 
             const container = [
                 new ContainerBuilder()
                 .setAccentColor(configs.color)
                 .addSectionComponents(
                     new SectionBuilder()
-                        .setThumbnailAccessory(
-                            new ThumbnailBuilder().setURL(user.user.displayAvatarURL() || '').setDescription('Avatar do Usuário')
+                    .setThumbnailAccessory(
+                        new ThumbnailBuilder()
+                            .setURL(user.user.displayAvatarURL() || interaction.guild.iconURL()).setDescription('Avatar do Usuário')
+                    )
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(`${configs.title}\n\u200B\n`),
+                        new TextDisplayBuilder().setContent(
+                            `- **Usuário(a):** <@${userId}>\n`+
+                            `- **Responsável:** <@${adminId}>`
                         )
-                        .addTextDisplayComponents(
-                            new TextDisplayBuilder().setContent(
-                                `${configs.title}\n\u200B\n`+
-                                `- **Usuário(a):**\n<@${userId}>\n`+
-                                `- **Responsável:**\n<@${adminId}>\n`+
-                                `- **Cargo Novo:**\n<@&${newRoleId}>\n`+
-                                `- **Cargo Antigo:**\n<@&${oldRoleId}>\n`+
-                                `- **Motivo:**\n\` ${reasonFormatted} \`\n\n`+
-                                `-# Máfia Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`
-                            )
-                        )
-
+                    )
                 )
-            ]
+                .addSeparatorComponents(
+                    new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large).setDivider(true),
+                )
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        `- **Antigo Cargo:**\n<@&${oldRoleId}>\n`+
+                        `- **Novo Cargo:**\n<@&${newRoleId}>\n`+
+                        `- **Motivo:**\n\` ${reasonFormatted} \`\n\n`+
+                        `-# Máfia Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`
+                    )
+                )
+            ];
 
             await configs.channel.send({
                 components: container,
                 flags: MessageFlags.IsComponentsV2,
                 allowedMentions: { users: [userId] }
-            })
+            });
 
             await interaction.editReply({
                 embeds: [{
                     description: configs.response,
                     color: configs.color
                 }]
-            })
+            });
         
         } catch (error) {
-            logger.error('Erro interno ao processar ações:', error)
+            logger.error('Erro interno ao processar ações:', error);
 
             await interaction.editReply({
                 embeds: [{
                     description: '✖ Ocorreu um erro interno no sistema!',
                     color: 0xFF0000
                 }]
-            })
+            });
         }
     }
 };

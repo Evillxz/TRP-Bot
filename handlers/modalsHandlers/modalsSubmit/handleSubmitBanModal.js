@@ -1,4 +1,13 @@
-const { MessageFlags, formatEmoji, ContainerBuilder, TextDisplayBuilder, ThumbnailBuilder, SectionBuilder } = require('discord.js');
+const { 
+    MessageFlags, 
+    ContainerBuilder, 
+    TextDisplayBuilder, 
+    ThumbnailBuilder, 
+    SectionBuilder,
+    SeparatorBuilder, 
+    SeparatorSpacingSize,
+    formatEmoji
+} = require('discord.js');
 const api = require('apiClient');
 const { formatarTextoEmbed } = require('formatarTextoEmbed');
 
@@ -17,7 +26,7 @@ module.exports = {
             const reason = interaction.fields.getTextInputValue("reason_text_input_ban");
             const adminId = interaction.user.id;
             const guildId = interaction.guild.id;
-            const logChannelId = '1296584859963359233'
+            const logChannelId = '1296584859963359233';
 
             const gavel = formatEmoji(emojis.static.gavel);
 
@@ -29,7 +38,7 @@ module.exports = {
                     }],
                     flags: MessageFlags.Ephemeral
                 })
-            }
+            };
 
             if (!member.bannable) {
                 logger.warn(`Tentativa de banimento mal sucedida - Usuário: ${member} | Admin: ${adminId}`);
@@ -40,7 +49,7 @@ module.exports = {
                     }],
                     flags: MessageFlags.Ephemeral
                 })
-            }
+            };
 
             await member.ban({ reason: reason });
             
@@ -48,7 +57,7 @@ module.exports = {
             const banId = r.id;
 
             const channel = await interaction.guild.channels.fetch(logChannelId).catch(() => null);
-            const reasonFormatted = formatarTextoEmbed(reason, 30);
+            const reasonFormatted = formatarTextoEmbed(reason, 50);
 
             if (channel) {
 
@@ -57,14 +66,29 @@ module.exports = {
                     .setAccentColor(0xFF0000)
                     .addSectionComponents(
                         new SectionBuilder()
-                            .setThumbnailAccessory(
-                                new ThumbnailBuilder()
-                                    .setURL(member.user.displayAvatarURL() || '')
+                        .setThumbnailAccessory(
+                            new ThumbnailBuilder()
+                            .setURL(member.user.displayAvatarURL() || interaction.guild.iconURL())
+                            .setDescription('Avatar do Usuário')
+                        )
+                        .addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent(`## ${gavel} Nova Exoneração`),
+                            new TextDisplayBuilder().setContent(
+                                `- **Usuário(a):** \` ${member.user.tag} \`\n`+
+                                `-**Responsável:** <@${adminId}>`
                             )
-                            .addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent(`## ${gavel} Nova Exoneração\n\u200B\n- **Usuário(a):**\n\` ${member.user.tag} \`\n- **Responsável:**\n<@${adminId}>\n- **Motivo:**\n\` ${reasonFormatted} \`\n\n-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`),
-                            ),
-                    ),
+                        )
+                    )
+                    .addSeparatorComponents(
+                        new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large).setDivider(true),
+                    )
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(
+                            `- **Motivo:**\n\` ${reasonFormatted} \`\n`+
+                            `- **Siga as regras para evitar futuros problemas!`+
+                            `-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`
+                        )
+                    )
                 ];
 
                 await channel.send({
@@ -72,7 +96,7 @@ module.exports = {
                     flags: MessageFlags.IsComponentsV2,
                     allowedMentions: { parse: [] }
                 });
-            }
+            };
 
             await interaction.editReply({
                 embeds: [{
@@ -99,4 +123,4 @@ module.exports = {
         }
         
     }
-}
+};

@@ -85,7 +85,7 @@ module.exports = {
             const registeredRoleId = '1296584614391054428';
             const initialRoleId = '1446158406561042602';
             const availabilityRole = registerData.availabilityRoles;
-            const newDate = new Date().toISOString();
+            const newDate = new Date().toISOString('pt-BR');
 
             const rolesToAdd = [registeredRoleId, initialRoleId, ...availabilityRole];
             
@@ -352,6 +352,8 @@ module.exports = {
                         .setValue(registerData.telephone)
                 )
             )
+        
+            const emojisNatal = '🎅, 🎄, 🧦, ❄️, ☃️'
         
         await interaction.showModal(editModal);
     },

@@ -1,4 +1,13 @@
-const { MessageFlags, formatEmoji, ContainerBuilder, TextDisplayBuilder, ThumbnailBuilder, SectionBuilder } = require('discord.js');
+const { 
+    MessageFlags, 
+    SeparatorBuilder, 
+    SeparatorSpacingSize, 
+    ContainerBuilder, 
+    TextDisplayBuilder, 
+    ThumbnailBuilder, 
+    SectionBuilder,
+    formatEmoji
+} = require('discord.js');
 const api = require('apiClient');
 const { formatarTextoEmbed } = require('formatarTextoEmbed');
 
@@ -23,7 +32,7 @@ module.exports = {
             const adminId = interaction.user.id;
             const guildId = interaction.guild.id;
             const logChannelId = '1296584858910326926';
-            // const logChannelId = '1293740554076688436';
+            // test = const logChannelId = '1293740554076688436';
 
             const alert = formatEmoji(emojis.static.alert);
 
@@ -104,21 +113,37 @@ module.exports = {
             if (channel) {
                 const durationText = durationHours ? `${durationHours}h` : 'Permanente';
 
-                const reasonFormatted = formatarTextoEmbed(reason, 30);
-                
+                const reasonFormatted = formatarTextoEmbed(reason, 50);
+
                 const container = [
                     new ContainerBuilder()
                     .setAccentColor(0xff7b00)
                     .addSectionComponents(
                         new SectionBuilder()
-                            .setThumbnailAccessory(
-                                new ThumbnailBuilder()
-                                    .setURL(member.user.displayAvatarURL() || '')
+                        .setThumbnailAccessory(
+                            new ThumbnailBuilder()
+                            .setURL(member.user.displayAvatarURL() || interaction.guild.iconURL())
+                            .setDescription('Avatar do Usuário')
+                        )
+                        .addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent(`## ${alert} Nova Advertência`),
+                            new TextDisplayBuilder().setContent(
+                                `- **Usuário(a):** \` ${member.user.tag} \`\n`+
+                                `-**Responsável:** <@${adminId}>`
                             )
-                            .addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent(`## ${alert} Nova Advertência\n\u200B\n- **Usuário(a):**\n\` ${member.user.tag} \`\n- **Responsável:**\n<@${adminId}>\n- **Motivo:**\n${reasonFormatted}\n- **Nível:**\n\` ADV${newWarningLevel} \`\n- **Duração:**\n\` ${durationText} \`\n\n-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`),
-                            ),
-                    ),
+                        )
+                    )
+                    .addSeparatorComponents(
+                        new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large).setDivider(true),
+                    )
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(
+                            `- **Motivo:**\n\` ${reasonFormatted} \`\n`+
+                            `- **Nível:**\n \` ADV${newWarningLevel} \`\n`+
+                            `- **Duração:**\n\` ${durationText} \`\n\n`+
+                            `-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`
+                        )
+                    )
                 ];
 
                 await channel.send({

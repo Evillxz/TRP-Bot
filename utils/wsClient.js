@@ -54,11 +54,14 @@ async function connect(client) {
   };
 
   const cacheServerData = (guildId, data) => {
-    serverDataCache.set(guildId, {
-      data,
-      timestamp: Date.now()
-    });
-    logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Dados do servidor salvos em cache (${guildId})`);
+    try {
+      serverDataCache.set(guildId, {
+        data,
+        timestamp: Date.now()
+      });
+    } catch (error) {
+      logger.error(`${chalk.red.bold('[WS CLIENT]')} Erro ao salvar dados em cache para servidor ${guildId}: ${error.message}`);
+    }
   };
 
   const collectServerData = (guild) => {
@@ -138,7 +141,6 @@ async function connect(client) {
                 type: 'server_data', 
                 data: serverData 
               }));
-              logger.info(`${chalk.green.bold('[WS CLIENT]')} Dados do servidor enviados para API`);
               startServerDataRefresh();
             }
           } catch (e) {
@@ -253,7 +255,6 @@ async function connect(client) {
       if (!data) {
         data = collectServerData(guild);
         cacheServerData(guild.id, data);
-        logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Dados coletados do cache do Discord`);
       } else {
         logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Usando cache local`);
       }

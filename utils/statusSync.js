@@ -50,7 +50,6 @@ async function syncUserStatuses(client, forceFetch = false) {
           status = presence.status;
         }
         
-        // Pega os roles do membro (excluindo @everyone)
         const roles = member.roles.cache
           .filter(role => role.id !== guild.id)
           .map(role => ({
@@ -94,7 +93,7 @@ async function syncUserStatuses(client, forceFetch = false) {
 function initializeStatusSync(client, context) {
   setInterval(() => {
     syncUserStatuses(client, false);
-  }, 360000); // 6 minutos - Aumentado para não conflitar com serverDataRefresh (4 min)
+  }, 360000);
   
   setTimeout(() => {
     syncUserStatuses(client, true);
