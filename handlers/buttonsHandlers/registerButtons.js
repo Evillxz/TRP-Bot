@@ -304,9 +304,7 @@ module.exports = {
     async editRegister(interaction, context, registerData) {
         const { 
             LabelBuilder, 
-            ModalBuilder, 
-            StringSelectMenuBuilder, 
-            StringSelectMenuOptionBuilder, 
+            ModalBuilder,
             TextDisplayBuilder, 
             TextInputBuilder, 
             TextInputStyle
@@ -352,8 +350,6 @@ module.exports = {
                         .setValue(registerData.telephone)
                 )
             )
-        
-            const emojisNatal = '🎅, 🎄, 🧦, ❄️, ☃️'
         
         await interaction.showModal(editModal);
     },
