@@ -103,7 +103,7 @@ module.exports = {
                 player.queue.add(track);
                 reply = await message.reply({
                     embeds: [{
-                        description: `${formatEmoji(emojis.static.addList)} Adicionado à fila: **${track.title}**`
+                        description: `${formatEmoji(emojis.static.spotify)} Adicionado à fila: **[${track.title}](${track.uri})**`
                     }],
                     flags: MessageFlags.Ephemeral
                 });

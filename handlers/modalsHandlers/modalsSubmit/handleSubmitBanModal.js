@@ -74,8 +74,8 @@ module.exports = {
                         .addTextDisplayComponents(
                             new TextDisplayBuilder().setContent(`## ${gavel} Nova Exoneração`),
                             new TextDisplayBuilder().setContent(
-                                `- **Usuário(a):** \` ${member.user.tag} \`\n`+
-                                `-**Responsável:** <@${adminId}>`
+                                `- Usuário(a): **${member.user.tag}**\n`+
+                                `- Responsável: <@${adminId}>`
                             )
                         )
                     )
@@ -84,8 +84,8 @@ module.exports = {
                     )
                     .addTextDisplayComponents(
                         new TextDisplayBuilder().setContent(
-                            `- **Motivo:**\n\` ${reasonFormatted} \`\n`+
-                            `- **Siga as regras para evitar futuros problemas!`+
+                            `- **Motivo:**\n${reasonFormatted}\n`+
+                            `- **Siga as regras para evitar futuros problemas!**\n\n`+
                             `-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`
                         )
                     )

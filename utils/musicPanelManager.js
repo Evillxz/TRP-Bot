@@ -162,14 +162,14 @@ class MusicPanelManager {
                         new ContainerBuilder()
                             .setAccentColor(982784)
                             .addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent(`${formatEmoji(emojis.static.stop)} Reprodução interrompida com sucesso!`)
+                                new TextDisplayBuilder().setContent(`${formatEmoji(emojis.animated.check, true)} Reprodução interrompida com sucesso!`)
                             )
                     ]
                     : [
                         new ContainerBuilder()
                             .setAccentColor(16772864)
                             .addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent("💨 Sem músicas para tocar, até mais!")
+                                new TextDisplayBuilder().setContent(`${formatEmoji(emojis.static.whiteMoon)} Sem músicas para tocar, até mais!`)
                             )
                     ];
                 

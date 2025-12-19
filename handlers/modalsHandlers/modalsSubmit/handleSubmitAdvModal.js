@@ -112,8 +112,8 @@ module.exports = {
             const channel = await interaction.guild.channels.fetch(logChannelId).catch(() => null);
             if (channel) {
                 const durationText = durationHours ? `${durationHours}h` : 'Permanente';
-
                 const reasonFormatted = formatarTextoEmbed(reason, 50);
+                const memberFormat = member ? `<@${member.user.id}>` : `<@${userId}>`;
 
                 const container = [
                     new ContainerBuilder()
@@ -128,8 +128,8 @@ module.exports = {
                         .addTextDisplayComponents(
                             new TextDisplayBuilder().setContent(`## ${alert} Nova Advertência`),
                             new TextDisplayBuilder().setContent(
-                                `- **Usuário(a):** \` ${member.user.tag} \`\n`+
-                                `-**Responsável:** <@${adminId}>`
+                                `- Usuário(a): ${memberFormat}\n`+
+                                `- Responsável: <@${adminId}>`
                             )
                         )
                     )
@@ -138,9 +138,9 @@ module.exports = {
                     )
                     .addTextDisplayComponents(
                         new TextDisplayBuilder().setContent(
-                            `- **Motivo:**\n\` ${reasonFormatted} \`\n`+
-                            `- **Nível:**\n \` ADV${newWarningLevel} \`\n`+
-                            `- **Duração:**\n\` ${durationText} \`\n\n`+
+                            `- **Motivo:**\n${reasonFormatted}\n`+
+                            `- **Nível:**\n \` ADV ${newWarningLevel} \`\n`+
+                            `- **Duração:**\n \` ${durationText} \`\n\n`+
                             `-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`
                         )
                     )

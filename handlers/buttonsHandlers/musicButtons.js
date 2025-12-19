@@ -49,7 +49,9 @@ module.exports = {
                     });
                 }
                 player.skip();
+                player.paused = false; // Forçar despausar após skip
                 await interaction.deferUpdate();
+                await musicPanelManager.createOrUpdatePanel(player, interaction.channel, player.queue.current?.requester || interaction.user);
                 break;
 
             case 'music_queue':

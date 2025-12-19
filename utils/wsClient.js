@@ -47,7 +47,6 @@ async function connect(client) {
 
   const getCachedServerData = (guildId) => {
     if (isServerDataCacheValid(guildId)) {
-      logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Usando dados do servidor do cache (${guildId})`);
       return serverDataCache.get(guildId).data;
     }
     return null;
@@ -255,8 +254,6 @@ async function connect(client) {
       if (!data) {
         data = collectServerData(guild);
         cacheServerData(guild.id, data);
-      } else {
-        logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Usando cache local`);
       }
 
       ws.send(JSON.stringify({
@@ -273,7 +270,6 @@ async function connect(client) {
           
           if (guild) {
             await sendServerData(guild);
-            logger.info(`${chalk.green.bold('[WS CLIENT]')} Dados do servidor reenviados (refresh periódico)`);
           }
         } catch (e) {
           logger.error(`${chalk.red.bold('[WS CLIENT]')} Erro ao reenviar dados do servidor: ${e && e.message ? e.message : e}`);

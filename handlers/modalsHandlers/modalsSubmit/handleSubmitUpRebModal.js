@@ -110,7 +110,7 @@ module.exports = {
                     new TextDisplayBuilder().setContent(
                         `- **Antigo Cargo:**\n<@&${oldRoleId}>\n`+
                         `- **Novo Cargo:**\n<@&${newRoleId}>\n`+
-                        `- **Motivo:**\n\` ${reasonFormatted} \`\n\n`+
+                        `- **Motivo:**\n${reasonFormatted}\n\n`+
                         `-# Máfia Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`
                     )
                 )

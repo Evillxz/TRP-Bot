@@ -15,13 +15,14 @@ const musicPanelManager = require('./utils/musicPanelManager');
 
 client.manager = new Kazagumo({
     defaultSearchEngine: 'youtube',
+    defaultSource: 'spsearch:',
     send: (guildId, payload) => {
         const guild = client.guilds.cache.get(guildId);
         if (guild) guild.shard.send(payload);
     }
 }, new Connectors.DiscordJS(client), [
     {
-        url: 'lavalink.jirayu.net:13592',
+        url: 'localhost:2333',
         auth: 'youshallnotpass',
         secure: false
     }

@@ -79,8 +79,6 @@ module.exports = {
 
         try {
             const res = await message.client.manager.search(search, message.author);
-            
-            // console.log('Resposta do Lavalink:', JSON.stringify(res, null, 2));
 
             if (!res || !res.tracks || res.tracks.length === 0) {
                 const reply = await message.reply({
@@ -96,6 +94,7 @@ module.exports = {
 
             let reply;
             if (res.type === 'PLAYLIST') {
+                res.tracks.forEach(track => track.requester = message.author);
                 player.queue.add(res.tracks);
                 reply = await message.reply({
                     embeds: [{
@@ -107,10 +106,11 @@ module.exports = {
                 await message.delete();
             } else {
                 const track = res.tracks[0];
+                track.requester = message.author;
                 player.queue.add(track);
                 reply = await message.reply({
                     embeds: [{
-                        description: `${formatEmoji(emojis.static.disc)} Adicionado a fila: **${track.title}**`,
+                        description: `${formatEmoji(emojis.static.spotify)} Adicionado a fila: **[${track.title}](${track.uri})**`,
                         color: 0x2ECC71
                     }],
                     flags: MessageFlags.Ephemeral
