@@ -84,7 +84,7 @@ module.exports = {
                     )
                     .addTextDisplayComponents(
                         new TextDisplayBuilder().setContent(
-                            `- **Motivo:**\n${reasonFormatted}\n`+
+                            `- **Motivo:**\n${reasonFormatted}\n\n`+
                             `- **Siga as regras para evitar futuros problemas!**\n\n`+
                             `-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`
                         )

@@ -108,8 +108,8 @@ module.exports = {
                 )
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        `- **Antigo Cargo:**\n<@&${oldRoleId}>\n`+
-                        `- **Novo Cargo:**\n<@&${newRoleId}>\n`+
+                        `- **Antigo Cargo:** <@&${oldRoleId}>\n`+
+                        `- **Novo Cargo:** <@&${newRoleId}>\n\n`+
                         `- **Motivo:**\n${reasonFormatted}\n\n`+
                         `-# Máfia Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`
                     )

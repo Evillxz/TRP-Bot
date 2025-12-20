@@ -51,7 +51,7 @@ module.exports = {
         if (!args.length) {
             const reply = await message.reply({
                 embeds: [{
-                    description: `✖ Icorreto! Use: \`!play nome-da-musica (Ou o link)\``,
+                    description: `✖ Icorreto! Use: \`!play **nome-da-musica** (Ou o **link**)\``,
                     color: 0xFF0000
                 }],
                 flags: MessageFlags.Ephemeral

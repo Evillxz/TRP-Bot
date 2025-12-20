@@ -9,6 +9,7 @@ const {
     SeparatorSpacingSize
 } = require('discord.js');
 const api = require('apiClient');
+const { formatarTextoEmbed } = require('formatarTextoEmbed');
 
 function formatarDataBR(dateString, ajustarFuso = true, retornarTimestamp = false) {
     const d = new Date(dateString);
@@ -59,20 +60,21 @@ module.exports = {
             }
 
             const now = new Date().toLocaleString('pt-BR');
-            let response = `### Advertência `;
+            let response = '';
             
             warnings.forEach(warning => {
 
+                const reasonFormatted = formatarTextoEmbed(warning.reason, 45);
                 const criadoEm = formatarDataBR(warning.created_at, true, true);
-                const expiraEm = warning.expires_at ? formatarDataBR(warning.expires_at, false, true) : "**em 0 horas (Permanente)**";
+                const expiraEm = warning.expires_at ? formatarDataBR(warning.expires_at, false, true) : "**em ∞ horas (Permanente)**";
 
-                response += ` ${warning.id}\n\n`;
+                response += `### Advertência ${warning.id}\n`;
                 response += `- Status: \` 🟢 Ativa \`\n`;
                 response += `- Usuário: <@${warning.user_id}> **(${warning.user_tag})**\n`;
                 response += `- Responsável: <@${warning.admin_id}>\n`;
                 response += `- Criada em <t:${criadoEm}:f>\n`;
                 response += `- Expira <t:${expiraEm}:R>\n`;
-                response += `- Motivo: \` ${warning.reason} \``;
+                response += `- **Motivo**: ${reasonFormatted}\n`
             });
 
             const container = [

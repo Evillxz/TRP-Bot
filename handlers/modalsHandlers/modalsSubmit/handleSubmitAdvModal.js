@@ -13,7 +13,6 @@ const { formatarTextoEmbed } = require('formatarTextoEmbed');
 
 const WARNING_ROLES = {
     1: '1446613392826564658',
-    // 1: '1366221765449220136',
     2: '1446613446639751189',
     3: '1446613483402821794'
 };
@@ -138,9 +137,9 @@ module.exports = {
                     )
                     .addTextDisplayComponents(
                         new TextDisplayBuilder().setContent(
-                            `- **Motivo:**\n${reasonFormatted}\n`+
-                            `- **Nível:**\n \` ADV ${newWarningLevel} \`\n`+
-                            `- **Duração:**\n \` ${durationText} \`\n\n`+
+                            `- **Motivo:**\n${reasonFormatted}\n\n`+
+                            `- **Nível:** <@&${WARNING_ROLES[newWarningLevel]}>\n`+
+                            `- **A Advertência expira em ${durationText}**\n\n`+
                             `-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`
                         )
                     )
