@@ -1,3 +1,19 @@
+const { 
+    MessageFlags,
+    ContainerBuilder, 
+    TextDisplayBuilder, 
+    ThumbnailBuilder, 
+    SectionBuilder,
+    formatEmoji,
+    ButtonBuilder,
+    ButtonStyle
+} = require('discord.js');
+const emojis = require('emojis');
+const logger = require('logger');
+const chalk = require('chalk');
+const { applyWarning } = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitAdvModal');
+const { applyExoneration } = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitBanModal');
+
 const handlers = {};
 
 function registerHandler(action, handler) {
@@ -19,155 +35,8 @@ function getAvailableActions() {
   return Object.keys(handlers);
 }
 
-registerHandler('get_guild_channels', async ({ client, payload }) => {
-  const { guildId } = payload;
-  
-  if (!guildId || typeof guildId !== 'string') {
-    throw new Error('guildId inválido');
-  }
-
-  const guild = client.guilds.cache.get(guildId);
-  if (!guild) {
-    return [];
-  }
-
-  try {
-    await guild.channels.fetch();
-  } catch (e) {
-  }
-
-  return Array.from(guild.channels.cache.values()).map(ch => ({
-    id: ch.id,
-    name: ch.name,
-    type: ch.type,
-    parentId: ch.parentId || null
-  }));
-});
-
-registerHandler('get_guild_roles', async ({ client, payload }) => {
-  const { guildId } = payload;
-  
-  if (!guildId || typeof guildId !== 'string') {
-    throw new Error('guildId inválido');
-  }
-
-  const guild = client.guilds.cache.get(guildId);
-  if (!guild) {
-    return [];
-  }
-
-  try {
-    await guild.roles.fetch();
-  } catch (e) {
-  }
-
-  return Array.from(guild.roles.cache.values())
-    .filter(r => r.id !== guild.id)
-    .map(r => ({
-      id: r.id,
-      name: r.name,
-      color: r.color,
-      position: r.position,
-      permissions: r.permissions.bitfield
-    }));
-});
-
-registerHandler('get_guild_members', async ({ client, payload }) => {
-  const { guildId, limit = 100 } = payload;
-  
-  if (!guildId || typeof guildId !== 'string') {
-    throw new Error('guildId inválido');
-  }
-
-  const safeLimit = Math.min(limit, 1000);
-
-  const guild = client.guilds.cache.get(guildId);
-  if (!guild) {
-    return [];
-  }
-
-  try {
-    await guild.members.fetch({ limit: safeLimit });
-  } catch (e) {
-  }
-
-  return Array.from(guild.members.cache.values())
-    .slice(0, safeLimit)
-    .map(m => ({
-      id: m.id,
-      username: m.user.username,
-      tag: m.user.tag,
-      avatar: m.user.avatar,
-      joinedAt: m.joinedAt,
-      roles: m.roles.cache.map(r => r.id)
-    }));
-});
-
-registerHandler('get_member', async ({ client, payload }) => {
-  const { guildId, memberId } = payload;
-  
-  if (!guildId || !memberId || typeof guildId !== 'string' || typeof memberId !== 'string') {
-    throw new Error('guildId ou memberId inválido');
-  }
-
-  const guild = client.guilds.cache.get(guildId);
-  if (!guild) {
-    throw new Error('Servidor não encontrado');
-  }
-
-  try {
-    const member = await guild.members.fetch(memberId);
-    return {
-      id: member.id,
-      username: member.user.username,
-      tag: member.user.tag,
-      avatar: member.user.avatar,
-      joinedAt: member.joinedAt,
-      roles: member.roles.cache.map(r => ({ id: r.id, name: r.name })),
-      nickname: member.nickname,
-      premiumSince: member.premiumSince
-    };
-  } catch (e) {
-    throw new Error('Membro não encontrado');
-  }
-});
-
-registerHandler('list_guilds', async ({ client }) => {
-  return Array.from(client.guilds.cache.values()).map(g => ({
-    id: g.id,
-    name: g.name,
-    icon: g.icon,
-    memberCount: g.memberCount || g.members.cache.size,
-    ownerId: g.ownerId
-  }));
-});
-
-registerHandler('ping', async ({ client, botId }) => {
-  return {
-    botId,
-    uptime: process.uptime(),
-    guilds: client.guilds.cache.size,
-    users: client.users.cache.size,
-    timestamp: Date.now()
-  };
-});
-
-registerHandler('get_bot_info', async ({ client, botId }) => {
-  return {
-    id: client.user.id,
-    username: client.user.username,
-    tag: client.user.tag,
-    avatar: client.user.avatar,
-    botId,
-    uptime: process.uptime(),
-    guilds: client.guilds.cache.size,
-    status: client.user.presence?.status || 'offline',
-    availableActions: getAvailableActions()
-  };
-});
-
 registerHandler('send_embed', async ({ client, payload }) => {
-  const { channelId, content, embed } = payload;
+  const { channelId, content, embed, embeds, editLastMessage } = payload;
 
   if (!channelId) {
     throw new Error('ID do canal é obrigatório');
@@ -192,13 +61,38 @@ registerHandler('send_embed', async ({ client, payload }) => {
 
     if (content) {
       messagePayload.content = content;
+    } else {
+      messagePayload.content = null; // Limpar conteúdo se não houver
     }
 
-    if (embed && Object.keys(embed).length > 0) {
+    if (embeds && Array.isArray(embeds) && embeds.length > 0) {
+      messagePayload.embeds = embeds;
+    } else if (embed && Object.keys(embed).length > 0) {
       messagePayload.embeds = [embed];
+    } else {
+      messagePayload.embeds = []; // Limpar embeds se não houver
     }
 
-    const message = await channel.send(messagePayload);
+    let message;
+
+    if (editLastMessage) {
+      try {
+        const messages = await channel.messages.fetch({ limit: 30 });
+        const lastMessage = messages.find(m => m.author.id === client.user.id);
+
+        // Se encontrou mensagem, é editável e não tem componentes (botões/menus)
+        if (lastMessage && lastMessage.editable && lastMessage.components.length === 0) {
+          message = await lastMessage.edit(messagePayload);
+        }
+      } catch (err) {
+        console.error('Erro ao tentar editar última mensagem:', err);
+        // Se falhar, continua para enviar nova mensagem
+      }
+    }
+
+    if (!message) {
+      message = await channel.send(messagePayload);
+    }
 
     return {
       success: true,
@@ -226,6 +120,118 @@ registerHandler('get_status', async ({ client }) => {
     memory: process.memoryUsage().rss,
     lavalink: lavalinkStatus
   };
+});
+
+registerHandler('apply_warning', async ({ client, payload }) => {
+
+  const context = {
+    logger: logger,
+    emojis: emojis,
+    chalk: chalk,
+    client: client
+  };
+
+  await applyWarning(null, context, payload);
+
+  return { success: true, action: 'warn', message: `Advertência aplicada com sucesso.` };
+});
+
+registerHandler('apply_exoneration', async ({ client, payload }) => {
+
+    const context = {
+      logger: logger,
+      emojis: emojis,
+      chalk: chalk,
+      client: client
+    };
+
+    await applyExoneration(null, context, payload);
+
+    return { success: true, message: 'Exoneração aplicada com sucesso.' };
+});
+
+registerHandler('create_raffle', async ({ client, payload }) => {
+  const { id, title, description, image_url, image_path } = payload;
+  const { AttachmentBuilder } = require('discord.js');
+  const path = require('path');
+  const channelId = '1447340512981024879';
+  const channel = client.channels.cache.get(channelId);
+  if (!channel) throw new Error('Canal não encontrado');
+
+  let files = [];
+  let thumbnailUrl = '';
+
+  if (image_path) {
+    const filename = path.basename(image_path);
+    const attachment = new AttachmentBuilder(image_path, { name: filename });
+    files.push(attachment);
+    thumbnailUrl = `attachment://${filename}`;
+  } else if (image_url && image_url.startsWith('http')) {
+    thumbnailUrl = image_url;
+  }
+
+  const crown = formatEmoji(emojis.static.crown);
+  const check = formatEmoji(emojis.animated.check, true);
+  const count = 0;
+
+  const container = [
+      new TextDisplayBuilder().setContent("|| @everyone @here ||"),
+      new ContainerBuilder()
+      .addSectionComponents(
+        new SectionBuilder()
+        .setThumbnailAccessory(
+        new ThumbnailBuilder()
+          .setURL(thumbnailUrl || client.user.displayAvatarURL())
+          .setDescription('Imagem do Sorteio')
+        )
+        .addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(
+              `## ${crown} ${title}ㅤㅤ\n`+
+              `${description}\n`
+            ),
+        ),
+      )
+      .addSectionComponents(
+        new SectionBuilder()
+        .setButtonAccessory(
+          new ButtonBuilder()
+          .setStyle(ButtonStyle.Success)
+          .setLabel(`Entrar (${count})`)
+          .setEmoji({ id: emojis.static.gift.id })
+          .setCustomId(`raffle_enter_${id}`)
+        )
+        .addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(`-# ${check} Powered by Trindade Penumbra®`),
+        ),
+      ),
+    ];
+
+  await channel.send({
+    files: files,
+    components: container,
+    flags: MessageFlags.IsComponentsV2
+  });
+});
+
+registerHandler('raffle_winner', async ({ client, payload }) => {
+  const { raffle_id, winner } = payload;
+  
+  const channelId = '1449810307349221387';
+  const channel = client.channels.cache.get(channelId);
+  if (!channel) throw new Error('Canal não encontrado');
+
+  const emoji = formatEmoji(emojis.static.gift2);
+
+  const container = [
+      new TextDisplayBuilder().setContent(`|| <@${winner.discord_id}> ||`),
+      new ContainerBuilder()
+      .setAccentColor(0xFFD700)
+      .addTextDisplayComponents(
+        new TextDisplayBuilder().setContent(`## ${emoji} Sorteio Finalizado!\n<@${winner.discord_id}> foi o vencedor, Parabéns!`),
+      )
+    ];
+
+  await channel.send({ components: container, flags: MessageFlags.IsComponentsV2 });
 });
 
 module.exports = {

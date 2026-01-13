@@ -17,102 +17,107 @@ const WARNING_ROLES = {
     3: '1446613483402821794'
 };
 
-module.exports = {
-    async execute(interaction, context) {
-        const { logger, emojis, chalk } = context;
+async function applyWarning(interaction, context, payload = null) {
+    const { logger, emojis, chalk, client } = context;
 
-        try {
+    const isWebSocket = !!payload;
+    const isInteraction = !isWebSocket && interaction;
+
+    try {
+        let targetId, adminId, reason, levelRaw, durationRaw, guild;
+
+        if (isWebSocket) {
+            
+            targetId = payload.userId;
+            adminId = payload.adminId;
+            reason = payload.reason;
+            levelRaw = parseInt(payload.level);
+            durationRaw = payload.durationHours;
+            guild = client ? client.guilds.cache.get(payload.guildId) : interaction?.client.guilds.cache.get(payload.guildId);
+
+        } else if (isInteraction) {
             await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-            const userId = interaction.fields.getSelectedUsers("user_modal_adv_select").first()?.id;
-            const member = await interaction.guild.members.fetch(userId).catch(() => null);
-            const reason = interaction.fields.getTextInputValue("reason_text_input_adv");
+            targetId = interaction.fields.getSelectedUsers("user_modal_adv_select").first()?.id;
+            adminId = interaction.user.id;
+            reason = interaction.fields.getTextInputValue("reason_text_input_adv");
+            
+            const levelSelect = interaction.fields.getStringSelectValues("level_select_adv")[0];
+            levelRaw = parseInt(levelSelect.split('_')[1]); 
+
             const durationSelect = interaction.fields.getStringSelectValues("duration_select_adv")[0];
-            const adminId = interaction.user.id;
-            const guildId = interaction.guild.id;
-            const logChannelId = '1296584858910326926';
-            // test = const logChannelId = '1293740554076688436';
+            durationRaw = durationSelect === 'permanent_adv_select' ? null : parseInt(durationSelect.split('_')[0]);
 
-            const alert = formatEmoji(emojis.static.alert);
+            guild = interaction.guild;
+        }
 
-            if (!member) {
+        if (!guild) {
+            logger.error(chalk.red('[ERRO] Guilda não encontrada no applyWarning.'));
+            return; 
+        }
+
+        const member = await guild.members.fetch(targetId).catch(() => null);
+        const adminMember = await guild.members.fetch(adminId).catch(() => null);
+        const adminUser = adminMember ? adminMember.user : await client?.users.fetch(adminId).catch(() => null);
+
+        if (!member) {
+            if (isInteraction) {
                 return interaction.editReply({
-                    embeds: [{
-                        description: '✖ Usuário não encontrado!',
-                        color: 0xFF0000
-                    }]
+                    embeds: [{ description: '✖ Usuário não encontrado no servidor!', color: 0xFF0000 }]
                 });
+            } else {
+                logger.warn(chalk.yellow(`[AVISO] Usuário ${targetId} não está no servidor, mas a ADV foi processada pela API.`));
+            }
+        }
+
+        const durationText = durationRaw ? `${durationRaw}h` : 'Permanente';
+        const reasonFormatted = formatarTextoEmbed(reason, 50);
+        const alert = formatEmoji(emojis.animated.alert, true);
+        const logChannelId = '1296584858910326926';
+
+        let color = 0xff7b00;
+        let levelRoleId = WARNING_ROLES[levelRaw];
+        let punishment = 'Não aplicável';
+        let feedbackDescription = '';
+
+        await api.post('/bot/warnings/add', { 
+            user_id: targetId, 
+            user_tag: member ? member.user.tag : 'Desconhecido',
+            user_nickname: member ? (member.nickname || 'Sem Apelido') : 'Desconhecido', 
+            admin_id: adminId,
+            admin_tag: adminUser ? adminUser.tag : 'Sistema',
+            admin_nickname: adminMember ? (adminMember.nickname || 'Sem Apelido') : 'Sistema', 
+            guild_id: guild.id, 
+            reason, 
+            duration_hours: durationRaw,
+            level: levelRaw
+        });
+
+        if (member && levelRoleId) {
+            const roleAdd = guild.roles.cache.get(levelRoleId);
+            if (roleAdd) await member.roles.add(roleAdd).catch(e => logger.error(`Erro ao dar cargo: ${e.message}`));
+        }
+
+        if (levelRaw === 1) {
+            feedbackDescription = `✔ Advertência **ADV 1** aplicada em <@${targetId}> com sucesso!`;
+        }
+
+        if (levelRaw === 2 || levelRaw === 3) {
+            
+            if (levelRaw === 3 && member) {
+                await member.timeout(7 * 24 * 60 * 60 * 1000, `Castigo automático: ADV 3`).catch(() => {});
+                punishment = 'Timeout de 7 dias aplicado.';
+                color = 0xFF0000;
+            } else if (levelRaw === 2) {
+                punishment = 'Advertência via DM.';
+                color = 0x00FF00;
             }
 
-            const durationHours = durationSelect === 'permanent_adv_select' ? null : parseInt(durationSelect.split('_')[0]);
-
-            let activeWarnings = [];
-            try {
-                activeWarnings = await api.get(`/bot/warnings/active/${userId}/${guildId}`);
-            } catch (err) {
-                throw new Error('Erro ao obter advertências via API');
-            }
-            const warningCount = activeWarnings.length;
-            const newWarningLevel = warningCount + 1;
-
-            if (newWarningLevel >= 3) {
-                let warningId;
-                const r = await api.post('/bot/warnings/add', { user_id: userId, user_tag: member.user.tag, admin_id: adminId, guild_id: guildId, reason, duration_hours: durationHours });
-                warningId = r.id;
-
-                await member.kick(`Acúmulo de advertências (${newWarningLevel})`);
-                
-                await api.post('/bot/warnings/clear', { user_id: userId, guild_id: guildId });
-
-                console.log('Dados sendo enviados:', {
-                    user_id: userId,
-                    user_tag: member.user.tag,
-                    admin_id: adminId,
-                    guild_id: guildId,
-                    reason: reason,
-                    duration_hours: durationHours
-                });
-
-                let kickId;
-                const r2 = await api.post('/bot/bans/add', { user_id: userId, user_nickname: member.nickname || member.user.username, user_tag: member.user.tag, admin_id: 'SYSTEM_AUTO_KICK', guild_id: guildId, reason: `Kick automático por ${newWarningLevel} advertências` });
-                kickId = r2.id;
-                
-                await interaction.editReply({
-                    embeds: [{
-                        description: `${alert} **${member.user.tag}** foi **kickado automaticamente** por acumular ${newWarningLevel} advertências!`,
-                        color: 0xFF0000
-                    }]
-                });
-
-                logger.info(`Kick automático! ID: ${kickId} | Usuário: ${member.user.tag} | Advertências: ${newWarningLevel} | Advertências zeradas`);
-                return;
-            }
-
-            if (newWarningLevel <= 3) {
-                if (warningCount > 0 && WARNING_ROLES[warningCount]) {
-                    const oldRole = interaction.guild.roles.cache.get(WARNING_ROLES[warningCount]);
-                    if (oldRole && member.roles.cache.has(oldRole.id)) {
-                        await member.roles.remove(oldRole);
-                    }
-                }
-
-                if (WARNING_ROLES[newWarningLevel]) {
-                    const newRole = interaction.guild.roles.cache.get(WARNING_ROLES[newWarningLevel]);
-                    if (newRole) {
-                        await member.roles.add(newRole);
-                    }
-                }
-            }
-
-            let warningId;
-            const r = await api.post('/bot/warnings/add', { user_id: userId, user_tag: member.user.tag, admin_id: adminId, guild_id: guildId, reason, duration_hours: durationHours });
-            warningId = r.id;
-
-            const channel = await interaction.guild.channels.fetch(logChannelId).catch(() => null);
-            if (channel) {
-                const durationText = durationHours ? `${durationHours}h` : 'Permanente';
-                const reasonFormatted = formatarTextoEmbed(reason, 50);
-                const memberFormat = member ? `<@${member.user.id}>` : `<@${userId}>`;
+            if (member) {
+                const title = levelRaw === 3 ? 'Castigo Recebido' : 'Advertência Recebida';
+                const descNivel = levelRaw === 3 
+                    ? `- Você recebeu uma **Advertência Nível 3**!\n- Advertência nível 3 resulta em timeout de 7 dias.ﾠ\n` 
+                    : `- Você recebeu uma **Advertência Nível 2**!\n`;
 
                 const container = [
                     new ContainerBuilder()
@@ -120,56 +125,102 @@ module.exports = {
                     .addSectionComponents(
                         new SectionBuilder()
                         .setThumbnailAccessory(
-                            new ThumbnailBuilder()
-                            .setURL(member.user.displayAvatarURL() || interaction.guild.iconURL())
-                            .setDescription('Avatar do Usuário')
+                            new ThumbnailBuilder().setURL(member.user.displayAvatarURL() || guild.iconURL())
                         )
                         .addTextDisplayComponents(
-                            new TextDisplayBuilder().setContent(`## ${alert} Nova Advertência`),
-                            new TextDisplayBuilder().setContent(
-                                `- Usuário(a): ${memberFormat}\n`+
-                                `- Responsável: <@${adminId}>`
-                            )
-                        )
+                            new TextDisplayBuilder().setContent(`## ${alert} — ${title}`),
+                            new TextDisplayBuilder().setContent(`${descNivel}- Servidor: ${guild.name}\n`),
+                        ),
                     )
                     .addSeparatorComponents(
                         new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large).setDivider(true),
                     )
                     .addTextDisplayComponents(
                         new TextDisplayBuilder().setContent(
-                            `- **Motivo:**\n${reasonFormatted}\n\n`+
-                            `- **Nível:** <@&${WARNING_ROLES[newWarningLevel]}>\n`+
-                            `- **A Advertência expira em ${durationText}**\n\n`+
+                            `- Duração: ${durationText}\n`+
+                            `- Responsável: <@${adminId}>\n\n`+
+                            `- Motivo: ${reasonFormatted}\n\n`+
                             `-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`
-                        )
-                    )
+                        ),
+                    ),
                 ];
 
-                await channel.send({
-                    components: container,
-                    flags: MessageFlags.IsComponentsV2,
-                    allowedMentions: { parse: [] }
-                });
+                await member.send({ components: container, flags: MessageFlags.IsComponentsV2 })
+                    .catch(() => {
+                        feedbackDescription += '\n#- (Não foi possível enviar a DM ao usuário.)';
+                    });
             }
 
+            feedbackDescription = `✔ Advertência **ADV ${levelRaw}** aplicada em <@${targetId}> com sucesso!`;
+        }
+
+
+        if (isInteraction) {
             await interaction.editReply({
                 embeds: [{
-                    description: `✔ Advertência **ADV ${newWarningLevel}** aplicada em **${member.user.tag}** com sucesso!`,
+                    description: feedbackDescription,
                     color: 0x00FF00
                 }]
             });
+        } else {
+            logger.info(chalk.green(`[WS] ADV ${levelRaw} aplicada via API para ${targetId}.`));
+        }
 
-            logger.info(`Advertência aplicada! ID: ${warningId} | Usuário: ${member.user.tag} | Nível: ADV ${newWarningLevel} | Admin: ${adminId}`);
+        const logChannel = await guild.channels.fetch(logChannelId).catch(() => null);
+        if (logChannel && member) {
+            const containerLog = [
+                new ContainerBuilder()
+                .setAccentColor(color)
+                .addSectionComponents(
+                    new SectionBuilder()
+                    .setThumbnailAccessory(
+                        new ThumbnailBuilder()
+                        .setURL(member.user.displayAvatarURL() || guild.iconURL())
+                        .setDescription('Avatar do Usuário')
+                    )
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(`## ${alert} — Nova Advertência`),
+                        new TextDisplayBuilder().setContent(
+                            `- Usuário(a): <@${targetId}>\n`+
+                            `- Responsável: <@${adminId}> ﾠﾠ`
+                        )
+                    )
+                )
+                .addSeparatorComponents(
+                    new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large).setDivider(true),
+                )
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        `- **Motivo:**\n${reasonFormatted}\n\n`+
+                        `- **Nível:** <@&${levelRoleId}>\n`+
+                        `- **Punição:** ${punishment}\n`+
+                        `- **A advertência expira em ${durationText}**\n\n`+
+                        `-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`
+                    )
+                )
+            ];
 
-        } catch (error) {
-            logger.error(`${chalk.red.bold('[ERRO]')} Erro no sistema de advertências: ${error.stack}`);
-
-            await interaction.editReply({
-                embeds: [{
-                    description: '✖ Ocorreu um erro ao aplicar a advertência!',
-                    color: 0xFF0000
-                }]
+            await logChannel.send({
+                components: containerLog,
+                flags: MessageFlags.IsComponentsV2,
+                allowedMentions: { parse: [] }
             });
+        }
+
+    } catch (error) {
+        if (error.response && error.response.data) {
+            logger.error(`${chalk.red.bold('[ERRO API]')} Detalhes: ${JSON.stringify(error.response.data)}`);
+        }
+        logger.error(`${chalk.red.bold('[ERRO]')} Erro no sistema de advertências: ${error.stack}`);
+
+        if (isInteraction) {
+            try {
+                await interaction.editReply({
+                    embeds: [{ description: '✖ Ocorreu um erro ao aplicar a advertência!', color: 0xFF0000 }]
+                });
+            } catch (err) { /* Ignore */ }
         }
     }
 };
+
+module.exports = { applyWarning };

@@ -8,17 +8,18 @@ const chalk = require('chalk');
 const fs = require('fs');
 const path = require('path');
 
+const { applyWarning } = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitAdvModal');
+const { applyExoneration } = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitBanModal');
+const { handleStatusButtons } = require('../handlers/buttonsHandlers/statusButtons');
+
 const handleRegisterModal = require('../handlers/modalsHandlers/handleRegisterModal');
 const handleSubmitRegisterModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitRegisterModal');
 const handleEditRegisterModal = require('../handlers/modalsHandlers/modalsSubmit/handleEditRegisterModal');
 const registerButtons = require('../handlers/buttonsHandlers/registerButtons');
-const { handleStatusButtons } = require('../handlers/buttonsHandlers/statusButtons');
 const roleButtons = require('../handlers/buttonsHandlers/roleButtons');
 const handleAdvModal = require('../handlers/modalsHandlers/handleAdvModal');
 const handleUpAndRebModal = require('../handlers/modalsHandlers/handleUpAndRebModal');
 const handleBanUserModal = require('../handlers/modalsHandlers/handleBanUserModal');
-const handleSubmitBanModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitBanModal');
-const handleSubmitAdvModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitAdvModal');
 const handleSubmitUpRebModal = require('../handlers/modalsHandlers/modalsSubmit/handleSubmitUpRebModal');
 const advsActiveListButton = require('../handlers/buttonsHandlers/advsActiveListButton');
 const handleSearchUserModal = require('../handlers/modalsHandlers/handleSearchUserModal');
@@ -84,7 +85,7 @@ module.exports = {
                     await banListButton.execute(interaction, context);
                 } else if (interaction.customId.startsWith('music_')) {
                     await musicButtons.execute(interaction, context);
-                } else if (interaction.customId === 'raffle_enter') {
+                } else if (interaction.customId === 'raffle_enter' || interaction.customId.startsWith('raffle_enter_')) {
                     await raffleButton(interaction);
                 } 
             
@@ -94,10 +95,13 @@ module.exports = {
                     return handleSubmitRegisterModal.execute(interaction, context);
                 } else if (interaction.customId.startsWith('edit_register_modal_')) {
                     return handleEditRegisterModal.execute(interaction, context);
+
                 } else if (interaction.customId.startsWith('modal_ban')) {
-                    return handleSubmitBanModal.execute(interaction, context);
+                    await applyExoneration(interaction, context);
+
                 } else if (interaction.customId.startsWith('modal_adv')) {
-                    return handleSubmitAdvModal.execute(interaction, context);
+                    await applyWarning(interaction, context);
+
                 } else if (interaction.customId.startsWith('modal_up_and_reb')) {
                     return handleSubmitUpRebModal.execute(interaction, context);
                 } else if (interaction.customId.startsWith('modal_search_register')) {

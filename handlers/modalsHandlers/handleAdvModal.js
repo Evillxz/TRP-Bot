@@ -59,6 +59,32 @@ module.exports = {
             )
             .addLabelComponents(
                 new LabelBuilder()
+                .setLabel("Nível da Advertência")
+                .setStringSelectMenuComponent(
+                    new StringSelectMenuBuilder()
+                    .setCustomId("level_select_adv")
+                    .setPlaceholder("Selecione clicando aqui...")
+                    .addOptions(
+                        new StringSelectMenuOptionBuilder()
+                        .setLabel("Advertência Nível 1")
+                        .setEmoji({ id: emojis.static.alert.id })
+                        .setValue("level_1_adv_select")
+                        .setDescription("Uma simples advertência sem consequências adicionais."),
+                        new StringSelectMenuOptionBuilder()
+                        .setLabel("Advertência Nível 2 + Mensagem DM")
+                        .setEmoji({ id: emojis.static.alert.id })
+                        .setValue("level_2_adv_select")
+                        .setDescription("Advertência nível 2 e uma mensagem direta via DM."),
+                        new StringSelectMenuOptionBuilder()
+                        .setLabel("Advertência Nível 3 + Castigo")
+                        .setEmoji({ id: emojis.static.alert.id })
+                        .setValue("level_3_adv_select")
+                        .setDescription("Advertência nível 3 e aplicação de castigo por 7 dias."),
+                    )
+                )
+            )
+            .addLabelComponents(
+                new LabelBuilder()
                 .setLabel("Duração da Advertência")
                 .setStringSelectMenuComponent(
                     new StringSelectMenuBuilder()
@@ -113,7 +139,7 @@ module.exports = {
                         .setDescription("Sem data de expiração (Pra sempre... é muito tempo)")
                     )
                 )
-            )
+            );
         
         interaction.showModal(modal);
         

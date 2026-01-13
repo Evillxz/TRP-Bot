@@ -1,6 +1,6 @@
 const api = require('apiClient');
 const { client } = require('../config/client');
-const logger = require('../config/logger');
+const logger = require('logger');
 const chalk = require('chalk');
 
 const WARNING_ROLES = {

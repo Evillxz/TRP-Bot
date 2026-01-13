@@ -1,6 +1,6 @@
 const musicPanelManager = require('../utils/musicPanelManager');
 const emojis = require('emojis');
-const { formatEmoji, MessageFlags } = require('discord.js');
+const { formatEmoji } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -23,40 +23,45 @@ module.exports = {
         }
 
         if (await isFeatureMaintenance('music')) {
-            const reply = await message.reply({
+            const reply = await message.channel.send({
                 embeds: [{
                     description: `🚧 Sistema de música em manutenção. Tente novamente mais tarde.`,
                     color: 0xFFA500
-                }],
-                flags: MessageFlags.Ephemeral
+                }]
             });
-            await message.delete();
-            setTimeout(() => reply.delete().catch(() => {}), 5000);
+            setTimeout(() => {
+                reply.delete().catch(() => {});
+                message.delete().catch(() => {});
+            }, 5000);
             return;
         }
         
         if (!channel) {
-            const reply = await message.reply({
+            const reply = await message.channel.send({
                 embeds: [{
                     description: `✖ Você precisa estar em um canal de voz!`,
                     color: 0xFF0000
-                }],
-                flags: MessageFlags.Ephemeral
+                }]
             });
-            setTimeout(() => reply.delete().catch(() => {}), 5000);
+            setTimeout(() => {
+                reply.delete().catch(() => {});
+                message.delete().catch(() => {});
+            }, 5000);
             return;
         }
 
         const args = message.content.split(' ').slice(1);
         if (!args.length) {
-            const reply = await message.reply({
+            const reply = await message.channel.send({
                 embeds: [{
                     description: `✖ Icorreto! Use: \`!play **nome-da-musica** (Ou o **link**)\``,
                     color: 0xFF0000
-                }],
-                flags: MessageFlags.Ephemeral
+                }]
             });
-            setTimeout(() => reply.delete().catch(() => {}), 5000);
+            setTimeout(() => {
+                reply.delete().catch(() => {});
+                message.delete().catch(() => {});
+            }, 5000);
             return;
         }
 
@@ -81,14 +86,16 @@ module.exports = {
             const res = await message.client.manager.search(search, message.author);
 
             if (!res || !res.tracks || res.tracks.length === 0) {
-                const reply = await message.reply({
+                const reply = await message.channel.send({
                     embeds: [{
                         description: `✖ Nenhuma música encontrada!`,
                         color: 0xFF0000
-                    }],
-                    flags: MessageFlags.Ephemeral
+                    }]
                 });
-                setTimeout(() => reply.delete().catch(() => {}), 5000);
+                setTimeout(() => {
+                    reply.delete().catch(() => {});
+                    message.delete().catch(() => {});
+                }, 5000);
                 return;
             }
 
@@ -96,28 +103,31 @@ module.exports = {
             if (res.type === 'PLAYLIST') {
                 res.tracks.forEach(track => track.requester = message.author);
                 player.queue.add(res.tracks);
-                reply = await message.reply({
+                reply = await message.channel.send({
                     embeds: [{
                         description: `${formatEmoji(emojis.static.list)} Playlist adicionada: **${res.playlistName}** (${res.tracks.length} músicas)`,
                         color: 0x00FF00
-                    }],
-                    flags: MessageFlags.Ephemeral
+                    }]
                 });
-                await message.delete();
+                setTimeout(() => {
+                    reply.delete().catch(() => {});
+                    message.delete().catch(() => {});
+                }, 5000);
             } else {
                 const track = res.tracks[0];
                 track.requester = message.author;
                 player.queue.add(track);
-                reply = await message.reply({
+                reply = await message.channel.send({
                     embeds: [{
                         description: `${formatEmoji(emojis.static.spotify)} Adicionado a fila: **[${track.title}](${track.uri})**`,
                         color: 0x2ECC71
-                    }],
-                    flags: MessageFlags.Ephemeral
+                    }]
                 });
-                await message.delete();
+                setTimeout(() => {
+                    reply.delete().catch(() => {});
+                    message.delete().catch(() => {});
+                }, 5000);
             }
-            setTimeout(() => reply.delete().catch(() => {}), 5000);
 
             if (!player.playing && !player.paused) {
                 player.play();
@@ -126,7 +136,7 @@ module.exports = {
             await musicPanelManager.createOrUpdatePanel(player, message.channel, message.author);
         } catch (error) {
             context.logger.error('Erro no comando play:', error);
-            const reply = await message.reply({
+            const reply = await message.channel.send({
                 embeds: [{
                     description: `✖ Erro interno ao executar a ação!`,
                     color: 0xFF0000

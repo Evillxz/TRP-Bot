@@ -4,7 +4,7 @@ const chalk = require('chalk');
 
 let hasFetchedMembers = false;
 let lastFetchTime = 0;
-const FETCH_COOLDOWN = 5 * 60 * 1000;
+const FETCH_COOLDOWN = 2 * 60 * 1000;
 
 async function syncUserStatuses(client, forceFetch = false) {
   try {
@@ -60,6 +60,10 @@ async function syncUserStatuses(client, forceFetch = false) {
         
         userStatuses.push({
           userId: member.user.id,
+          username: member.user.username,
+          nickname: member.nickname || member.user.username,
+          avatar: member.user.displayAvatarURL({ extension: 'png', size: 128 }),
+          joinedAt: member.joinedAt,
           status: status,
           roles: roles
         });
@@ -69,7 +73,7 @@ async function syncUserStatuses(client, forceFetch = false) {
     if (userStatuses.length > 0) {
       
       
-      const response = await axios.post(
+      await axios.post(
         `${apiBase.replace(/\/$/, '')}/api/bot/user_status/batch`,
         { users: userStatuses },
         {
@@ -91,6 +95,9 @@ async function syncUserStatuses(client, forceFetch = false) {
 }
 
 function initializeStatusSync(client, context) {
+  // Executa sincronização inicial imediatamente
+  setTimeout(() => syncUserStatuses(client, true), 5000); // 5s delay
+
   setInterval(() => {
     syncUserStatuses(client, false);
   }, 360000);

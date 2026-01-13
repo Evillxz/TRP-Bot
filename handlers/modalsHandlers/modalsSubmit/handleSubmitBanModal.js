@@ -11,93 +11,122 @@ const {
 const api = require('apiClient');
 const { formatarTextoEmbed } = require('formatarTextoEmbed');
 
-module.exports = {
-    async execute(interaction, context) {
-        const { logger, emojis, chalk } = context;
+async function applyExoneration(interaction, context, payload = null) {
+    const { logger, emojis, chalk, client } = context;
 
-        try{
+    const isWebSocket = !!payload;
+    const isInteraction = !isWebSocket && interaction;
+
+    try {
+        let targetId, adminId, reason, guild;
+
+        if (isWebSocket) {
+            targetId = payload.userId;
+            adminId = payload.adminId;
+            reason = payload.reason;
+            guild = client ? client.guilds.cache.get(payload.guildId) : interaction?.client.guilds.cache.get(payload.guildId);
+
+        } else if (isInteraction) {
             await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-            const userId = interaction.fields.getSelectedUsers("user_modal_ban_select", true)?.map((user) => user.id)[0];; 
-            const member = await interaction.guild.members.fetch(userId).catch(() => null);
+            targetId = interaction.fields.getSelectedUsers("user_modal_ban_select", true)?.map((user) => user.id)[0];
+            adminId = interaction.user.id;
+            reason = interaction.fields.getTextInputValue("reason_text_input_ban");
+            guild = interaction.guild;
+        }
 
-            const nickname = member?.nickname || member?.user.username;
+        if (!guild) {
+            logger.error(chalk.red('[ERRO] Guilda não encontrada no applyExoneration.'));
+            return;
+        }
 
-            const reason = interaction.fields.getTextInputValue("reason_text_input_ban");
-            const adminId = interaction.user.id;
-            const guildId = interaction.guild.id;
-            const logChannelId = '1296584859963359233';
+        const member = await guild.members.fetch(targetId).catch(() => null);
+        const adminMember = await guild.members.fetch(adminId).catch(() => null);
+        const adminUser = adminMember ? adminMember.user : await client?.users.fetch(adminId).catch(() => null);
 
-            const gavel = formatEmoji(emojis.static.gavel);
+        const logChannelId = '1296584859963359233';
+        const gavel = formatEmoji(emojis.static.gavel);
 
-            if (!member) {
+        if (!member) {
+            if (isInteraction) {
                 return interaction.editReply({
-                    embeds: [{
-                        description: '✖ Usuário não encontrado!',
-                        color: 0xFF0000
-                    }],
+                    embeds: [{ description: '✖ Usuário não encontrado!', color: 0xFF0000 }],
                     flags: MessageFlags.Ephemeral
-                })
-            };
+                });
+            } else {
+                logger.warn(`[API] Tentativa de ban em usuário fora do servidor: ${targetId}`);
+                return;
+            }
+        }
 
-            if (!member.bannable) {
-                logger.warn(`Tentativa de banimento mal sucedida - Usuário: ${member} | Admin: ${adminId}`);
-                return interaction.editReply({
-                    embeds: [{
-                        description: '✖ Usuário não pode ser banido!',
-                        color: 0xFF0000
-                    }],
-                    flags: MessageFlags.Ephemeral
-                })
-            };
-
-            await member.ban({ reason: reason });
+        if (!member.bannable) {
+            const errorMsg = '✖ Usuário não pode ser banido (Cargos superiores ou erro de permissão)!';
+            logger.warn(`Tentativa de banimento mal sucedida - Usuário: ${member.user.tag} | Admin: ${adminId}`);
             
-            const r = await api.post('/bot/bans/add', { user_id: userId, user_nickname: nickname, user_tag: member.user.tag, admin_id: adminId, guild_id: guildId, reason });
-            const banId = r.id;
+            if (isInteraction) {
+                return interaction.editReply({
+                    embeds: [{ description: errorMsg, color: 0xFF0000 }],
+                    flags: MessageFlags.Ephemeral
+                });
+            }
+            return;
+        }
 
-            const channel = await interaction.guild.channels.fetch(logChannelId).catch(() => null);
-            const reasonFormatted = formatarTextoEmbed(reason, 50);
+        const nickname = member.nickname || member.user.username;
+        const adminTag = adminUser ? adminUser.tag : 'Admin Desconhecido';
+        
+        const r = await api.post('/bot/bans/add', { 
+            user_id: targetId, 
+            user_nickname: nickname, 
+            user_tag: member.user.tag, 
+            admin_id: adminId, 
+            guild_id: guild.id, 
+            reason 
+        });
+        const banId = r.id;
 
-            if (channel) {
+        const channel = await guild.channels.fetch(logChannelId).catch(() => null);
+        const reasonFormatted = formatarTextoEmbed(reason, 50);
 
-                const container = [
-                    new ContainerBuilder()
-                    .setAccentColor(0xFF0000)
-                    .addSectionComponents(
-                        new SectionBuilder()
-                        .setThumbnailAccessory(
-                            new ThumbnailBuilder()
-                            .setURL(member.user.displayAvatarURL() || interaction.guild.iconURL())
-                            .setDescription('Avatar do Usuário')
-                        )
-                        .addTextDisplayComponents(
-                            new TextDisplayBuilder().setContent(`## ${gavel} Nova Exoneração`),
-                            new TextDisplayBuilder().setContent(
-                                `- Usuário(a): **${member.user.tag}**\n`+
-                                `- Responsável: <@${adminId}>`
-                            )
-                        )
-                    )
-                    .addSeparatorComponents(
-                        new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large).setDivider(true),
+        if (channel) {
+            const container = [
+                new ContainerBuilder()
+                .setAccentColor(0xFF0000)
+                .addSectionComponents(
+                    new SectionBuilder()
+                    .setThumbnailAccessory(
+                        new ThumbnailBuilder()
+                        .setURL(member.user.displayAvatarURL() || guild.iconURL())
+                        .setDescription('Avatar do Usuário')
                     )
                     .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(`## ${gavel} Nova Exoneração`),
                         new TextDisplayBuilder().setContent(
-                            `- **Motivo:**\n${reasonFormatted}\n\n`+
-                            `- **Siga as regras para evitar futuros problemas!**\n\n`+
-                            `-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`
+                            `- Usuário(a): **${member.user.tag}**\n`+
+                            `- Responsável: <@${adminId}>`
                         )
                     )
-                ];
+                )
+                .addSeparatorComponents(
+                    new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large).setDivider(true),
+                )
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        `- **Motivo:**\n${reasonFormatted}\n\n`+
+                        `- **Siga as regras para evitar futuros problemas!**\n\n`+
+                        `-# Trindade Penumbra® • ${new Date().toLocaleString("pt-BR")}`
+                    )
+                )
+            ];
 
-                await channel.send({
-                    components: container,
-                    flags: MessageFlags.IsComponentsV2,
-                    allowedMentions: { parse: [] }
-                });
-            };
+            await channel.send({
+                components: container,
+                flags: MessageFlags.IsComponentsV2,
+                allowedMentions: { parse: [] }
+            });
+        }
 
+        if (isInteraction) {
             await interaction.editReply({
                 embeds: [{
                     description: `✔ Usuário **${member.user.tag}** banido com sucesso!`,
@@ -105,22 +134,25 @@ module.exports = {
                 }],
                 flags: MessageFlags.Ephemeral
             });
-
-            logger.info(`Banimento concluído! ID: ${banId} | Usuário: ${member} | Motivo: ${reason} | Admin: ${adminId} | Guild: ${guildId}`);
-        
-
-
-        } catch (error) {
-            logger.error(`${chalk.red.bold('[ERRO]')} Erro no sistema de exoneração: ${error.stack}`);
-
-            await interaction.editReply({
-                embeds: [{
-                    description: '✖ Ocorreu um erro ao tentar banir o usuário!',
-                    color: 0xFF0000
-                }],
-                flags: MessageFlags.Ephemeral
-            });
         }
-        
+
+        logger.info(`Banimento concluído! ID: ${banId} | Usuário: ${member.user.tag} | Motivo: ${reason} | Admin: ${adminId} | Guild: ${guild.id}`);
+
+    } catch (error) {
+        logger.error(`${chalk.red.bold('[ERRO]')} Erro no sistema de exoneração: ${error.stack}`);
+
+        if (isInteraction) {
+            try {
+                await interaction.editReply({
+                    embeds: [{
+                        description: '✖ Ocorreu um erro ao tentar banir o usuário!',
+                        color: 0xFF0000
+                    }],
+                    flags: MessageFlags.Ephemeral
+                });
+            } catch (err) { /* Ignore */ }
+        }
     }
-};
+}
+
+module.exports = { applyExoneration };

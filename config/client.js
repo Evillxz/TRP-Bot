@@ -8,14 +8,15 @@ const client = new Client({
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.GuildVoiceStates,
-        GatewayIntentBits.GuildPresences, // Necessário para monitorar presenças/atividades
+        GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildExpressions,
     ],
     makeCache: Options.cacheWithLimits({
         MessageManager: 0,
-        PresenceManager: Infinity, // Infinity = Sem limite (monitorar todos)
+        PresenceManager: Infinity,
         ReactionManager: 0,
-        UserManager: Infinity, // Infinity = Sem limite
-        GuildMemberManager: Infinity, // Infinity = Sem limite (necessário para roles e status)
+        UserManager: Infinity,
+        GuildMemberManager: Infinity,
         ThreadManager: 0,
         ThreadMemberManager: 0,
         GuildScheduledEventManager: 0,

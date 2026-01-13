@@ -93,13 +93,14 @@ module.exports = {
                     new SectionBuilder()
                     .setThumbnailAccessory(
                         new ThumbnailBuilder()
-                            .setURL(user.user.displayAvatarURL() || interaction.guild.iconURL()).setDescription('Avatar do Usuário')
+                        .setURL(user.user.displayAvatarURL() || interaction.guild.iconURL())
+                        .setDescription('Avatar do Usuário')
                     )
                     .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(`${configs.title}\n\u200B\n`),
+                        new TextDisplayBuilder().setContent(`${configs.title}\n`),
                         new TextDisplayBuilder().setContent(
-                            `- **Usuário(a):** <@${userId}>\n`+
-                            `- **Responsável:** <@${adminId}>`
+                            `- Usuário(a): <@${userId}>\n`+
+                            `- Responsável: <@${adminId}>`
                         )
                     )
                 )

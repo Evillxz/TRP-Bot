@@ -12,11 +12,22 @@ const {
 
 const { createCanvas, loadImage } = require('canvas');
 const path = require('path');
+const apiClient = require('apiClient');
 
 module.exports = {
     name: Events.GuildMemberAdd,
     async execute(member, context) {
         const { logger } = context;
+
+        try {
+            await apiClient.post('/bot/member_flow', {
+                user_id: member.id,
+                user_tag: member.user.tag,
+                action: 'join'
+            });
+        } catch (error) {
+            logger.error(`Failed to log member join: ${error.message}`);
+        }
 
         const welcomeChannelId = '1296584792111845449';
         const welcomeChannel = member.guild.channels.cache.get(welcomeChannelId);

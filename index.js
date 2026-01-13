@@ -15,16 +15,15 @@ const musicPanelManager = require('./utils/musicPanelManager');
 
 client.manager = new Kazagumo({
     defaultSearchEngine: 'youtube',
-    defaultSource: 'scsearch:',
     send: (guildId, payload) => {
         const guild = client.guilds.cache.get(guildId);
         if (guild) guild.shard.send(payload);
     }
 }, new Connectors.DiscordJS(client), [
     {
-        url: 'trplavalink.discloud.app:443',
-        auth: 'youshallnotpass',
-        secure: true
+        url: 'lavalinkv4.serenetia.com:80',
+        auth: 'https://dsc.gg/ajidevserver',
+        secure: false
     }
 ]);
 
@@ -168,7 +167,7 @@ if (fs.existsSync(musicCommandsPath)) {
 }
 
 client.on('messageCreate', async message => {
-    const prefixes = ['!', '.', 'p!', ';'];
+    const prefixes = ['!', '.', 'p!', ';', '?'];
     
     if (message.author.bot) return;
     const usedPrefix = prefixes.find(p => message.content.startsWith(p));
@@ -181,7 +180,7 @@ client.on('messageCreate', async message => {
 
     try {
         await message.channel.sendTyping();
-        await command.execute(message, baseEventHandlerContext);
+        await command.execute(message, args, baseEventHandlerContext);
     } catch (err) {
         logger.error(`Erro no comando de prefixo '${commandName}': ${err.stack || err}`);
         message.reply('✖ Ocorreu um erro ao executar este comando.');
@@ -193,6 +192,16 @@ const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'
 for (const file of eventFiles) {
     const filePath = path.join(eventsPath, file);
     const event = require(filePath);
+    
+    // Handle multiple events in one file
+    if (Array.isArray(event)) {
+        for (const singleEvent of event) {
+            const eventContext = { ...baseEventHandlerContext, eventName: singleEvent.name };
+            client.on(singleEvent.name, (...args) => singleEvent.execute(...args, eventContext));
+        }
+        continue;
+    }
+    
     const eventContext = { ...baseEventHandlerContext, eventName: event.name };
 
     if (event.once) {
@@ -231,7 +240,9 @@ WarningManager.startMonitoring();
 try {
     const wsClient = require('./utils/wsClient');
     wsClient.connect(client);
+
     logger.info(`${chalk.green.bold('[WEBSOCKET]')} Cliente WebSocket conectando à API...`);
+    
 } catch (err) {
     logger.error(`${chalk.red.bold('[WEBSOCKET]')} Erro ao iniciar cliente WebSocket: ${err && err.message ? err.message : err}`);
 }

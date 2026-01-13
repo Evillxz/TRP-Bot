@@ -32,7 +32,6 @@ function formatarDataBR(dateString, ajustarFuso = true, retornarTimestamp = fals
     return `${dia}/${mes}/${ano}, ${horas}:${minutos}`;
 }
 
-
 module.exports = {
     async execute(interaction, context) {
         const { logger, emojis } = context;
@@ -65,7 +64,7 @@ module.exports = {
             warnings.forEach(warning => {
 
                 const reasonFormatted = formatarTextoEmbed(warning.reason, 45);
-                const criadoEm = formatarDataBR(warning.created_at, true, true);
+                const criadoEm = formatarDataBR(warning.created_at, false, true);
                 const expiraEm = warning.expires_at ? formatarDataBR(warning.expires_at, false, true) : "**em ∞ horas (Permanente)**";
 
                 response += `### Advertência ${warning.id}\n`;

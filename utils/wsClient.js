@@ -16,11 +16,22 @@ const BASE_RECONNECT_DELAY = 3000;
 const MAX_RECONNECT_DELAY = 60000;
 const HEARTBEAT_INTERVAL = 30000;
 const HEARTBEAT_TIMEOUT = 10000;
-const SERVER_DATA_CACHE_TTL = 4 * 60 * 1000;
-const SERVER_DATA_REFRESH_INTERVAL = 4 * 60 * 1000;
+const SERVER_DATA_CACHE_TTL = 30 * 1000; // 30 segundos
+const SERVER_DATA_REFRESH_INTERVAL = 60 * 1000; // 1 minuto (fallback)
 const localBotId = process.env.BOT_ID || `bot_${uuidv4()}`;
 
 const serverDataCache = new Map();
+const MAX_CACHE_SIZE = 10;
+
+// Limpar cache periodicamente
+setInterval(() => {
+  if (serverDataCache.size > MAX_CACHE_SIZE) {
+    const entries = Array.from(serverDataCache.entries());
+    entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
+    const toDelete = entries.slice(0, entries.length - MAX_CACHE_SIZE);
+    toDelete.forEach(([key]) => serverDataCache.delete(key));
+  }
+}, 10 * 60 * 1000); // Limpar a cada 10 minutos
 
 async function connect(client) {
   const apiBase = process.env.API_URL || process.env.API_BASE_URL || 'http://localhost:5500';
@@ -60,6 +71,29 @@ async function connect(client) {
       });
     } catch (error) {
       logger.error(`${chalk.red.bold('[WS CLIENT]')} Erro ao salvar dados em cache para servidor ${guildId}: ${error.message}`);
+    }
+  };
+
+  const sendServerDataNow = async () => {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      try {
+        const GUILD_ID = process.env.GUILD_ID || '1295702106195492894';
+        const guild = client.guilds.cache.get(GUILD_ID);
+        
+        if (guild) {
+          const serverData = collectServerData(guild);
+          cacheServerData(guild.id, serverData);
+          ws.send(JSON.stringify({ 
+            type: 'server_data', 
+            data: serverData,
+            timestamp: Date.now(),
+            force_update: true
+          }));
+          logger.info(`${chalk.blue.bold('[WS CLIENT]')} Dados do servidor enviados em tempo real`);
+        }
+      } catch (e) {
+        logger.error(`${chalk.red.bold('[WS CLIENT]')} Erro ao enviar dados em tempo real: ${e.message}`);
+      }
     }
   };
 
@@ -138,7 +172,9 @@ async function connect(client) {
               const serverData = await collectServerData(guild);
               ws.send(JSON.stringify({ 
                 type: 'server_data', 
-                data: serverData 
+                data: serverData,
+                timestamp: Date.now(),
+                initial_load: true
               }));
               startServerDataRefresh();
             }
@@ -258,7 +294,9 @@ async function connect(client) {
 
       ws.send(JSON.stringify({
         type: 'server_data',
-        data
+        data,
+        timestamp: Date.now(),
+        refresh: true
       }));
     };
     
@@ -306,13 +344,26 @@ async function connect(client) {
     return timeoutId;
   }
 
+  // Disponibilizar função globalmente
+  sendServerDataNowFunc = sendServerDataNow;
+
   doConnect();
 }
+
+let sendServerDataNowFunc = null;
 
 function invalidateServerDataCache(guildId) {
   if (guildId) {
     serverDataCache.delete(guildId);
     logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Cache invalidado para servidor ${guildId}`);
+    
+    // Enviar dados atualizados imediatamente
+    if (sendServerDataNowFunc) {
+      logger.info(`${chalk.blue.bold('[WS CLIENT]')} Enviando dados atualizados...`);
+      sendServerDataNowFunc();
+    } else {
+      logger.warn(`${chalk.yellow.bold('[WS CLIENT]')} sendServerDataNowFunc não disponível`);
+    }
   } else {
     serverDataCache.clear();
     logger.info(`${chalk.cyan.bold('[WS CLIENT]')} Cache limpo completamente`);

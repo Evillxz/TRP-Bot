@@ -5,7 +5,7 @@ module.exports = {
     aliases: ['pr', 'painelr', 'rpainel'],
     description: 'Envia o painel de registro.',
 
-    async execute(message, context) {
+    async execute(message, args, context) {
         const mockInteraction = {
             guild: message.guild,
             member: message.member,

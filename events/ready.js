@@ -1,7 +1,6 @@
 const { Events, ActivityType } = require('discord.js');
 const packageJson = require('../package.json');
 const { initializeStatusSync } = require('../utils/statusSync');
-const { invalidateServerDataCache } = require('../utils/wsClient');
 
 module.exports = {
     name: Events.ClientReady,
@@ -70,24 +69,6 @@ module.exports = {
             logger.error(`Erro crítico ao registrar os comandos: ${error.message}\n${error.stack}`);
         }
 
-        client.on('guildMemberAdd', m => invalidateServerDataCache(m.guild.id));
-        client.on('guildMemberRemove', m => invalidateServerDataCache(m.guild.id));
-        client.on('guildMemberUpdate', (o, n) => {
-            if (o.nickname !== n.nickname) {
-                invalidateServerDataCache(n.guild.id);
-            }
-        });
 
-        client.on('roleCreate', r => invalidateServerDataCache(r.guild.id));
-        client.on('roleDelete', r => invalidateServerDataCache(r.guild.id));
-        client.on('roleUpdate', (o, r) => invalidateServerDataCache(r.guild.id));
-
-        client.on('channelCreate', c => invalidateServerDataCache(c.guild.id));
-        client.on('channelDelete', c => invalidateServerDataCache(c.guild.id));
-        client.on('channelUpdate', (o, c) => invalidateServerDataCache(c.guild.id));
-
-        client.on('emojiCreate', e => invalidateServerDataCache(e.guild.id));
-        client.on('emojiDelete', e => invalidateServerDataCache(e.guild.id));
-        client.on('emojiUpdate', (o, e) => invalidateServerDataCache(e.guild.id));
     },
 };

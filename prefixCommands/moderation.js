@@ -17,7 +17,7 @@ module.exports = {
     aliases: ['pm', 'pmoderador', 'painelm'],
     description: 'Painel de moderação do servidor.',
     
-    async execute(message, context) {
+    async execute(message, args, context) {
         const { emojis, chalk, logger } = context;
 
         try {
