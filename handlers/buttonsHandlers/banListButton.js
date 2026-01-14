@@ -78,9 +78,10 @@ module.exports = {
             ];
 
             await interaction.editReply({
-                components: container,
-                flags: MessageFlags.IsComponentsV2,
-                allowedMentions: { parse: [] }
+                embeds: [{
+                    description: '### 🚨 Atualizações no Sistema de Banimento\nO sistema de lista de banimentos está passando por uma atualização\ne se encontra indisponível no momento!',
+                    color: 0xFF0000
+                }]
             });
             
         } catch (error) {
