@@ -1,6 +1,5 @@
 const { Events, ActivityType } = require('discord.js');
 const packageJson = require('../package.json');
-const { initializeStatusSync } = require('../utils/statusSync');
 
 module.exports = {
     name: Events.ClientReady,
@@ -17,25 +16,19 @@ module.exports = {
         try {
             const presenceUpdate = require('./presenceUpdate');
             if (presenceUpdate.detectCurrentlyPlayingUsers) {
+                
                 await presenceUpdate.detectCurrentlyPlayingUsers();
             }
         } catch (error) {
             logger.warn(`${chalk.yellow.bold(`[READY]`)} Erro ao inicializar módulo de presença: ${error.message}`);
         }
 
-        try {
-            initializeStatusSync(client, context);
-        } catch (error) {
-            logger.error(`${chalk.red.bold(`[READY]`)} Erro ao inicializar sincronização de status: ${error.message}`);
-        }
-
-        client.user.setStatus('online');
+        client.user.setStatus('idle');
 
         const activitiesCustom = [
-            { state: 'Evento On! Participe Já!', type: ActivityType.Custom },
-            { state: 'Faça já seu registro!', type: ActivityType.Custom },
-            { state: `${packageJson.version} (Stable Version)`, type: ActivityType.Custom },
-            { state: 'Shard 0 (Nano Banana)', type: ActivityType.Custom },
+            { state: '🔴 Reestruturação do Sistema', type: ActivityType.Custom },
+            { state: `Operando na versão ${packageJson.version}`, type: ActivityType.Custom },
+            { state: 'Shard 0 (Cluster Andrômeda)', type: ActivityType.Custom },
         ];
 
         let activityIndex = 0;
