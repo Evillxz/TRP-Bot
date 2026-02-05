@@ -10,7 +10,7 @@ const logger = winston.createLogger({
         winston.format.splat(),
         winston.format.json(), 
     ),
-    defaultMeta: { service: 'ponto-bot' },
+    defaultMeta: { service: 'TRP-Bot' },
     transports: [
         
         new winston.transports.Console({

@@ -2,9 +2,7 @@ const {
     Events, 
     AttachmentBuilder,
     MediaGalleryBuilder,
-    MediaGalleryItemBuilder, 
-    SeparatorBuilder, 
-    SeparatorSpacingSize, 
+    MediaGalleryItemBuilder,
     TextDisplayBuilder, 
     ContainerBuilder,
     MessageFlags
@@ -73,21 +71,13 @@ module.exports = {
                 const components = [
                     new TextDisplayBuilder().setContent(`-# || <@${member.user.id}>, é uma grande honra que você tenha se juntado a nossa família ||`),
                     new ContainerBuilder()
-                        .addMediaGalleryComponents(
-                            new MediaGalleryBuilder()
-                                .addItems(
-                                    new MediaGalleryItemBuilder()
-                                        .setURL("attachment://welcome-image.png")
-                                ),
-                        )
-                        /*
-                        .addSeparatorComponents(
-                            new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
-                        )
-                        .addTextDisplayComponents(
-                            new TextDisplayBuilder().setContent("### É uma grande honra que você tenha se juntado a nossa família, siete i benvenuti!"),
-                        ),
-                        */
+                    .addMediaGalleryComponents(
+                        new MediaGalleryBuilder()
+                            .addItems(
+                                new MediaGalleryItemBuilder()
+                                    .setURL("attachment://welcome-image.png")
+                            ),
+                    )
                 ];
 
                 await welcomeChannel.send({

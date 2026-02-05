@@ -107,10 +107,8 @@ async function applyWarning(interaction, context, payload = null) {
             if (levelRaw === 3 && member) {
                 await member.timeout(7 * 24 * 60 * 60 * 1000, `Castigo automático: ADV 3`).catch(() => {});
                 punishment = 'Timeout de 7 dias aplicado.';
-                color = 0xFF0000;
             } else if (levelRaw === 2) {
                 punishment = 'Advertência via DM.';
-                color = 0x00FF00;
             }
 
             if (member) {

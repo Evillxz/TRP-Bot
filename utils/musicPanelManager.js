@@ -3,8 +3,8 @@ const emojis = require('emojis');
 
 class MusicPanelManager {
     constructor() {
-        this.panels = new Map(); // guildId -> { messageId, channelId }
-        this.repeatModes = new Map(); // guildId -> 0 (off), 1 (one), 2 (all)
+        this.panels = new Map();
+        this.repeatModes = new Map();
     }
 
     async createOrUpdatePanel(player, channel, requester) {

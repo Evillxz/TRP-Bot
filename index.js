@@ -69,7 +69,7 @@ setInterval(() => {
     const servidoresAtivos = client.guilds.cache.size;
     logger.info(
         `${chalk.yellow.bold(`[MONITORAMENTO]`)} RAM: ${memoriaTotalUsada.toFixed(2)} MB | ` +
-        `Servidores: ${servidoresAtivos} }`
+        `Servidores: ${servidoresAtivos} `
     ); 
 }, 15 * 60 * 1000);
 
@@ -193,7 +193,6 @@ for (const file of eventFiles) {
     const filePath = path.join(eventsPath, file);
     const event = require(filePath);
     
-    // Handle multiple events in one file
     if (Array.isArray(event)) {
         for (const singleEvent of event) {
             const eventContext = { ...baseEventHandlerContext, eventName: singleEvent.name };
@@ -221,7 +220,7 @@ function checkApiHealth() {
     const apiBase = process.env.API_URL || process.env.API_BASE_URL || 'http://localhost:5500';
     const apiKey = process.env.API_KEY || process.env.BOT_API_KEY;
     const headers = apiKey ? { 'x-api-key': apiKey } : {};
-    axios.get(`${apiBase.replace(/\/$/, '')}/health`, { headers, timeout: 5000 })
+    axios.get(`${apiBase.replace(/\/$/, '')}/api`, { headers, timeout: 5000 })
         .then(res => {
             if (res && res.status === 200) {
                 logger.info(`${chalk.green.bold('[API]')} Saúde da API: OK => Saudável`);
@@ -230,8 +229,9 @@ function checkApiHealth() {
             }
         })
         .catch(err => {
-            logger.warn && logger.warn(`${chalk.yellow.bold('[API]')} Verificação de saúde falhou (${apiBase}/health): ${err.message}`);
-        });
+            logger.warn && logger.warn(`${chalk.yellow.bold('[API]')} Verificação de saúde falhou (${apiBase}/api): ${err.message}`);
+        })
+    ;
 }
 
 checkApiHealth();

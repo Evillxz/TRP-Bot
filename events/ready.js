@@ -8,25 +8,10 @@ module.exports = {
         const { chalk, logger } = context;
 
         logger.info(`${chalk.green.bold(`[READY]`)} Conectado ao Discord | Bot está online como ${client.user.tag}!`);
-        
-        if (client.loadActiveSessions) {
-            await client.loadActiveSessions(context);
-        }
-
-        try {
-            const presenceUpdate = require('./presenceUpdate');
-            if (presenceUpdate.detectCurrentlyPlayingUsers) {
-                
-                await presenceUpdate.detectCurrentlyPlayingUsers();
-            }
-        } catch (error) {
-            logger.warn(`${chalk.yellow.bold(`[READY]`)} Erro ao inicializar módulo de presença: ${error.message}`);
-        }
 
         client.user.setStatus('idle');
-
         const activitiesCustom = [
-            { state: '🔴 Reestruturação do Sistema', type: ActivityType.Custom },
+            { state: '🟡 Reestruturação do Sistema (60%)', type: ActivityType.Custom },
             { state: `Operando na versão ${packageJson.version}`, type: ActivityType.Custom },
             { state: 'Shard 0 (Cluster Andrômeda)', type: ActivityType.Custom },
         ];
@@ -46,7 +31,7 @@ module.exports = {
 
         try {
             if (!client.commands || client.commands.size === 0) {
-                logger.warn('Nenhum comando encontrado para registrar.');
+                logger.warn(`${chalk.yellow.bold(`[READY]`)} Nenhum comando encontrado para registrar globalmente!`);
                 return;
             }
             const commandObjects = Array.from(client.commands.values());
@@ -61,7 +46,5 @@ module.exports = {
         } catch (error) {
             logger.error(`Erro crítico ao registrar os comandos: ${error.message}\n${error.stack}`);
         }
-
-
     },
 };

@@ -76,7 +76,7 @@ module.exports = async (interaction) => {
             });
         }
 
-        const raffleData = await api.get(`/raffle/${raffleId}`);
+        const raffleData = await api.get(`/site/raffle/${raffleId}`);
 
         if (raffleData.status !== 'active') {
             return await interaction.reply({
@@ -96,7 +96,7 @@ module.exports = async (interaction) => {
 
         if (!existingParticipant) {
             try {
-                await api.post(`/raffle/${raffleId}/add-participant`, { discord_name: userName, discord_tag: userTag, discord_id: userId });
+                await api.post(`/site/raffle/${raffleId}/add-participant`, { discord_name: userName, discord_tag: userTag, discord_id: userId });
                 newCount++;
                 await interaction.reply({
                     embeds: [{
@@ -136,7 +136,7 @@ module.exports = async (interaction) => {
                 throw err;
             }
         } else {
-            await api.delete(`/raffle/${raffleId}/remove-participant/${existingParticipant.id}`);
+            await api.delete(`/site/raffle/${raffleId}/remove-participant/${existingParticipant.id}`);
             newCount--;
             await interaction.reply({
                 embeds: [{
