@@ -126,6 +126,10 @@ async function applyExoneration(interaction, context, payload = null) {
             });
         }
 
+        await member.ban({
+            reason: `Exoneração: ${reason}`
+        });
+
         if (isInteraction) {
             await interaction.editReply({
                 embeds: [{
